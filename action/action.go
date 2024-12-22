@@ -21,7 +21,8 @@ func controlService(service, action string) {
 
 }
 func StartApache() {
-
+	fmt.Println("STARTING APACHE...")
+	controlService("apache", "start")
 }
 
 func StartMysql() {
