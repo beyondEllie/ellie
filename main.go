@@ -16,6 +16,9 @@ func main() {
 		case "mysql":
 			fmt.Println("starting mysql")
 			break
+		case "all":
+			fmt.Println("starting mysql & apache")
+			break
 
 		}
 	}else{
