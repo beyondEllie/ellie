@@ -14,7 +14,9 @@ func controlService(service, action string) error {
 		return err
 	}
 
-	fmt.Printf("Output:\n%s\n", output)
+	if output != nil || len(output) == 0 {
+		fmt.Printf("Output:\n%s\n", output)
+	}
 	return nil
 }
 
