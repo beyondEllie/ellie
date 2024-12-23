@@ -6,10 +6,8 @@ import (
 )
 
 func controlService(service, action string) error {
-	// Create the system command
 	cmd := exec.Command("pkexec", "systemctl", action, service)
 
-	// Run the command and capture output
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
