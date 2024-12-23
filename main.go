@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"yourmodule/action" // Replace with the correct module name
 )
 
 func main() {
@@ -11,39 +12,46 @@ func main() {
 		switch args[1] {
 		case "start":
 			start(args)
-			break
 		case "stop":
-			fmt.Println("starting mysql")
-			break
+			stop(args)
 		default:
-			fmt.Println("Hello Tach, what can i do for you today?")
+			fmt.Println("Hello Tach, what can I do for you today?")
 		}
 	} else {
-		fmt.Println("Hello Tach, what can i do for you today?")
+		fmt.Println("Hello Tach, what can I do for you today?")
 	}
-
 }
 
 func start(args []string) {
 	if len(args) > 2 {
-		switch args[1] {
+		switch args[2] {
 		case "apache":
-			fmt.Println("starting apache")
-			break
+			action.StartApache()
 		case "mysql":
-			fmt.Println("starting mysql")
-			break
+			action.StartMysql()
 		case "all":
-			fmt.Println("starting mysql & apache")
-			break
+			action.StartAll()
 		default:
-			fmt.Println("Hello Tach, what can i do for you today?")
+			fmt.Println("Service not recognized. Please choose 'apache', 'mysql', or 'all'.")
 		}
 	} else {
-		fmt.Println("Hello Tach, what can i do for you today?")
+		fmt.Println("Please specify a service to start: 'apache', 'mysql', or 'all'.")
 	}
 }
 
-func stop() {
-
+func stop(args []string) {
+	if len(args) > 2 {
+		switch args[2] {
+		case "apache":
+			action.StopApache()
+		case "mysql":
+			action.StopMysql()
+		case "all":
+			action.StopAll()
+		default:
+			fmt.Println("Service not recognized. Please choose 'apache', 'mysql', or 'all'.")
+		}
+	} else {
+		fmt.Println("Please specify a service to stop: 'apache', 'mysql', or 'all'.")
+	}
 }
