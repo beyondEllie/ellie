@@ -3,7 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
-	"yourmodule/action" // Replace with the correct module name
+
+	"github.com/tacheraSasi/ellie/action"
 )
 
 func main() {
