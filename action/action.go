@@ -32,7 +32,7 @@ func StartMysql() {
 	if err := controlService("mysql", "start"); err == nil {
 		fmt.Println("MySQL server started successfully.")
 	}
-}
+}  
 
 func StartAll() {
 	fmt.Println("STARTING ALL SERVICES...")
