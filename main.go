@@ -19,6 +19,8 @@ func main() {
 			stop(args)
 		case "restart":
 			restart(args)
+		case "setup-git":
+			action.GitSetup()
 		default:
 			fmt.Println("Hello Tach, what can I do for you today?")
 		}
