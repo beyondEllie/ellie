@@ -11,6 +11,8 @@ func main() {
 	args := os.Args
 	if len(args) > 1 {
 		switch args[1] {
+		case "pwd":
+			action.Pwd()
 		case "start":
 			start(args)
 		case "stop": 

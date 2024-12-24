@@ -20,6 +20,18 @@ func controlService(service, action string) error {
 	return nil
 }
 
+func Pwd(){
+	cmd := exec.Command("pwd")
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+	}
+
+	if output != nil || len(output) == 0 {
+		fmt.Printf("Output: %s", output)
+	}
+}
+
 func StartApache() {
 	fmt.Println("STARTING APACHE...")
 	if err := controlService("apache2", "start"); err == nil {
