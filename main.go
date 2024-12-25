@@ -75,7 +75,7 @@ func main() {
 			actions.Chat(openaiApikey)
 		}
 	} else {
-		fmt.Println("Hello Tach, what can I do for you today?")
+		actions.Chat(openaiApikey)
 	}
 }
 

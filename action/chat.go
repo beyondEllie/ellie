@@ -6,6 +6,25 @@ import (
 	"os"
 )
 
+
+type OpenAIRequest struct {
+	Model    string  `json:"model"`
+	Messages []Message `json:"messages"`
+}
+
+type Message struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
+}
+
+type OpenAIResponse struct {
+	Choices []Choice `json:"choices"`
+}
+
+type Choice struct {
+	Message Message `json:"message"`
+}
+
 func Chat(openaiApikey string){
 	for {
 		reader := bufio.NewReader(os.Stdin)
@@ -27,6 +46,7 @@ func Chat(openaiApikey string){
 
 }
 func chatWithOpenAI(message string) string {
-
+	url := "https://api.openai.com/v1/chat/completions"
+	return "I am a chatbot"
 
 }
