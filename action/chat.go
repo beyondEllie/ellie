@@ -2,8 +2,12 @@ package actions
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"os"
 )
 
@@ -37,12 +41,12 @@ func Chat(openaiApikey string) {
 			break
 		}
 
-		output := chatWithOpenAI(msg)
+		output := chatWithOpenAI(msg,openaiApikey)
 		fmt.Println(output)
 	}
 
 }
-func chatWithOpenAI(message string) string {
+func chatWithOpenAI(message,openaiApikey string) string {
 	url := "https://api.openai.com/v1/chat/completions"
 
 	reqBody := OpenAIRequest{
@@ -52,13 +56,45 @@ func chatWithOpenAI(message string) string {
 			{Role: "user", Content: message},
 		},
 	}
-	
+
 	body,err := json.Marshal(reqBody)
 	if err != nil {
 		fmt.Println("Error marshalling json", err)
 		return ""
 	}
 
-	return "I am a chatbot"
+	req, reqErr := http.NewRequest("POST", url, bytes.NewBuffer(body))
+	if reqErr != nil {
+		fmt.Println("Error creating request", reqErr)
+		return ""
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer " + openaiApikey)
+	// Send the request
+		client := &http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			log.Fatalf("Error sending request: %v", err)
+		}
+		defer resp.Body.Close()
+
+		// Read the response
+		respBody, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Fatalf("Error reading response: %v", err)
+		}
+
+		// Parse the response
+		var openAIResponse OpenAIResponse
+		if err := json.Unmarshal(respBody, &openAIResponse); err != nil {
+			log.Fatalf("Error unmarshalling response: %v", err)
+		}
+
+		// Return the first response from OpenAI
+		if len(openAIResponse.Choices) > 0 {
+			return openAIResponse.Choices[0].Message.Content
+		}
+
+		return "Sorry, I couldn't generate a response."
 
 }
