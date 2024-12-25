@@ -19,6 +19,7 @@ func main() {
 
 	pat := os.Getenv("PAT")
 	username := os.Getenv("USERNAME")
+	openaiApikey := os.Getenv("OPENAI_API_KEY")
 
 	// fmt.Println("PAT:", pat)
 	// fmt.Println("Username:", username)
@@ -71,7 +72,7 @@ func main() {
 		case "greet":
 			greetUser()
 		default:
-			fmt.Println("Hello Tach, what can I do for you today?")
+			actions.Chat(openaiApikey)
 		}
 	} else {
 		fmt.Println("Hello Tach, what can I do for you today?")
