@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/joho/godotenv"
-	"./actions"
+	actions "github.com/tacheraSasi/ellie/action"
 )
 
 func main() {
