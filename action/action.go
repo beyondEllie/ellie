@@ -32,7 +32,7 @@ func Pwd(){
 	}
 }
 
-func GitSetup() {//
+func GitSetup(pat,username string) {
 	cmd := exec.Command("git", "status") 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
