@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	markdown "github.com/MichaelMure/go-term-markdown"
 	"github.com/joho/godotenv"
 	actions "github.com/tacheraSasi/ellie/action"
 )
@@ -19,11 +20,14 @@ func main() {
 	pat := os.Getenv("PAT")
 	username := os.Getenv("USERNAME")
 
+	// fmt.Println("PAT:", pat)
+	// fmt.Println("Username:", username)
+
 	args := os.Args
 	if len(args) > 1 {
 		switch args[1] {
 		case "run":
-			fmt.Println("Running the command...")
+			actions.Run(args)
 		case "pwd":
 			actions.Pwd()
 		case "start":
@@ -137,4 +141,11 @@ func greetUser() {
 	} else {
 		fmt.Println("Good evening!")
 	}
+}
+
+func renderMd(content string) {
+	fmt.Println(content)
+	result := markdown.Render(string(content), 80, 6)
+
+	fmt.Println(result)
 }

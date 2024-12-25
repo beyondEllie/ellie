@@ -44,6 +44,11 @@ Ellie speaks plain command-line English. Just type:
 ```
 
 ### Commands You’ll Love:
+-Running normal shell commands:
+  ```bash
+  ./ellie run <command>
+  ./ellie run echo "Hello, Ellie!"
+  ```
 
 #### 🛠️ Service Management
 - Start Apache or MySQL like a boss:

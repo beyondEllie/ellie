@@ -6,6 +6,19 @@ import (
 	"os/exec"
 )
 
+func Run(args []string){
+	cmd := exec.Command(args[2], args[3:]...)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if output != nil || len(output) == 0 {
+		fmt.Printf("%s", output)
+	}
+	
+	
+}
 func Pwd() {
 	cmd := exec.Command("pwd")
 	output, err := cmd.CombinedOutput()
