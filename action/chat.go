@@ -2,13 +2,13 @@ package actions
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"os"
 )
 
-
 type OpenAIRequest struct {
-	Model    string  `json:"model"`
+	Model    string    `json:"model"`
 	Messages []Message `json:"messages"`
 }
 
@@ -25,28 +25,40 @@ type Choice struct {
 	Message Message `json:"message"`
 }
 
-func Chat(openaiApikey string){
+func Chat(openaiApikey string) {
 	for {
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print("Talk to me: ")
-		msg,readerErr := reader.ReadString('\n')
-		if readerErr != nil{
-			fmt.Println("Something went wrong",readerErr)
+		msg, readerErr := reader.ReadString('\n')
+		if readerErr != nil {
+			fmt.Println("Something went wrong", readerErr)
 		}
 		if msg == "exit" {
 			break
 		}
-		
+
 		output := chatWithOpenAI(msg)
 		fmt.Println(output)
 	}
 
-
-
-
 }
 func chatWithOpenAI(message string) string {
 	url := "https://api.openai.com/v1/chat/completions"
+
+	reqBody := OpenAIRequest{
+		Model: "gpt-4",
+		Messages: []Message{
+			{Role: "system", Content: "You are Ellie, an AI therapist and friend."},
+			{Role: "user", Content: message},
+		},
+	}
+	
+	body,err := json.Marshal(reqBody)
+	if err != nil {
+		fmt.Println("Error marshalling json", err)
+		return ""
+	}
+
 	return "I am a chatbot"
 
 }
