@@ -3,33 +3,67 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
-	"github.com/tacheraSasi/ellie/action"
-	"github/joho/godotenv"
+	"github.com/joho/godotenv"
+	"./actions"
 )
 
 func main() {
 	err := godotenv.Load()
-	if err !=nil{
-		fmt.Println("Error loading .env file",err)
+	if err != nil {
+		fmt.Println("Error loading .env file", err)
 		return
 	}
+
 	pat := os.Getenv("PAT")
 	username := os.Getenv("USERNAME")
-	
+
 	args := os.Args
 	if len(args) > 1 {
 		switch args[1] {
 		case "pwd":
-			action.Pwd()
+			actions.Pwd()
 		case "start":
 			start(args)
-		case "stop": 
+		case "stop":
 			stop(args)
 		case "restart":
 			restart(args)
 		case "setup-git":
-			action.GitSetup(pat,username)
+			actions.GitSetup(pat, username)
+		case "sysinfo":
+			actions.SysInfo()
+		case "install":
+			if len(args) > 2 {
+				actions.InstallPackage(args[2])
+			} else {
+				fmt.Println("Please specify a package to install.")
+			}
+		case "update":
+			actions.UpdatePackages()
+		case "list":
+			if len(args) > 2 {
+				actions.ListFiles(args[2])
+			} else {
+				fmt.Println("Please specify a directory to list files.")
+			}
+		case "create-file":
+			if len(args) > 2 {
+				actions.CreateFile(args[2])
+			} else {
+				fmt.Println("Please specify a file path to create.")
+			}
+		case "network-status":
+			actions.NetworkStatus()
+		case "connect-wifi":
+			if len(args) > 3 {
+				actions.ConnectWiFi(args[2], args[3])
+			} else {
+				fmt.Println("Please provide SSID and password for Wi-Fi.")
+			}
+		case "greet":
+			greetUser()
 		default:
 			fmt.Println("Hello Tach, what can I do for you today?")
 		}
@@ -42,11 +76,11 @@ func start(args []string) {
 	if len(args) > 2 {
 		switch args[2] {
 		case "apache":
-			action.StartApache()
+			actions.StartApache()
 		case "mysql":
-			action.StartMysql()
+			actions.StartMysql()
 		case "all":
-			action.StartAll()
+			actions.StartAll()
 		default:
 			fmt.Println("Service not recognized. Please choose 'apache', 'mysql', or 'all'.")
 		}
@@ -59,11 +93,11 @@ func stop(args []string) {
 	if len(args) > 2 {
 		switch args[2] {
 		case "apache":
-			action.StopApache()
+			actions.StopApache()
 		case "mysql":
-			action.StopMysql()
+			actions.StopMysql()
 		case "all":
-			action.StopAll()
+			actions.StopAll()
 		default:
 			fmt.Println("Service not recognized. Please choose 'apache', 'mysql', or 'all'.")
 		}
@@ -73,21 +107,32 @@ func stop(args []string) {
 }
 
 func restart(args []string) {
-    if len(args) > 2 {
-        switch args[2] {
-        case "apache":
-            action.StopApache()
-            action.StartApache()
-        case "mysql":
-            action.StopMysql()
-            action.StartMysql()
-        case "all":
-            action.StopAll()
-            action.StartAll()
-        default:
-            fmt.Println("Service not recognized. Please choose 'apache', 'mysql', or 'all'.")
-        }
-    } else {
-        fmt.Println("Please specify a service to restart: 'apache', 'mysql', or 'all'.")
-    }
+	if len(args) > 2 {
+		switch args[2] {
+		case "apache":
+			actions.StopApache()
+			actions.StartApache()
+		case "mysql":
+			actions.StopMysql()
+			actions.StartMysql()
+		case "all":
+			actions.StopAll()
+			actions.StartAll()
+		default:
+			fmt.Println("Service not recognized. Please choose 'apache', 'mysql', or 'all'.")
+		}
+	} else {
+		fmt.Println("Please specify a service to restart: 'apache', 'mysql', or 'all'.")
+	}
+}
+
+func greetUser() {
+	hour := time.Now().Hour()
+	if hour < 12 {
+		fmt.Println("Good morning!")
+	} else if hour < 18 {
+		fmt.Println("Good afternoon!")
+	} else {
+		fmt.Println("Good evening!")
+	}
 }
