@@ -22,6 +22,8 @@ func main() {
 	args := os.Args
 	if len(args) > 1 {
 		switch args[1] {
+		case "run":
+			fmt.Println("Running the command...")
 		case "pwd":
 			actions.Pwd()
 		case "start":
