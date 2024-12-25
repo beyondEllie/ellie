@@ -32,15 +32,16 @@ func Pwd(){
 	}
 }
 
-func GitSetup(){
-	cmd := exec.Command("git status")//failing because of Error: exec: "git status": executable file not found in $PATH
+func GitSetup() {
+	cmd := exec.Command("git", "status") 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
+		return
 	}
 
-	if output != nil || len(output) == 0 {
-		fmt.Printf("Output: %s", output)
+	if len(output) > 0 {
+		fmt.Printf("Output: %s\n", string(output))
 	}
 }
 
