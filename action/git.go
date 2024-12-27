@@ -41,7 +41,7 @@ func GitPush() {
 		return
 	}
 
-	fmt.Printf("Output: %s\n", output)
+	fmt.Printf("Output: %s\n", output)        
 }
 
 func GitStatus(){
