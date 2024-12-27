@@ -14,7 +14,7 @@ func GitPush() {
 		return
 	}
 
-	// Run 'git add .'
+	// 'git add .'
 	cmd := exec.Command("git", "add", ".")
 	output, cmdErr := cmd.CombinedOutput()
 	if cmdErr != nil {
@@ -23,7 +23,7 @@ func GitPush() {
 		return
 	}
 
-	// Run 'git commit -m <commitMsg>'
+	// 'git commit -m <commitMsg>'
 	cmd = exec.Command("git", "commit", "-m", commitMsg)
 	output, cmdErr = cmd.CombinedOutput()
 	if cmdErr != nil {
@@ -32,7 +32,7 @@ func GitPush() {
 		return
 	}
 
-	// Run 'git push'
+	//'git push'
 	cmd = exec.Command("git", "push")
 	output, cmdErr = cmd.CombinedOutput()
 	if cmdErr != nil {
@@ -55,3 +55,26 @@ func GitStatus(){
 		fmt.Printf("%s", output)
 	}
 }
+
+func GitAdd(file string){
+	cmd := exec.Command("git", "add", file)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if output != nil || len(output) == 0 {
+		fmt.Printf("%s", output)
+	}
+}
+
+// func GitCommit(commitMsg string){
+// 	// 'git commit -m <commitMsg>'
+// 	cmd = exec.Command("git", "commit", "-m", commitMsg)
+// 	output, cmdErr = cmd.CombinedOutput()
+// 	if cmdErr != nil {
+// 		fmt.Printf("Error running git commit: %s\n", cmdErr)
+// 		fmt.Printf("Output: %s\n", output)
+// 		return
+// 	}
+// }
