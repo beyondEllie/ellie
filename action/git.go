@@ -20,7 +20,7 @@ func GitPush() {
 	if cmdErr != nil {
 		fmt.Printf("Error running git add: %s\n", cmdErr)
 		fmt.Printf("Output: %s\n", output)
-		return
+		return               
 	}
 
 	// 'git commit -m <commitMsg>'
