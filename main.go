@@ -21,7 +21,6 @@ func main() {
 	username := os.Getenv("USERNAME")
 	openaiApikey := os.Getenv("OPENAI_API_KEY")
 
-
 	args := os.Args
 	if len(args) > 1 {
 		switch args[1] {
@@ -37,6 +36,8 @@ func main() {
 			restart(args)
 		case "setup-git":
 			actions.GitSetup(pat, username)
+		case "git":
+			git(args)
 		case "sysinfo":
 			actions.SysInfo()
 		case "install":
@@ -74,6 +75,24 @@ func main() {
 		}
 	} else {
 		actions.Chat(openaiApikey)
+	}
+}
+
+
+func git(args []string) {
+	if len(args) > 2 {
+		switch args[2] {
+		case "status":
+			actions.GitStatus()
+		case "push":
+			actions.GitPush()
+		// case "pull":
+		// 	actions.GitPull()
+		default:
+			fmt.Println("Command not recognized. Please use 'status', 'push', or 'pull'.")
+		}
+	} else {
+		fmt.Println("Please specify a git command: 'status','push', or 'pull'.")
 	}
 }
 
