@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
+	err := godotenv.Load("/home/tach/tach/go/ellie/.env")
 	if err != nil {
 		fmt.Println("Error loading .env file", err)
 		return
@@ -21,8 +21,6 @@ func main() {
 	username := os.Getenv("USERNAME")
 	openaiApikey := os.Getenv("OPENAI_API_KEY")
 
-	// fmt.Println("PAT:", pat)
-	// fmt.Println("Username:", username)
 
 	args := os.Args
 	if len(args) > 1 {

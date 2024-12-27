@@ -1,7 +1,6 @@
 package actions
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -12,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/charmbracelet/glamour"
+	"github.com/tacheraSasi/ellie/utils"
 )
 
 type OpenAIRequest struct {
@@ -33,17 +33,13 @@ type Choice struct {
 }
 
 func Chat(openaiApikey string) {
-	reader := bufio.NewReader(os.Stdin)
 	for {
-		fmt.Print("Talk to me: ")
-		msg, err := reader.ReadString('\n')
+		msg, err := utils.GetInput("Talk to me: ")
 		if err != nil {
 			fmt.Println("Error reading input:", err)
 			continue
 		}
 
-		// Trimming newline and spaces
-		msg = strings.TrimSpace(msg)
 		if strings.EqualFold(msg, "exit") {
 			fmt.Println("Goodbye!")
 			break
