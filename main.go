@@ -164,6 +164,5 @@ func greetUser() {
 func renderMd(content string) {
 	fmt.Println(content)
 	result := markdown.Render(string(content), 80, 6)
-
 	fmt.Println(result)
 }
