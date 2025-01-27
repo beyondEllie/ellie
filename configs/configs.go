@@ -1,6 +1,6 @@
 package configs
 
-func ellieReadmeContent()string{
+func EllieReadmeContent()string{
 	content := `g3ri`
 	return content
 }
