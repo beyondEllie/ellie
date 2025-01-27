@@ -86,6 +86,8 @@ func git(args []string) {
 			actions.GitStatus()
 		case "push":
 			actions.GitPush()
+		case "commit":
+			actions.GitCommitCmd()
 		// case "pull":
 		// 	actions.GitPull()
 		default:

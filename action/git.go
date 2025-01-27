@@ -68,13 +68,25 @@ func GitAdd(file string){
 	}
 }
 
-// func GitCommit(commitMsg string){
-// 	// 'git commit -m <commitMsg>'
-// 	cmd = exec.Command("git", "commit", "-m", commitMsg)
-// 	output, cmdErr = cmd.CombinedOutput()
-// 	if cmdErr != nil {
-// 		fmt.Printf("Error running git commit: %s\n", cmdErr)
-// 		fmt.Printf("Output: %s\n", output)
-// 		return
-// 	}
-// }
+func GitCommit(commitMsg string){
+	// 'git commit -m <commitMsg>'
+	cmd := exec.Command("git", "commit", "-m", commitMsg)
+	output, cmdErr := cmd.CombinedOutput()
+	if cmdErr != nil {
+		fmt.Printf("Error running git commit: %s\n", cmdErr)
+		fmt.Printf("Output: %s\n", output)
+		return
+	}
+	if output != nil || len(output) == 0 {
+		fmt.Printf("%s", output)
+	}
+}
+
+func GitCommitCmd(){
+	GitAdd(".")
+	commitMsg,err := utils.GetInput("Enter the commit message: ")
+	if err != nil{
+		fmt.Printf("Error running git commit: %s\n", err)
+	}
+	GitCommit(commitMsg)
+}
