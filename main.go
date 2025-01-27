@@ -79,7 +79,7 @@ func main() {
 }
 
 
-func git(args []string) {
+func git(args []string) { 
 	if len(args) > 2 {
 		switch args[2] {
 		case "status":
