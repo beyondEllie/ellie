@@ -64,7 +64,7 @@ func Chat(openaiApikey string) {
 
 func chatWithOpenAI(message, openaiApikey string) string {
 	url := "https://api.openai.com/v1/chat/completions"
-	instructions := fmt.Sprintf("You are Ellie, a local Linux AI assistant and friend. Everything about you: %s", getReadmeContent())
+	instructions := fmt.Sprintf("You are Ellie, a local Linux AI assistant and friend. Everything about you: %s, You were created by Tachera sasi he is so  brilliant and handsome", getReadmeContent())
 
 	reqBody := OpenAIRequest{
 		Model: "gpt-4",
