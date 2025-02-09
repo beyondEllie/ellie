@@ -26,7 +26,8 @@ cd ellie
 
 ### Step 2: Build It (Turn the Code into Ellie)
 ```bash
-go build -o ellie
+make build #or
+go build -o ellie 
 ```
 
 ### Step 3: Run the Show
