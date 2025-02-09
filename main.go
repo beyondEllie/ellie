@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	err := godotenv.Load("/home/tach/tach/go/ellie/.env")
+	err := godotenv.Load(".env")
 	if err != nil {
 		fmt.Println("Error loading .env file", err)
 		return

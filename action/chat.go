@@ -121,7 +121,7 @@ func chatWithOpenAI(message, openaiApikey string) string {
 }
 
 func getReadmeContent() string {
-	content, err := os.ReadFile("/home/tach/tach/go/ellie/README.md")
+	content, err := os.ReadFile("./README.md")
 	if err != nil {
 		log.Printf("Error reading README.md: %v", err)
 		return "README.md file not found or unreadable."

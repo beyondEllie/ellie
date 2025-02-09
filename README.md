@@ -1,6 +1,6 @@
 # Ellie - My All-in-One Command Line Buddy 🚀
 
-Hey there! Meet **Ellie**—my personal command-line companion designed to take the hassle out of system management and automation. I’m **Tachera Sasi**, and I built Ellie for... well, me! But guess what? You get to use her too. Whether it’s managing services, showing off system info, or tinkering with files, Ellie’s got your back.
+Hey there! Meet **Ellie** my personal command-line companion designed to take the hassle out of system management and automation. I’m **Tachera Sasi**, and I built Ellie for... well, me! But guess what? You get to use her too. Whether it’s managing services, showing off system info, or tinkering with files, Ellie’s got your back.
 
 ## Why Ellie?
 
