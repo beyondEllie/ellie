@@ -3,6 +3,7 @@ package utils
 import (
 	"bufio"
 	"fmt"
+	"math/rand/v2"
 	"os"
 	"strings"
 )
@@ -17,4 +18,15 @@ func GetInput(prompt string) (string, error) {
     // Trimming the newline character from the input
     input = strings.TrimSpace(input)
     return input, nil
+}
+
+func RandNum()int{
+	return rand.IntN(100)
+}
+
+func IsEven(num int)bool{
+	if num % 2 == 0{
+		return true
+	}
+	return false
 }
