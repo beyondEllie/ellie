@@ -46,13 +46,13 @@ func GitPush() {
 }
 
 func GitPull(){
-	cmd := exec.Command("git add .")
+	cmd := exec.Command("git","pull",".")
 	output,err := cmd.CombinedOutput()
 	if err != nil{
 		log.Printf("Error: %s\n",err)
 		return
 	}
-	fmt.Printf("%s",output)
+	fmt.Printf("OUTPUT: %s",output)
 }
 
 func GitStatus() {

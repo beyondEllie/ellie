@@ -120,6 +120,8 @@ func chatWithOpenAI(message, openaiApikey string) string {
 	return "No response received from OpenAI."
 }
 
+func ChatWithGemini(){}
+
 func getReadmeContent() string {
 	content, err := os.ReadFile("./README.md")
 	if err != nil {
