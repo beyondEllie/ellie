@@ -2,6 +2,7 @@ package actions
 
 import (
 	"fmt"
+	"log"
 	"os/exec"
 
 	"github.com/tacheraSasi/ellie/utils"
@@ -42,6 +43,16 @@ func GitPush() {
 	}
 
 	fmt.Printf("Output: %s\n", output)
+}
+
+func GitPull(){
+	cmd := exec.Command("git add .")
+	output,err := cmd.CombinedOutput()
+	if err != nil{
+		log.Printf("Error: %s\n",err)
+		return
+	}
+	fmt.Printf("%s",output)
 }
 
 func GitStatus() {
