@@ -57,7 +57,9 @@ func Chat(openaiApikey string) {
 			fmt.Println("Error rendering Markdown:", err)
 			continue
 		}
-		
+		if utils.IsEven(utils.RandNum()){
+			fmt.Println(utils.Ads[1])
+		}
 		fmt.Println(renderedOutput)
 	}
 }
