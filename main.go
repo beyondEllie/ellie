@@ -9,6 +9,7 @@ import (
 	"github.com/joho/godotenv"
 	actions "github.com/tacheraSasi/ellie/action"
 )
+const VERSION = "0.0.3"
 
 func main() {
 	err := godotenv.Load(".env")
@@ -90,8 +91,8 @@ func git(args []string) {
 			actions.GitPush()
 		case "commit":
 			actions.GitCommitCmd()
-		// case "pull":
-		// 	actions.GitPull()
+		case "pull":
+			actions.GitPull()
 		default:
 			fmt.Println("Command not recognized. Please use 'status', 'push', or 'pull'.")
 		}

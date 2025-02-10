@@ -51,6 +51,11 @@ Ellie speaks plain command-line English. Just type:
   ./ellie run echo "Hello, Ellie!"
   ```
 
+### Opening File explorer
+```bash
+./ellie open-explorer
+```
+
 #### 🛠️ Service Management
 - Start Apache or MySQL like a boss:
   ```bash
