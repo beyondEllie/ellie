@@ -81,7 +81,7 @@ func GitAdd(file string) {
 
 func GitCommit(commitMsg string) {
 	// 'git commit -m <commitMsg>'
-	cmd := exec.Command("git", "commit", "-m", commitMsg)
+	cmd := exec.Command("git", "commit", "-m", "Ellie: "+commitMsg)
 	output, cmdErr := cmd.CombinedOutput()
 	if cmdErr != nil {
 		fmt.Printf("Error running git commit: %s\n", cmdErr)
