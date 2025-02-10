@@ -57,7 +57,7 @@ func Chat(openaiApikey string) {
 			fmt.Println("Error rendering Markdown:", err)
 			continue
 		}
-
+		
 		fmt.Println(renderedOutput)
 	}
 }
