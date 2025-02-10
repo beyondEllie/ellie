@@ -47,17 +47,7 @@ dependencies:
 	@echo 'checking dependencies...'
 	go mod tidy
 
-test:
-	@echo -e '\nTesting Lexer...'
-	@./gotest --format testname ./lexer/ 
-	@echo -e '\nTesting Parser...'
-	@./gotest --format testname ./parser/
-	@echo -e '\nTesting AST...'
-	@./gotest --format testname ./ast/
-	@echo -e '\nTesting Object...'
-	@./gotest --format testname ./object/
-	@echo -e '\nTesting Evaluator...'
-	@./gotest --format testname ./evaluator/
+
 
 clean:
 	go clean

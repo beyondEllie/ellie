@@ -168,3 +168,14 @@ func controlService(service, action string) error {
 	}
 	return nil
 }
+
+func OpenExplorer(){
+	//Will check the OS and open the file explorer
+	cmd := exec.Command("xdg-open", ".")
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("Error opening file explorer:", err)
+		return
+	}
+	fmt.Printf("File explorer opened successfully:\n%s\n", string(output))
+}

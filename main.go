@@ -28,6 +28,8 @@ func main() {
 			actions.Run(args)
 		case "pwd":
 			actions.Pwd()
+		case "open-explorer":
+			actions.OpenExplorer()
 		case "start":
 			start(args)
 		case "stop":
