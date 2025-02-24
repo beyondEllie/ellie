@@ -155,7 +155,7 @@ func StopAll() {
 }
 
 func controlService(service, action string) error {
-	cmd := exec.Command("sudo", "systemctl", action, service) //NOTE:pkexec  for a window popup
+	cmd := exec.Command("pkexec", "systemctl", action, service) //NOTE:pkexec  for a window popup
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {

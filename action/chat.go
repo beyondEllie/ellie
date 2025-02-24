@@ -44,6 +44,7 @@ func Chat(openaiApikey string) {
 			fmt.Println("Goodbye!")
 			break
 		}
+		// fmt.Println(utils.Ads[1])
 
 		output := chatWithOpenAI(msg, openaiApikey)
 		if output == "" {
