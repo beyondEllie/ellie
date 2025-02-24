@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-func Run(args []string){
+func Run(args []string) {
 	cmd := exec.Command(args[2], args[3:]...)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -16,8 +16,7 @@ func Run(args []string){
 	if output != nil || len(output) == 0 {
 		fmt.Printf("%s", output)
 	}
-	
-	
+
 }
 func Pwd() {
 	cmd := exec.Command("pwd")
@@ -169,8 +168,8 @@ func controlService(service, action string) error {
 	return nil
 }
 
-func OpenExplorer(){
-	//Will check the OS and open the file explorer
+func OpenExplorer() {
+	//TODO:Will check the OS and open the file explorer
 	cmd := exec.Command("xdg-open", ".")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -180,6 +179,6 @@ func OpenExplorer(){
 	fmt.Printf("File explorer opened successfully:\n%s\n", string(output))
 }
 
-func Play(args []string){
-
+func Play(args []string) {
+	//TODO:Will check the OS
 }
