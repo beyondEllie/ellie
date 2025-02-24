@@ -31,6 +31,9 @@ func main() {
 			actions.Pwd()
 		case "open-explorer":
 			actions.OpenExplorer()
+		case "play":
+			fmt.Println("Using the mpv player")
+			actions.Play(args)
 		case "start":
 			start(args)
 		case "stop":

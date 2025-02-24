@@ -179,3 +179,7 @@ func OpenExplorer(){
 	}
 	fmt.Printf("File explorer opened successfully:\n%s\n", string(output))
 }
+
+func Play(args []string){
+
+}

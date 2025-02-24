@@ -45,7 +45,7 @@ func GitPush() {
 	fmt.Printf("Output: %s\n", output)
 }
 
-func GitPull(){
+func GitPull(){	
 	cmd := exec.Command("git","pull",".")
 	output,err := cmd.CombinedOutput()
 	if err != nil{
