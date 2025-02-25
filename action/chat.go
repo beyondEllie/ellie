@@ -53,7 +53,7 @@ func Chat(openaiApikey string) {
 		}
 
 		// Rendering markdown with glamour
-		renderedOutput, err := renderMarkdown(output)
+		renderedOutput, err := RenderMarkdown(output)
 		if err != nil {
 			fmt.Println("Error rendering Markdown:", err)
 			continue
@@ -134,7 +134,7 @@ func getReadmeContent() string {
 	return string(content)
 }
 
-func renderMarkdown(input string) (string, error) {
+func RenderMarkdown(input string) (string, error) {
 	// Rendering Markdown with glamour
 	rendered, err := glamour.Render(input, "dark") 
 	if err != nil {
