@@ -94,7 +94,7 @@ var (
 )
 
 func main() {
-	_ = godotenv.Load(configPath) // Optional .env loading
+	_ = godotenv.Load(configPath) 
 
 	if len(os.Args) < 2 {
 		actions.Chat(getEnv("OPENAI_API_KEY"))
