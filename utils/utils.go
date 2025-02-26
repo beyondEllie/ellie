@@ -8,6 +8,8 @@ import (
 	"os/exec"
 	"runtime"
 	"strings"
+
+	"github.com/charmbracelet/glamour"
 )
 
 var Ads []string = []string{
@@ -50,4 +52,13 @@ func RunCommand(cmdArgs []string,errMsg string) {
 
 func IsLinux() bool {
 	return strings.Contains(runtime.GOOS, "linux")
+}
+
+func RenderMarkdown(input string) (string, error) {
+	// Rendering Markdown with glamour
+	rendered, err := glamour.Render(input, "dark") 
+	if err != nil {
+		return "", err
+	}
+	return rendered, nil
 }

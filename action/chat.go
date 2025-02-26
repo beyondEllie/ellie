@@ -10,7 +10,6 @@ import (
 	"os"
 	"strings"
 
-	"github.com/charmbracelet/glamour"
 	"github.com/tacheraSasi/ellie/utils"
 )
 
@@ -53,7 +52,7 @@ func Chat(openaiApikey string) {
 		}
 
 		// Rendering markdown with glamour
-		renderedOutput, err := RenderMarkdown(output)
+		renderedOutput, err := utils.RenderMarkdown(output)
 		if err != nil {
 			fmt.Println("Error rendering Markdown:", err)
 			continue
@@ -134,11 +133,4 @@ func getReadmeContent() string {
 	return string(content)
 }
 
-func RenderMarkdown(input string) (string, error) {
-	// Rendering Markdown with glamour
-	rendered, err := glamour.Render(input, "dark") 
-	if err != nil {
-		return "", err
-	}
-	return rendered, nil
-}
+
