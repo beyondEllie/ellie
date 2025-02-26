@@ -6,6 +6,7 @@ import (
 	"math/rand/v2"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 )
 
@@ -48,4 +49,8 @@ func RunCommand(cmdArgs []string,errMsg string) {
 	if output != nil || len(output) == 0 {
 		fmt.Printf("%s", output)
 	}
+}
+
+func IsLinux() bool {
+	return strings.Contains(runtime.GOOS, "linux")
 }
