@@ -194,5 +194,6 @@ func Play(args []string) {
 	// fmt.Println(args) //For debugging
 	command := []string{"mpv",args[1]}//TODO: check if mpv is installed
 	//TODO:Will create a custom way of playing files in the future
+	fmt.Println("Playing file...")
 	utils.RunCommand(command,"Error playing the file:")
 }
