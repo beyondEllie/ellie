@@ -44,7 +44,7 @@ func RunCommand(cmdArgs []string,errMsg string) {
 		return
 	}
 	if output != nil || len(output) == 0 {
-		fmt.Printf("%s", output)
+		fmt.Printf("Output:\n%s\n", output)
 	}
 }
 
