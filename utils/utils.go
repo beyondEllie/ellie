@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand/v2"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -35,4 +36,16 @@ func IsEven(num int) bool {
 		return true
 	}
 	return false
+}
+
+func RunCommand(cmdArgs []string) {
+	cmd := exec.Command(cmdArgs[0], cmdArgs[1:]...)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if output != nil || len(output) == 0 {
+		fmt.Printf("%s", output)
+	}
 }
