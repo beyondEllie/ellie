@@ -170,7 +170,10 @@ func controlService(service, action string) error {
 }
 
 func OpenExplorer() {
-	//TODO:Will check the OS and open the file explorer
+	if runtime.GOOS != "linux"{
+		fmt.Println("Open Explorer functinality is only supported on Linux for now.")
+		return
+	}
 	cmd := exec.Command("xdg-open", ".")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
