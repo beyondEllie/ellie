@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 )
 
 func Run(args []string) {
@@ -181,4 +182,8 @@ func OpenExplorer() {
 
 func Play(args []string) {
 	//TODO:Will check the OS
+	if runtime.GOOS != "linux"{
+		fmt.Println("Play functinality is only supported on Linux for now.")
+		return
+	}
 }
