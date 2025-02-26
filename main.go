@@ -5,7 +5,6 @@ import (
 	"os"
 	"time"
 
-	markdown "github.com/MichaelMure/go-term-markdown"
 	"github.com/joho/godotenv"
 	actions "github.com/tacheraSasi/ellie/action"
 )
@@ -85,21 +84,22 @@ var (
 				"pull":   {Handler: func(_ []string) { actions.GitPull() }},
 			},
 		},
-		"start":    createServiceCommand("start"),
-		"stop":     createServiceCommand("stop"),
-		"restart":  createServiceCommand("restart"),
-		"--help":   {Handler: showHelp},
+		"start":     createServiceCommand("start"),
+		"stop":      createServiceCommand("stop"),
+		"restart":   createServiceCommand("restart"),
+		"--help":    {Handler: showHelp},
 		"--version": {Handler: func(_ []string) { fmt.Println("Ellie CLI Version:", VERSION) }},
 	}
 )
 
 func main() {
-	_ = godotenv.Load(configPath) 
+	_ = godotenv.Load(configPath)
 
 	if len(os.Args) < 2 {
 		actions.Chat(getEnv("OPENAI_API_KEY"))
 		return
 	}
+	fmt.Println(len(os.Args), os.Args)
 
 	handleCommand(os.Args[1:])
 }
@@ -126,7 +126,7 @@ func handleCommand(args []string) {
 		return
 	}
 
-	if len(args) <= cmd.MinArgs {
+	if len(args)-1 < cmd.MinArgs {
 		fmt.Printf("Invalid usage: %s\n%s\n", cmdName, cmd.Usage)
 		return
 	}
@@ -259,9 +259,4 @@ Examples:
   ellie play video.mp4
 `
 	fmt.Println(helpText)
-}
-
-func renderMd(content string) {
-	result := markdown.Render(content, 80, 6)
-	fmt.Println(string(result))
 }
