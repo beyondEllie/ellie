@@ -5,7 +5,6 @@ import (
 	"os"
 	"time"
 
-	markdown "github.com/MichaelMure/go-term-markdown"
 	"github.com/joho/godotenv"
 	actions "github.com/tacheraSasi/ellie/action"
 )
@@ -35,7 +34,7 @@ var (
 			Handler: func(_ []string) { actions.OpenExplorer() },
 		},
 		"play": {
-			MinArgs: 2,
+			MinArgs: 1,
 			Usage:   "play <media>",
 			PreHook: func() { fmt.Println("Using the mpv player") },
 			Handler: actions.Play,
@@ -49,30 +48,30 @@ var (
 			Handler: func(_ []string) { actions.SysInfo() },
 		},
 		"install": {
-			MinArgs: 2,
+			MinArgs: 1,
 			Usage:   "install <package>",
-			Handler: func(a []string) { actions.InstallPackage(a[2]) },
+			Handler: func(a []string) { actions.InstallPackage(a[1]) },
 		},
 		"update": {
 			Handler: func(_ []string) { actions.UpdatePackages() },
 		},
 		"list": {
-			MinArgs: 2,
+			MinArgs: 1,
 			Usage:   "list <directory>",
-			Handler: func(a []string) { actions.ListFiles(a[2]) },
+			Handler: func(a []string) { actions.ListFiles(a[1]) },
 		},
 		"create-file": {
-			MinArgs: 2,
+			MinArgs: 1,
 			Usage:   "create-file <path>",
-			Handler: func(a []string) { actions.CreateFile(a[2]) },
+			Handler: func(a []string) { actions.CreateFile(a[1]) },
 		},
 		"network-status": {
 			Handler: func(_ []string) { actions.NetworkStatus() },
 		},
 		"connect-wifi": {
-			MinArgs: 3,
+			MinArgs: 2,
 			Usage:   "connect-wifi <SSID> <password>",
-			Handler: func(a []string) { actions.ConnectWiFi(a[2], a[3]) },
+			Handler: func(a []string) { actions.ConnectWiFi(a[1], a[2]) },
 		},
 		"greet": {
 			Handler: func(_ []string) { greetUser() },
@@ -85,16 +84,18 @@ var (
 				"pull":   {Handler: func(_ []string) { actions.GitPull() }},
 			},
 		},
-		"start":    createServiceCommand("start"),
-		"stop":     createServiceCommand("stop"),
-		"restart":  createServiceCommand("restart"),
-		"--help":   {Handler: showHelp},
+		"start":     createServiceCommand("start"),
+		"stop":      createServiceCommand("stop"),
+		"restart":   createServiceCommand("restart"),
+		"--help":    {Handler: showHelp},
 		"--version": {Handler: func(_ []string) { fmt.Println("Ellie CLI Version:", VERSION) }},
 	}
 )
 
 func main() {
-	_ = godotenv.Load(configPath) 
+	if err := godotenv.Load(configPath); err != nil {
+		fmt.Println("Warning: .env file could not be loaded.")
+	}
 
 	if len(os.Args) < 2 {
 		actions.Chat(getEnv("OPENAI_API_KEY"))
@@ -113,8 +114,8 @@ func handleCommand(args []string) {
 	cmdName := args[0]
 	cmd, exists := commandRegistry[cmdName]
 	if !exists {
-		actions.Chat(getEnv("OPENAI_API_KEY"))
-		return
+		fmt.Println("Unknown command:", cmdName)
+		os.Exit(1)
 	}
 
 	if cmd.PreHook != nil {
@@ -126,9 +127,9 @@ func handleCommand(args []string) {
 		return
 	}
 
-	if len(args) <= cmd.MinArgs {
+	if len(args)-1 < cmd.MinArgs {
 		fmt.Printf("Invalid usage: %s\n%s\n", cmdName, cmd.Usage)
-		return
+		os.Exit(1)
 	}
 
 	cmd.Handler(args)
@@ -138,13 +139,13 @@ func handleSubCommand(parentCmd Command, args []string) {
 	subCmdName := args[0]
 	subCmd, exists := parentCmd.SubCommands[subCmdName]
 	if !exists {
-		fmt.Printf("Unknown subcommand: %s\n", subCmdName)
-		return
+		fmt.Println("Unknown subcommand:", subCmdName)
+		os.Exit(1)
 	}
 
-	if len(args) <= subCmd.MinArgs {
+	if len(args)-1 < subCmd.MinArgs {
 		fmt.Printf("Invalid usage: %s\n%s\n", subCmdName, subCmd.Usage)
-		return
+		os.Exit(1)
 	}
 
 	if subCmd.PreHook != nil {
@@ -200,10 +201,11 @@ func handleService(action, service string) {
 }
 
 func getEnv(key string) string {
-	if value, exists := os.LookupEnv(key); exists {
-		return value
+	value, exists := os.LookupEnv(key)
+	if !exists {
+		return ""
 	}
-	return ""
+	return value
 }
 
 func greetUser() {
@@ -218,7 +220,7 @@ func greetUser() {
 }
 
 func showHelp(_ []string) {
-	helpText := `
+	fmt.Println(`
 Ellie CLI - AI-Powered System Management Tool
 
 Usage: ellie <command> [arguments]
@@ -236,32 +238,5 @@ Core Commands:
   create-file <path>    Create new files
   network-status        Show network information
   connect-wifi <creds>  Manage WiFi connections
-
-Service Management:
-  start    <service>    Start system services
-  stop     <service>    Stop system services
-  restart  <service>    Restart services
-
-Git Operations:
-  git status            Check repository status
-  git push              Push changes
-  git commit            Commit changes
-  git pull              Fetch and merge
-
-Miscellaneous:
-  --help                Show this help message
-  --version             Display version information
-  greet                 Get time-based greeting
-
-Examples:
-  ellie start apache
-  ellie git status
-  ellie play video.mp4
-`
-	fmt.Println(helpText)
-}
-
-func renderMd(content string) {
-	result := markdown.Render(content, 80, 6)
-	fmt.Println(string(result))
+`)
 }

@@ -5,7 +5,11 @@ import (
 	"fmt"
 	"math/rand/v2"
 	"os"
+	"os/exec"
+	"runtime"
 	"strings"
+
+	"github.com/charmbracelet/glamour"
 )
 
 var Ads []string = []string{
@@ -31,8 +35,30 @@ func RandNum() int {
 }
 
 func IsEven(num int) bool {
-	if num%2 == 0 {
-		return true
+	return num%2 == 0
+}
+
+func RunCommand(cmdArgs []string,errMsg string) {
+	cmd := exec.Command(cmdArgs[0], cmdArgs[1:]...)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("%s %s\n", errMsg,err)
+		return
 	}
-	return false
+	if output != nil || len(output) == 0 {
+		fmt.Printf("Output:\n%s\n", output)
+	}
+}
+
+func IsLinux() bool {
+	return strings.Contains(runtime.GOOS, "linux")
+}
+
+func RenderMarkdown(input string) (string, error) {
+	// Rendering Markdown with glamour
+	rendered, err := glamour.Render(input, "dark") 
+	if err != nil {
+		return "", err
+	}
+	return rendered, nil
 }

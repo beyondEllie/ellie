@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
+
+	"github.com/tacheraSasi/ellie/utils"
 )
 
 func Run(args []string) {
@@ -169,7 +172,10 @@ func controlService(service, action string) error {
 }
 
 func OpenExplorer() {
-	//TODO:Will check the OS and open the file explorer
+	if runtime.GOOS != "linux"{
+		fmt.Println("Open Explorer functinality is only supported on Linux for now.")
+		return
+	}
 	cmd := exec.Command("xdg-open", ".")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -180,5 +186,14 @@ func OpenExplorer() {
 }
 
 func Play(args []string) {
-	//TODO:Will check the OS
+	if runtime.GOOS != "linux"{
+		fmt.Println("Play functinality is only supported on Linux for now.")
+		return
+	}
+
+	// fmt.Println(args) //For debugging
+	command := []string{"mpv",args[1]}//TODO: check if mpv is installed
+	//TODO:Will create a custom way of playing files in the future
+	fmt.Println("Playing file...")
+	utils.RunCommand(command,"Error playing the file:")
 }
