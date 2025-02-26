@@ -6,11 +6,10 @@ import (
 	"os"
 
 	"github.com/google/generative-ai-go/genai"
-	actions "github.com/tacheraSasi/ellie/action"
 	"google.golang.org/api/option"
 )
 
-func geminiChat(prompt string) {
+func GeminiChat(prompt string) genai.GenerateContentResponse {
 	ctx := context.Background()
 	client, err := genai.NewClient(ctx, option.WithAPIKey(os.Getenv("GEMINI_API_KEY")))
 	if err != nil {
@@ -24,7 +23,7 @@ func geminiChat(prompt string) {
 		log.Fatal(err)
 	}
 
-	actions.RenderMarkdown(resp)
+	return *resp
 
 
 }
