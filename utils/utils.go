@@ -38,11 +38,11 @@ func IsEven(num int) bool {
 	return false
 }
 
-func RunCommand(cmdArgs []string) {
+func RunCommand(cmdArgs []string,errMsg string) {
 	cmd := exec.Command(cmdArgs[0], cmdArgs[1:]...)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("Error: %s\n", err)
+		fmt.Printf("%s %s\n", errMsg,err)
 		return
 	}
 	if output != nil || len(output) == 0 {
