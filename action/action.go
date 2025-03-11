@@ -199,6 +199,7 @@ func Play(args []string) {
 }
 
 func Focus(args []string){
+	fmt.Println(args)
 	cmd := exec.Command(args[1], args[2:]...)
 	output,err := cmd.CombinedOutput()
 	if err != nil{
