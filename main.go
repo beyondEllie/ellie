@@ -27,6 +27,10 @@ var (
 		"run": {
 			Handler: actions.Run,
 		},
+		"focus":{
+			PreHook: func() { fmt.Println("Using focus") },
+			Handler: func(a []string) { actions.Focus(a) },
+		},
 		"pwd": {
 			Handler: func(_ []string) { actions.Pwd() },
 		},
