@@ -200,7 +200,12 @@ func Play(args []string) {
 
 func Focus(args []string){
 	fmt.Println(args)
-	cmd := exec.Command(args[1], args[2:]...)
+	var cmd *exec.Cmd;
+	if len(args) < 2{
+		cmd = exec.Command(args[1])
+	}else{
+		cmd = exec.Command(args[0], args[1:]...)
+	}
 	output,err := cmd.CombinedOutput()
 	if err != nil{
 		fmt.Println("Error: ",err)
