@@ -202,7 +202,7 @@ func Focus(args []string){
 	fmt.Println(args)
 	var cmd *exec.Cmd;
 	if len(args) < 2{
-		cmd = exec.Command(args[1])
+		cmd = exec.Command(args[0])
 	}else{
 		cmd = exec.Command(args[0], args[1:]...)
 	}
