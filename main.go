@@ -11,7 +11,7 @@ import (
 
 const (
 	VERSION    = "0.0.3"
-	configPath = ".env"
+	configPath = "/home/tach/tach/go/ellie/.env"
 )
 
 type Command struct {

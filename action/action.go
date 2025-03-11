@@ -197,3 +197,7 @@ func Play(args []string) {
 	fmt.Println("Playing file...")
 	utils.RunCommand(command,"Error playing the file:")
 }
+
+func Focus(arg []string){
+
+}
