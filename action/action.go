@@ -197,3 +197,22 @@ func Play(args []string) {
 	fmt.Println("Playing file...")
 	utils.RunCommand(command,"Error playing the file:")
 }
+
+func Focus(args []string){//Doesnot work properly
+	fmt.Println(args)
+	var cmd *exec.Cmd;
+	if len(args) < 2{
+		cmd = exec.Command(args[0])
+	}else{
+		cmd = exec.Command(args[0], args[1:]...)
+	}
+	output,err := cmd.CombinedOutput()
+	if err != nil{
+		fmt.Println("Error: ",err)
+		return
+	}
+	if output != nil || len(output) == 0{
+		fmt.Printf("%s",output)
+	}
+
+}

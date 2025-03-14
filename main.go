@@ -11,9 +11,10 @@ import (
 
 const (
 	VERSION    = "0.0.3"
-	configPath = ".env"
+	configPath = "/home/tach/tach/go/ellie/.env" // Consider making this configurable.
 )
 
+// Command holds CLI command details.
 type Command struct {
 	MinArgs     int
 	Usage       string
@@ -22,81 +23,94 @@ type Command struct {
 	PreHook     func()
 }
 
-var (
-	commandRegistry = map[string]Command{
-		"run": {
-			Handler: actions.Run,
+var commandRegistry = map[string]Command{
+	"run": {
+		Handler: actions.Run,
+	},
+	"focus": {
+		PreHook: func() { fmt.Println("Using focus") },
+		Handler: actions.Focus,
+	},
+	"pwd": {
+		Handler: func(_ []string) {actions.Pwd()},
+	},
+	"open-explorer": {
+		Handler: func(_ []string) {actions.OpenExplorer()},
+	},
+	"play": {
+		MinArgs: 1,
+		Usage:   "play <media>",
+		PreHook: func() { fmt.Println("Using the mpv player") },
+		Handler: actions.Play,
+	},
+	"setup-git": {
+		Handler: func(args []string) {
+			actions.GitSetup(getEnv("PAT"), getEnv("USERNAME"))
 		},
-		"pwd": {
-			Handler: func(_ []string) { actions.Pwd() },
+	},
+	"sysinfo": {
+		Handler: func(_ []string) {
+			actions.SysInfo()
 		},
-		"open-explorer": {
-			Handler: func(_ []string) { actions.OpenExplorer() },
+	},
+	"install": {
+		MinArgs: 1,
+		Usage:   "install <package>",
+		Handler: func(args []string) { actions.InstallPackage(args[1]) },
+	},
+	"update": {
+		Handler: func(_ []string) {
+			actions.UpdatePackages()
 		},
-		"play": {
-			MinArgs: 1,
-			Usage:   "play <media>",
-			PreHook: func() { fmt.Println("Using the mpv player") },
-			Handler: actions.Play,
+	},
+	"list": {
+		MinArgs: 1,
+		Usage:   "list <directory>",
+		Handler: func(args []string) { actions.ListFiles(args[1]) },
+	},
+	"create-file": {
+		MinArgs: 1,
+		Usage:   "create-file <path>",
+		Handler: func(args []string) { actions.CreateFile(args[1]) },
+	},
+	"network-status": {
+		Handler: func(_ []string) {actions.NetworkStatus()},
+	},
+	"connect-wifi": {
+		MinArgs: 2,
+		Usage:   "connect-wifi <SSID> <password>",
+		Handler: func(args []string) { actions.ConnectWiFi(args[1], args[2]) },
+	},
+	"greet": {
+		Handler: greetUser,
+	},
+	"git": {
+		SubCommands: map[string]Command{
+			"status": {Handler: func(_ []string) {actions.GitStatus()}},
+			"push":   {Handler: func(_ []string) {actions.GitPush()}},
+			// Use our production-ready Conventional Commit implementation.
+			"commit": {Handler: func(args []string) { actions.GitConventionalCommit() }},
+			"pull":   {Handler: func(_ []string) {actions.GitPull()}},
 		},
-		"setup-git": {
-			Handler: func(_ []string) {
-				actions.GitSetup(getEnv("PAT"), getEnv("USERNAME"))
-			},
+	},
+	"start":   createServiceCommand("start"),
+	"stop":    createServiceCommand("stop"),
+	"restart": createServiceCommand("restart"),
+	"--help":  {Handler: showHelp},
+	"--version": {
+		Handler: func(args []string) {
+			fmt.Println("Ellie CLI Version:", VERSION)
 		},
-		"sysinfo": {
-			Handler: func(_ []string) { actions.SysInfo() },
-		},
-		"install": {
-			MinArgs: 1,
-			Usage:   "install <package>",
-			Handler: func(a []string) { actions.InstallPackage(a[1]) },
-		},
-		"update": {
-			Handler: func(_ []string) { actions.UpdatePackages() },
-		},
-		"list": {
-			MinArgs: 1,
-			Usage:   "list <directory>",
-			Handler: func(a []string) { actions.ListFiles(a[1]) },
-		},
-		"create-file": {
-			MinArgs: 1,
-			Usage:   "create-file <path>",
-			Handler: func(a []string) { actions.CreateFile(a[1]) },
-		},
-		"network-status": {
-			Handler: func(_ []string) { actions.NetworkStatus() },
-		},
-		"connect-wifi": {
-			MinArgs: 2,
-			Usage:   "connect-wifi <SSID> <password>",
-			Handler: func(a []string) { actions.ConnectWiFi(a[1], a[2]) },
-		},
-		"greet": {
-			Handler: func(_ []string) { greetUser() },
-		},
-		"git": {
-			SubCommands: map[string]Command{
-				"status": {Handler: func(_ []string) { actions.GitStatus() }},
-				"push":   {Handler: func(_ []string) { actions.GitPush() }},
-				"commit": {Handler: func(_ []string) { actions.GitCommitCmd() }},
-				"pull":   {Handler: func(_ []string) { actions.GitPull() }},
-			},
-		},
-		"start":     createServiceCommand("start"),
-		"stop":      createServiceCommand("stop"),
-		"restart":   createServiceCommand("restart"),
-		"--help":    {Handler: showHelp},
-		"--version": {Handler: func(_ []string) { fmt.Println("Ellie CLI Version:", VERSION) }},
-	}
-)
+	},
+}
 
 func main() {
+	// Load environment variables.
 	if err := godotenv.Load(configPath); err != nil {
 		fmt.Println("Warning: .env file could not be loaded.")
 	}
 
+	// If no command is provided, fallback to a default interactive mode.
 	if len(os.Args) < 2 {
 		actions.Chat(getEnv("OPENAI_API_KEY"))
 		return
@@ -158,9 +172,9 @@ func handleSubCommand(parentCmd Command, args []string) {
 func createServiceCommand(action string) Command {
 	return Command{
 		SubCommands: map[string]Command{
-			"apache": {Handler: func(_ []string) { handleService(action, "apache") }},
-			"mysql":  {Handler: func(_ []string) { handleService(action, "mysql") }},
-			"all":    {Handler: func(_ []string) { handleService(action, "all") }},
+			"apache": {Handler: func(args []string) { handleService(action, "apache") }},
+			"mysql":  {Handler: func(args []string) { handleService(action, "mysql") }},
+			"all":    {Handler: func(args []string) { handleService(action, "all") }},
 		},
 	}
 }
@@ -208,18 +222,18 @@ func getEnv(key string) string {
 	return value
 }
 
-func greetUser() {
-	switch hour := time.Now().Hour(); {
-	case hour < 12:
+func greetUser(args []string) {
+	hour := time.Now().Hour()
+	if hour < 12 {
 		fmt.Println("Good morning!")
-	case hour < 18:
+	} else if hour < 18 {
 		fmt.Println("Good afternoon!")
-	default:
+	} else {
 		fmt.Println("Good evening!")
 	}
 }
 
-func showHelp(_ []string) {
+func showHelp(args []string) {
 	fmt.Println(`
 Ellie CLI - AI-Powered System Management Tool
 
@@ -238,5 +252,10 @@ Core Commands:
   create-file <path>    Create new files
   network-status        Show network information
   connect-wifi <creds>  Manage WiFi connections
+  git status            Show Git status
+  git push              Push commits
+  git commit            Create a Conventional Commit and push
+  git pull              Pull latest changes
+  start, stop, restart  Manage services (apache, mysql, all)
 `)
 }
