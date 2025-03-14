@@ -31,7 +31,7 @@ func GitConventionalCommit() {
 		}
 		fmt.Println("Invalid commit type. Please choose a valid type.")
 	}
-
+   
 	// Get optional scope.
 	fmt.Print("Enter commit scope (optional): ")
 	scope, _ := reader.ReadString('\n')
