@@ -11,7 +11,7 @@ import (
 )
 
 // GitConventionalCommit interactively builds a commit message per the Conventional Commits spec
-// (see https://www.conventionalcommits.org/en/v1.0.0/) and executes the git commands.
+// (see https://www.conventionalcommits.org/en/v1.0.0/).
 func GitConventionalCommit() {
 	reader := bufio.NewReader(os.Stdin)
 	allowedTypes := []string{"feat", "fix", "docs", "style", "refactor", "perf", "test", "chore", "revert"}
