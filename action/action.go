@@ -5,33 +5,44 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 
 	"github.com/tacheraSasi/ellie/utils"
 )
 
+// Run executes system commands cross-platform
 func Run(args []string) {
-	cmd := exec.Command(args[2], args[3:]...)
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
+	if len(args) < 2 {
+		fmt.Println("Please specify a command to run")
 		return
 	}
-	if output != nil || len(output) == 0 {
-		fmt.Printf("%s", output)
+
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("pwsh", "-Command", strings.Join(args[2:], " "))
+	default:
+		cmd = exec.Command(args[2], args[3:]...)
 	}
 
-}
-func Pwd() {
-	cmd := exec.Command("pwd")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("Error: %s\n", err)
+		fmt.Printf("Error: %v\n", err)
+		return
 	}
-
-	if output != nil || len(output) == 0 {
-		fmt.Printf("Output: %s", output)
-	}
+	fmt.Printf("%s\n", output)
 }
+
+// Pwd prints working directory cross-platform
+func Pwd() {
+	dir, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		return
+	}
+	fmt.Println(dir)
+}
+
 
 func GitSetup(pat, username string) {
 	cmd := exec.Command("git", "status")
