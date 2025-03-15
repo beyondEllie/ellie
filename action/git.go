@@ -23,7 +23,7 @@ var (
 	successStyle = color.New(color.FgHiGreen, color.Bold)
 )
 
-// GitConventionalCommit guides user through creating a conventional commit
+// GitConventionalCommit 
 func GitConventionalCommit() {
 	reader := bufio.NewReader(os.Stdin)
 
