@@ -171,18 +171,21 @@ func controlService(service, action string) error {
 	return nil
 }
 
+// OpenExplorer opens file manager cross-platform
 func OpenExplorer() {
-	if runtime.GOOS != "linux"{
-		fmt.Println("Open Explorer functinality is only supported on Linux for now.")
-		return
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("explorer", ".")
+	case "darwin":
+		cmd = exec.Command("open", ".")
+	default:
+		cmd = exec.Command("xdg-open", ".")
 	}
-	cmd := exec.Command("xdg-open", ".")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println("Error opening file explorer:", err)
-		return
+
+	if err := cmd.Start(); err != nil {
+		fmt.Printf("Error opening explorer: %v\n", err)
 	}
-	fmt.Printf("File explorer opened successfully:\n%s\n", string(output))
 }
 
 func Play(args []string) {
