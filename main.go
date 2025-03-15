@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	VERSION    = "0.0.3"
-	configPath = "/home/tach/tach/go/ellie/.env" // Consider making this configurable.
+	VERSION    = "0.0.5"
+	configPath = "/home/tach/tach/go/ellie/.env" //TODO: Will make this configurable.
 )
 
 // Command holds CLI command details.
@@ -88,7 +88,7 @@ var commandRegistry = map[string]Command{
 		SubCommands: map[string]Command{
 			"status": {Handler: func(_ []string) {actions.GitStatus()}},
 			"push":   {Handler: func(_ []string) {actions.GitPush()}},
-			// Use our production-ready Conventional Commit implementation.
+			// Using production-ready Conventional Commit implementation.
 			"commit": {Handler: func(args []string) { actions.GitConventionalCommit() }},
 			"pull":   {Handler: func(_ []string) {actions.GitPull()}},
 		},
@@ -98,6 +98,11 @@ var commandRegistry = map[string]Command{
 	"restart": createServiceCommand("restart"),
 	"--help":  {Handler: showHelp},
 	"--version": {
+		Handler: func(args []string) {
+			fmt.Println("Ellie CLI Version:", VERSION)
+		},
+	},
+	"--v": {
 		Handler: func(args []string) {
 			fmt.Println("Ellie CLI Version:", VERSION)
 		},

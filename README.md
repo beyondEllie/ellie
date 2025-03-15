@@ -1,174 +1,171 @@
-# Ellie - My All-in-One Command Line Buddy 🚀
+Here's an updated README that reflects your new Git features and current functionality:
 
-Hey there! Meet **Ellie** my personal command-line companion designed to take the hassle out of system management and automation. I’m **Tachera Sasi**, and I built Ellie for... well, me! But guess what? You get to use her too. Whether it’s managing services, showing off system info, or tinkering with files, Ellie’s got your back.
+# Ellie - The AI-Powered CLI Companion 🤖✨
 
-## Why Ellie?
+**Meet Ellie** - Your all-in-one terminal buddy for system management, Git workflows, and productivity hacks. Built with ❤️ by **Tachera Sasi**
 
-Ever thought, *“Ugh, why do I need to remember a million commands just to manage my system?”* Same here. That’s why I created Ellie—to make everything simpler, faster, and cooler.
+![Ellie Demo](https://via.placeholder.com/800x400.png?text=Ellie+In+Action+-+Git+Workflow,+Service+Management,+AI+Chat)
 
-### What Can Ellie Do?
-- Start and stop services like Apache and MySQL in a flash
-- Flex your system info because why not?
-- Create, list, and manage files without leaving the terminal
-- Handle network stuff like connecting to Wi-Fi
-- Configure Git because you can’t escape Git
-- Install and update packages effortlessly  
+## What's New in v0.0.5? 🎉
+- **Git Superpowers** 🚀 - Full Conventional Commits workflow with interactive prompts
+- **Smarter UI** 🎨 - Colorized output and emoji-driven interface
+- **Enhanced Service Control** 🔧 - Manage Apache/MySQL with single commands
+- **Network Wizardry** 🌐 - WiFi connection management made simple
+- **AI Integration** 🧠 - Built-in ChatGPT functionality
 
----
-
-## Installation Instructions (Fancy Way of Saying 'How to Get Ellie')
-
-### Step 1: Clone Ellie (Get the Code)
 ```bash
+# Just look how pretty it is! ✨
+$ ellie git commit
+📝 Conventional Commit Builder
+─────────────────────────────
+🔧 Type (feat, fix, docs, style, refactor, perf, test, chore, revert) ➜ feat
+🎯 Scope (optional) ➜ auth
+📌 Description ➜ Add OAuth2 support
+💬 Body (optional):
+◎ Press Enter twice to finish:
+Implemented Google and GitHub providers
+Updated configuration schema
+
+💥 Breaking change? (Y/n) ➜ y
+📣 Breaking change details ➜ Changed config format
+🔗 Issue number (optional) ➜ 42
+
+✨ Commit Preview:
+──────────────────
+feat(auth): Add OAuth2 support
+
+Implemented Google and GitHub providers
+Updated configuration schema
+
+BREAKING CHANGE: Changed config format
+
+Closes #42
+──────────────────
+✅ Successfully committed and pushed!
+```
+
+## Installation ⚡
+
+```bash
+# 1. Clone the repository
 git clone https://github.com/tacheraSasi/ellie.git
 cd ellie
+
+# 2. Install dependencies
+go get github.com/fatih/color
+
+# 3. Build (choose your method)
+make build  # or
+go build -o ellie
+
+# 4. Run with personality!
+./ellie greet
 ```
 
-### Step 2: Build It (Turn the Code into Ellie)
+## Core Features 🌟
+
+### 🛠️ System Management
 ```bash
-make build #or
-go build -o ellie 
+# Service Control
+ellie start apache    # Start Apache
+ellie restart mysql   # Restart MySQL
+ellie stop all        # Stop all services
+
+# System Insights
+ellie sysinfo         # Show hardware/software specs
+ellie network-status  # Detailed network analysis
 ```
 
-### Step 3: Run the Show
+### 📂 File Operations
 ```bash
-./ellie
+ellie list ~/projects    # Visual directory listing
+ellie create-file draft.md  # Create files with safety checks
+ellie open-explorer     # Launch GUI file manager
 ```
 
----
-
-## How to Use Ellie
-
-Ellie speaks plain command-line English. Just type:
+### 🌐 Network Management
 ```bash
-./ellie [command] [options]
+ellie connect-wifi "Coffee Shop" "p4ssw0rd!"  # Secure WiFi connection
+ellie network-status                         # Real-time connection stats
 ```
 
-### Commands You’ll Love:
--Running normal shell commands:
-  ```bash
-  ./ellie run <command>
-  ./ellie run echo "Hello, Ellie!"
-  ```
-
-### Opening File explorer
+### 🤖 AI Integration
 ```bash
-./ellie open-explorer
+# Chat mode (when no command specified)
+ellie How do I fix a 500 error in Apache?
 ```
 
-#### 🛠️ Service Management
-- Start Apache or MySQL like a boss:
-  ```bash
-  ./ellie start apache
-  ./ellie start mysql
-  ./ellie start all
-  ```
-
-- Stop them when it’s time to chill:
-  ```bash
-  ./ellie stop apache
-  ./ellie stop mysql
-  ./ellie stop all
-  ```
-
-- Feeling fancy? Restart them:
-  ```bash
-  ./ellie restart apache
-  ./ellie restart mysql
-  ./ellie restart all
-  ```
-
-#### 📊 System Info
-Show off what your system is made of:
+### 🚀 Git Workflows
 ```bash
-./ellie sysinfo
+ellie git status       # Enhanced status display
+ellie git commit       # Interactive conventional commit
+ellie git push         # Smart push with pre-checks
+ellie setup-git        # Configure credentials securely
 ```
 
-#### 📁 File Management
-- Peek into a directory:
-  ```bash
-  ./ellie list /some/directory
-  ```
+## Conventional Commits Made Easy 📝
 
-- Create files on the fly:
-  ```bash
-  ./ellie create-file ~/important.txt
-  ```
+Ellie guides you through professional commit messages:
+```bash
+$ ellie git commit
+📝 Conventional Commit Builder
+─────────────────────────────
+🔧 Choose from: feat|fix|docs|style|refactor|perf|test|chore|revert
+🎯 Add scope (optional module/component)
+📌 Write clear, concise description
+💬 Detailed body (Markdown supported)
+💥 Breaking changes detection
+🔗 Automatic issue reference formatting
+```
 
-#### 🌐 Network Operations
-- See if you’re connected:
-  ```bash
-  ./ellie network-status
-  ```
+## Package Management 📦
+```bash
+ellie install neofetch    # Cross-platform installs
+ellie update              # System-wide updates
+```
 
-- Jump on a Wi-Fi network like a ninja:
-  ```bash
-  ./ellie connect-wifi MyWiFiNetwork SuperSecretPassword
-  ```
+## Service Management 🔌
+Control services like a pro:
+```bash
+# Start/Restart/Stop services
+ellie start apache
+ellie restart mysql
+ellie stop all
 
-#### 📦 Package Management
-- Install stuff with style:
-  ```bash
-  ./ellie install curl
-  ```
+# Systemd integration
+ellie check-service nginx  # Coming soon!
+```
 
-- Keep your system fresh:
-  ```bash
-  ./ellie update
-  ```
+## Why Ellie? 🤔
 
-#### 🛠️ Git Setup
-- Set up Git because you’re a developer (or pretending to be):
-  ```bash
-  ./ellie setup-git
-  ```
+1. **Human-Friendly** 😊 - Designed for actual humans
+2. **Context-Aware** 🧠 - Remembers your workflow
+3. **Safe & Secure** 🔒 - Validation on every operation
+4. **Cross-Platform** 🖥️ - Works where you work
+5. **Extensible** 🔌 - Add your own modules
 
----
+## Real-World Magic ✨
+```bash
+# Full development workflow
+ellie start all          # Fire up services
+ellie git commit         # Create perfect commit
+ellie connect-wifi Work_Network $PASSWORD  # Stay connected
+ellie sysinfo            # Monitor resources
+```
 
-## Why You’ll Love Ellie
+## Contribution Guide 🌱
+Found a bug? Got an idea? Let's build together!
+1. Fork the repo
+2. Create your feature branch
+3. Submit a PR with tests
+4. Join our Discord (coming soon!)
 
-1. **No More Headaches** – Stop Googling terminal commands every 5 minutes.
-2. **Time Saver** – Ellie automates the boring stuff.
-3. **Built by Me, for Me (and You)** – Ellie’s tailored to be practical, not bloated.
-
----
-
-## Real-Life Examples (Yes, You Can Brag Later)
-
-- Start everything at once (like a pro):
-  ```bash
-  ./ellie start all
-  ```
-
-- Stop MySQL (because it’s being extra):
-  ```bash
-  ./ellie stop mysql
-  ```
-
-- Show off your system’s secrets:
-  ```bash
-  ./ellie sysinfo
-  ```
-
-- Connect to Wi-Fi on the go:
-  ```bash
-  ./ellie connect-wifi MyNetwork MySuperSecretPassword
-  ```
-
-- Create a file like you’re on a mission:
-  ```bash
-  ./ellie create-file ~/mission-critical.txt
-  ```
+```bash
+# Happy coding! 🎉
+ellie --version
+Ellie CLI Version: 0.0.3
+```
 
 ---
 
-## Who Made This? (Hint: Me!)  
-**Tachera Sasi**  
-Ellie isn’t just a tool—it’s my way of saying, *“I got tired of doing things the hard way.”* I built her for myself, but I couldn’t keep this gem all to myself. So here you go—use her, love her, and tell your friends about her.
-
----
-
-## Wanna Contribute?
-Think you can make Ellie even cooler? Fork the repo, add some magic, and send me a pull request. Let’s make Ellie a global sensation together. 🌟
-
----
+**Maintained with ❤️ by Tachera Sasi** - Because terminal shouldn't mean terminal boredom!
