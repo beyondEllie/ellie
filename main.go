@@ -88,7 +88,7 @@ var commandRegistry = map[string]Command{
 		SubCommands: map[string]Command{
 			"status": {Handler: func(_ []string) {actions.GitStatus()}},
 			"push":   {Handler: func(_ []string) {actions.GitPush()}},
-			// Use our production-ready Conventional Commit implementation.
+			// Using production-ready Conventional Commit implementation.
 			"commit": {Handler: func(args []string) { actions.GitConventionalCommit() }},
 			"pull":   {Handler: func(_ []string) {actions.GitPull()}},
 		},
