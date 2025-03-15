@@ -50,8 +50,13 @@ func GitConventionalCommit() {
 	fmt.Print("Enter commit body (optional): ")
 	body, _ := reader.ReadString('\n')
 	body = strings.TrimSpace(body)
+	
+	// Optional issue reference.
+	fmt.Print("Enter issue reference (optional): ")
+	issueRef, _ := reader.ReadString('\n')
+	issueRef = strings.TrimSpace(issueRef)
 
-	// Ask for breaking change.
+	// breaking change.
 	fmt.Print("Is this a breaking change? (y/n): ")
 	breakingInput, _ := reader.ReadString('\n')
 	breakingInput = strings.TrimSpace(breakingInput)
