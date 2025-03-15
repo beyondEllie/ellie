@@ -104,7 +104,7 @@ func getIssueReference(reader *bufio.Reader) string {
 	if input == "" {
 		return ""
 	}
-	return fmt.Sprintf("Closes #%s", input)
+	return fmt.Sprintf("Refs #%s", input)
 }
 
 func getTrailers(reader *bufio.Reader) []string {
