@@ -46,35 +46,7 @@ func GitSetup(pat, username string) {
 	}
 }
 
-func SysInfo() {
-	cmd := exec.Command("sh", "-c", "top -bn1 | grep load && free -m && df -h")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println("Error fetching system info:", err)
-		return
-	}
-	fmt.Printf("System Info:\n%s\n", string(output))
-}
 
-func InstallPackage(pkg string) {
-	cmd := exec.Command("sudo", "apt-get", "install", "-y", pkg)
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Printf("Error installing %s: %s\n", pkg, err)
-		return
-	}
-	fmt.Printf("Installed %s successfully:\n%s\n", pkg, string(output))
-}
-
-func UpdatePackages() {
-	cmd := exec.Command("sudo", "apt-get", "update")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println("Error updating packages:", err)
-		return
-	}
-	fmt.Printf("Packages updated successfully:\n%s\n", string(output))
-}
 
 func ListFiles(dir string) {
 	files, err := os.ReadDir(dir)
@@ -156,18 +128,85 @@ func StopAll() {
 	StopMysql()
 }
 
-func controlService(service, action string) error {
-	cmd := exec.Command("pkexec", "systemctl", action, service) //NOTE:pkexec  for a window popup
+// SysInfo gets system information cross-platform
+func SysInfo() {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("pwsh", "-Command", `
+			Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture | Format-List;
+			Get-ComputerInfo -Property 'OsTotalVisibleMemorySize', 'OsFreePhysicalMemory' | Format-List`)
+	case "darwin":
+		cmd = exec.Command("sh", "-c", `top -l 1 | head -n 10 && sysctl -n hw.memsize && df -h`)
+	default: // Linux
+		cmd = exec.Command("sh", "-c", `top -bn1 | grep load && free -m && df -h`)
+	}
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return err
+		fmt.Printf("Error getting system info: %v\n", err)
+		return
+	}
+	fmt.Printf("System Info:\n%s\n", output)
+}
+
+// InstallPackage installs packages cross-platform
+func InstallPackage(pkg string) {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("winget", "install", pkg)
+	case "darwin":
+		cmd = exec.Command("brew", "install", pkg)
+	default:
+		cmd = exec.Command("sudo", "apt-get", "install", "-y", pkg)
 	}
 
-	if output != nil || len(output) == 0 {
-		fmt.Printf("Output:\n%s\n", output)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("Install error: %v\n", err)
+		return
 	}
+	fmt.Printf("Installed %s:\n%s\n", pkg, output)
+}
+
+// UpdatePackages updates system packages cross-platform
+func UpdatePackages() {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("winget", "update")
+	case "darwin":
+		cmd = exec.Command("brew", "update")
+	default:
+		cmd = exec.Command("sudo", "apt-get", "update")
+	}
+
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("Update error: %v\n", err)
+		return
+	}
+	fmt.Printf("Updates:\n%s\n", output)
+}
+
+// Service control functions
+func controlService(service, action string) error {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("net", action, service)
+	case "darwin":
+		cmd = exec.Command("launchctl", action, service)
+	default:
+		cmd = exec.Command("sudo", "systemctl", action, service)
+	}
+
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("service control failed: %v\nOutput: %s", err, output)
+	}
+	fmt.Printf("Service %s %sed\nOutput: %s\n", service, action, output)
 	return nil
 }
 
