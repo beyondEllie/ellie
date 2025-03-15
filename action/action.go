@@ -5,33 +5,44 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 
 	"github.com/tacheraSasi/ellie/utils"
 )
 
+// Run executes system commands cross-platform
 func Run(args []string) {
-	cmd := exec.Command(args[2], args[3:]...)
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
+	if len(args) < 2 {
+		fmt.Println("Please specify a command to run")
 		return
 	}
-	if output != nil || len(output) == 0 {
-		fmt.Printf("%s", output)
+
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("pwsh", "-Command", strings.Join(args[2:], " "))
+	default:
+		cmd = exec.Command(args[2], args[3:]...)
 	}
 
-}
-func Pwd() {
-	cmd := exec.Command("pwd")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("Error: %s\n", err)
+		fmt.Printf("Error: %v\n", err)
+		return
 	}
-
-	if output != nil || len(output) == 0 {
-		fmt.Printf("Output: %s", output)
-	}
+	fmt.Printf("%s\n", output)
 }
+
+// Pwd prints working directory cross-platform
+func Pwd() {
+	dir, err := os.Getwd()
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		return
+	}
+	fmt.Println(dir)
+}
+
 
 func GitSetup(pat, username string) {
 	cmd := exec.Command("git", "status")
@@ -46,35 +57,7 @@ func GitSetup(pat, username string) {
 	}
 }
 
-func SysInfo() {
-	cmd := exec.Command("sh", "-c", "top -bn1 | grep load && free -m && df -h")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println("Error fetching system info:", err)
-		return
-	}
-	fmt.Printf("System Info:\n%s\n", string(output))
-}
 
-func InstallPackage(pkg string) {
-	cmd := exec.Command("sudo", "apt-get", "install", "-y", pkg)
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Printf("Error installing %s: %s\n", pkg, err)
-		return
-	}
-	fmt.Printf("Installed %s successfully:\n%s\n", pkg, string(output))
-}
-
-func UpdatePackages() {
-	cmd := exec.Command("sudo", "apt-get", "update")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println("Error updating packages:", err)
-		return
-	}
-	fmt.Printf("Packages updated successfully:\n%s\n", string(output))
-}
 
 func ListFiles(dir string) {
 	files, err := os.ReadDir(dir)
@@ -156,33 +139,103 @@ func StopAll() {
 	StopMysql()
 }
 
-func controlService(service, action string) error {
-	cmd := exec.Command("pkexec", "systemctl", action, service) //NOTE:pkexec  for a window popup
+// SysInfo gets system information cross-platform
+func SysInfo() {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("pwsh", "-Command", `
+			Get-CimInstance Win32_OperatingSystem | Select-Object Caption, Version, OSArchitecture | Format-List;
+			Get-ComputerInfo -Property 'OsTotalVisibleMemorySize', 'OsFreePhysicalMemory' | Format-List`)
+	case "darwin":
+		cmd = exec.Command("sh", "-c", `top -l 1 | head -n 10 && sysctl -n hw.memsize && df -h`)
+	default: // Linux
+		cmd = exec.Command("sh", "-c", `top -bn1 | grep load && free -m && df -h`)
+	}
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return err
+		fmt.Printf("Error getting system info: %v\n", err)
+		return
+	}
+	fmt.Printf("System Info:\n%s\n", output)
+}
+
+// InstallPackage installs packages cross-platform
+func InstallPackage(pkg string) {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("winget", "install", pkg)
+	case "darwin":
+		cmd = exec.Command("brew", "install", pkg)
+	default:
+		cmd = exec.Command("sudo", "apt-get", "install", "-y", pkg)
 	}
 
-	if output != nil || len(output) == 0 {
-		fmt.Printf("Output:\n%s\n", output)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("Install error: %v\n", err)
+		return
 	}
+	fmt.Printf("Installed %s:\n%s\n", pkg, output)
+}
+
+// UpdatePackages updates system packages cross-platform
+func UpdatePackages() {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("winget", "update")
+	case "darwin":
+		cmd = exec.Command("brew", "update")
+	default:
+		cmd = exec.Command("sudo", "apt-get", "update")
+	}
+
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Printf("Update error: %v\n", err)
+		return
+	}
+	fmt.Printf("Updates:\n%s\n", output)
+}
+
+// Service control functions
+func controlService(service, action string) error {
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("net", action, service)
+	case "darwin":
+		cmd = exec.Command("launchctl", action, service)
+	default:
+		cmd = exec.Command("sudo", "systemctl", action, service)
+	}
+
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("service control failed: %v\nOutput: %s", err, output)
+	}
+	fmt.Printf("Service %s %sed\nOutput: %s\n", service, action, output)
 	return nil
 }
 
+// OpenExplorer opens file manager cross-platform
 func OpenExplorer() {
-	if runtime.GOOS != "linux"{
-		fmt.Println("Open Explorer functinality is only supported on Linux for now.")
-		return
+	var cmd *exec.Cmd
+	switch runtime.GOOS {
+	case "windows":
+		cmd = exec.Command("explorer", ".")
+	case "darwin":
+		cmd = exec.Command("open", ".")
+	default:
+		cmd = exec.Command("xdg-open", ".")
 	}
-	cmd := exec.Command("xdg-open", ".")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println("Error opening file explorer:", err)
-		return
+
+	if err := cmd.Start(); err != nil {
+		fmt.Printf("Error opening explorer: %v\n", err)
 	}
-	fmt.Printf("File explorer opened successfully:\n%s\n", string(output))
 }
 
 func Play(args []string) {
