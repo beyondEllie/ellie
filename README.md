@@ -1,10 +1,6 @@
-Here's an updated README that reflects your new Git features and current functionality:
-
 # Ellie - The AI-Powered CLI Companion 🤖✨
 
 **Meet Ellie** - Your all-in-one terminal buddy for system management, Git workflows, and productivity hacks. Built with ❤️ by **Tachera Sasi**
-
-![Ellie Demo](https://via.placeholder.com/800x400.png?text=Ellie+In+Action+-+Git+Workflow,+Service+Management,+AI+Chat)
 
 ## What's New in v0.0.5? 🎉
 - **Git Superpowers** 🚀 - Full Conventional Commits workflow with interactive prompts
