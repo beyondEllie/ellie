@@ -102,6 +102,11 @@ var commandRegistry = map[string]Command{
 			fmt.Println("Ellie CLI Version:", VERSION)
 		},
 	},
+	"--v": {
+		Handler: func(args []string) {
+			fmt.Println("Ellie CLI Version:", VERSION)
+		},
+	},
 }
 
 func main() {
