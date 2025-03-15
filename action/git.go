@@ -16,7 +16,7 @@ func GitConventionalCommit() {
 	reader := bufio.NewReader(os.Stdin)
 	allowedTypes := []string{"feat", "fix", "docs", "style", "refactor", "perf", "test", "chore", "revert"}
 
-	// Validate commit type.
+	// commit type Validation.
 	var commitType string
 	for {
 		fmt.Print("Enter commit type (feat, fix, docs, style, refactor, perf, test, chore, revert): ")
