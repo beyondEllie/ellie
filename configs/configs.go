@@ -9,73 +9,84 @@ import (
 	"github.com/tacheraSasi/ellie/utils"
 )
 
-// Default configuration file path in the user's home directory
+// Default configuration directory & file
+var configDir string
 var configPath string
 
 func init() {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		styles.ErrorStyle.Println("Error: Unable to determine user home directory")
+		styles.ErrorStyle.Println("❌ Error: Unable to determine user home directory")
 		os.Exit(1)
 	}
-	configPath = filepath.Join(homeDir, "ellie/.ellie.env")
+	
+	configDir = filepath.Join(homeDir, "ellie")         // Set directory
+	configPath = filepath.Join(configDir, ".ellie.env") // Set full .env path
 
-	// Initializes configuration
+	// Ensure the directory exists
+	if err := os.MkdirAll(configDir, os.ModePerm); err != nil {
+		styles.ErrorStyle.Println("❌ Error: Failed to create config directory:", err)
+		os.Exit(1)
+	}
+
+	// Initialize config
 	Init()
 }
 
-// Init checks if the config file exists; if not, prompts user input and creates one
+// Init loads config or creates it if missing
 func Init() {
+	// If .env doesn't exist, create it
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		createDefaultConfig()
 	}
 
 	// Load .env file
 	if err := godotenv.Load(configPath); err != nil {
-		styles.WarningStyle.Println("Warning: Failed to load config file:", err)
+		styles.WarningStyle.Println("⚠️ Warning: Failed to load config file:", err)
 	}
 }
 
-// createDefaultConfig prompts user input and writes a .env file
+// createDefaultConfig asks for user input & writes .env file
 func createDefaultConfig() {
 	styles.InfoStyle.Println("🔧 Setting up Ellie CLI configuration...")
 
 	username, err := utils.GetInput("-> Enter your username: ")
 	if err != nil {
-		styles.ErrorStyle.Printf("Error: %v\n", err)
+		styles.ErrorStyle.Printf("❌ Error: %v\n", err)
 		return
 	}
 
 	openaiKey, err := utils.GetInput("-> Enter your OpenAI API key: ")
 	if err != nil {
-		styles.ErrorStyle.Printf("Error: %v\n", err)
+		styles.ErrorStyle.Printf("❌ Error: %v\n", err)
 		return
 	}
 
-	pat, err := utils.GetInput("-> Enter your PAT (Personal Access Token): ")
+	email, err := utils.GetInput("-> Enter your Email (Optional): ")
 	if err != nil {
-		styles.ErrorStyle.Printf("Error: %v\n", err)
+		styles.ErrorStyle.Printf("❌ Error: %v\n", err)
 		return
 	}
 
-	// Save to .env file
+	// Save config
 	envData := map[string]string{
 		"USERNAME":       username,
+		"EMAIL":       email,
 		"OPENAI_API_KEY": openaiKey,
-		"PAT":            pat,
 	}
 
+	// Ensure .env file is written correctly
 	err = godotenv.Write(envData, configPath)
 	if err != nil {
-		styles.ErrorStyle.Println("Error: Failed to create config file:", err)
+		styles.ErrorStyle.Println("❌ Error: Failed to create config file:", err)
 		os.Exit(1)
 	}
 
 	styles.SuccessStyle.Println("✅ Configuration saved successfully at", configPath)
-	styles.InfoStyle.Println("Wanna edit the configurations?, Open ", configPath)
+	styles.InfoStyle.Println("🔧 Want to edit it? Open:", configPath)
 }
 
-// GetEnv fetches environment variables from the config file
+// GetEnv fetches environment variables from the .env file
 func GetEnv(key string) string {
 	return os.Getenv(key)
 }

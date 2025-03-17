@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	VERSION    = "0.0.5"
+	VERSION    = "0.0.6"
 	configPath = "/home/tach/tach/go/ellie/.env" //TODO: Will make this configurable.
 )
 
@@ -105,7 +105,7 @@ var commandRegistry = map[string]Command{
 	},
 	"whoami": {
 		Handler: func(_ []string){
-			styles.InfoStyle.Println("Your majesty,",configs.GetEnv("username"))
+			styles.InfoStyle.Println("Your majesty,",configs.GetEnv("USERNAME"))
 		},
 	},
 	"--v": {
