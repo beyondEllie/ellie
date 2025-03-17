@@ -13,18 +13,10 @@ import (
 
 var (
 	allowedTypes = []string{"feat", "fix", "docs", "style", "refactor", "perf", "test", "chore", "revert"}
-	cyan         = color.New(color.FgCyan)
-	green        = color.New(color.FgGreen)
-	red          = color.New(color.FgRed)
-	yellow       = color.New(color.FgYellow)
-	magenta      = color.New(color.FgMagenta)
-	bold         = color.New(color.Bold)
-	headerStyle  = color.New(color.FgGreen, color.Bold)
-	errorStyle   = color.New(color.FgRed, color.Bold, color.BgBlack)
 	successStyle = color.New(color.FgHiGreen, color.Bold)
 )
 
-// GitConventionalCommit 
+// GitConventionalCommit
 func GitConventionalCommit() {
 	reader := bufio.NewReader(os.Stdin)
 
@@ -49,7 +41,7 @@ func GitConventionalCommit() {
 	}
 
 	executeGitWorkflow(commitMessage)
-	successStyle.Println("✅ Successfully committed and pushed!")
+	styles.SuccessStyle.Println("✅ Successfully committed and pushed!")
 }
 
 func getCommitType(reader *bufio.Reader) string {
@@ -78,7 +70,7 @@ func getRequiredInput(reader *bufio.Reader, label string) string {
 
 func getMultilineInput(reader *bufio.Reader, label string) string {
 	styles.Cyan.Printf("\n%s\n", label)
-	yellow.Println("◎ Press Enter twice to finish")
+	styles.Yellow.Println("◎ Press Enter twice to finish")
 	var lines []string
 	for {
 		line, _ := reader.ReadString('\n')
@@ -111,7 +103,7 @@ func getIssueReference(reader *bufio.Reader) string {
 func getTrailers(reader *bufio.Reader) []string {
 	var trailers []string
 	styles.Cyan.Println("\n🏷  Git Trailers (e.g., Reviewed-by: Name)")
-	yellow.Println("◎ Leave empty to finish")
+	styles.Yellow.Println("◎ Leave empty to finish")
 	for {
 		input := promptInput(reader, "   Add trailer", "Key: Value")
 		if input == "" {
@@ -157,7 +149,7 @@ func buildCommitMessage(header, body, breaking string, isBreaking bool, issue st
 }
 
 func displayCommitPreview(message string) {
-	magenta.Println("\n✨ Commit Preview:")
+	styles.Magenta.Println("\n✨ Commit Preview:")
 	fmt.Println("──────────────────")
 	fmt.Println(message)
 	fmt.Println("──────────────────")
@@ -183,7 +175,7 @@ func runGitCommand(args ...string) {
 func promptInput(reader *bufio.Reader, label string, placeholder string) string {
 	styles.Cyan.Printf("%s ", label)
 	if placeholder != "" {
-		yellow.Printf("(%s) ", placeholder)
+		styles.Yellow.Printf("(%s) ", placeholder)
 	}
 	fmt.Print("➜ ")
 	input, _ := reader.ReadString('\n')
@@ -213,7 +205,7 @@ func GitPush() {
 	reader := bufio.NewReader(os.Stdin)
 	styles.Cyan.Println("\n🚀 Quick Push")
 	styles.Cyan.Println("─────────────")
-	
+
 	message := promptInput(reader, "💌 Message", "")
 	if message == "" {
 		styles.ErrorStyle.Println("🚫 Commit message required")
@@ -228,7 +220,7 @@ func GitPull() {
 	styles.Cyan.Println("\n🔄 Pulling Changes")
 	styles.Cyan.Println("─────────────────")
 	runGitCommand("pull")
-	successStyle.Println("✅ Pull completed")
+	styles.SuccessStyle.Println("✅ Pull completed")
 }
 
 // GitStatus shows enhanced status output
