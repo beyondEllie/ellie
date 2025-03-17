@@ -35,7 +35,7 @@ Updated configuration schema
 
 BREAKING CHANGE: Changed config format
 
-Closes #42
+Refs #42
 ──────────────────
 ✅ Successfully committed and pushed!
 ```
