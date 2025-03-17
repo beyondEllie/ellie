@@ -21,9 +21,9 @@ func Run(args []string) {
 	var cmd *exec.Cmd
 	switch runtime.GOOS {
 	case "windows":
-		cmd = exec.Command("pwsh", "-Command", strings.Join(args[2:], " "))
+		cmd = exec.Command("pwsh", "-Command", strings.Join(args[1:], " "))
 	default:
-		cmd = exec.Command(args[2], args[3:]...)
+		cmd = exec.Command(args[1], args[2:]...)
 	}
 
 	output, err := cmd.CombinedOutput()
