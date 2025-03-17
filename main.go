@@ -7,6 +7,7 @@ import (
 
 	"github.com/joho/godotenv"
 	actions "github.com/tacheraSasi/ellie/action"
+	"github.com/tacheraSasi/ellie/configs"
 )
 
 const (
@@ -110,14 +111,12 @@ var commandRegistry = map[string]Command{
 }
 
 func main() {
-	// Load environment variables.
-	if err := godotenv.Load(configPath); err != nil {
-		fmt.Println("Warning: .env file could not be loaded.")
-	}
+	// Ensure configuration is initialized
+	configs.Init()
 
-	// If no command is provided, fallback to a default interactive mode.
+	// If no command is provided, fallback to interactive mode
 	if len(os.Args) < 2 {
-		actions.Chat(getEnv("OPENAI_API_KEY"))
+		actions.Chat(configs.GetEnv("OPENAI_API_KEY"))
 		return
 	}
 
