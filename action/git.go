@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
+	"github.com/tacheraSasi/ellie/styles"
 )
 
 var (
@@ -43,7 +44,7 @@ func GitConventionalCommit() {
 
 	displayCommitPreview(commitMessage)
 	if !confirmAction("Commit with this message?") {
-		errorStyle.Println("🚫 Commit canceled")
+		styles.ErrorStyle.Println("🚫 Commit canceled")
 		os.Exit(0)
 	}
 
@@ -57,7 +58,7 @@ func getCommitType(reader *bufio.Reader) string {
 		if isValidCommitType(input) {
 			return input
 		}
-		errorStyle.Printf("⚠️  Invalid type: %s\n", input)
+		styles.ErrorStyle.Printf("⚠️  Invalid type: %s\n", input)
 	}
 }
 
@@ -71,7 +72,7 @@ func getRequiredInput(reader *bufio.Reader, label string) string {
 		if input != "" {
 			return input
 		}
-		errorStyle.Println("⚠️  This field is required")
+		styles.ErrorStyle.Println("⚠️  This field is required")
 	}
 }
 
@@ -119,7 +120,7 @@ func getTrailers(reader *bufio.Reader) []string {
 		if isValidTrailer(input) {
 			trailers = append(trailers, input)
 		} else {
-			errorStyle.Println("⚠️  Invalid format. Use 'Key: Value'")
+			styles.ErrorStyle.Println("⚠️  Invalid format. Use 'Key: Value'")
 		}
 	}
 	return trailers
@@ -173,7 +174,7 @@ func runGitCommand(args ...string) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	if err := cmd.Run(); err != nil {
-		errorStyle.Printf("🚨 Git error: %v\n", err)
+		styles.ErrorStyle.Printf("🚨 Git error: %v\n", err)
 		os.Exit(1)
 	}
 }
@@ -215,7 +216,7 @@ func GitPush() {
 	
 	message := promptInput(reader, "💌 Message", "")
 	if message == "" {
-		errorStyle.Println("🚫 Commit message required")
+		styles.ErrorStyle.Println("🚫 Commit message required")
 		os.Exit(1)
 	}
 
