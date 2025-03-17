@@ -1,5 +1,5 @@
 package configs
 
-func init(){
+func Init(){
 	
 }
