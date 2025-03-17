@@ -28,8 +28,8 @@ var (
 func GitConventionalCommit() {
 	reader := bufio.NewReader(os.Stdin)
 
-	cyan.Println("\n📝 Conventional Commit Builder")
-	cyan.Println("─────────────────────────────")
+	styles.Cyan.Println("\n📝 Conventional Commit Builder")
+	styles.Cyan.Println("─────────────────────────────")
 
 	commitType := getCommitType(reader)
 	scope := getScope(reader)
@@ -77,7 +77,7 @@ func getRequiredInput(reader *bufio.Reader, label string) string {
 }
 
 func getMultilineInput(reader *bufio.Reader, label string) string {
-	cyan.Printf("\n%s\n", label)
+	styles.Cyan.Printf("\n%s\n", label)
 	yellow.Println("◎ Press Enter twice to finish")
 	var lines []string
 	for {
@@ -110,7 +110,7 @@ func getIssueReference(reader *bufio.Reader) string {
 
 func getTrailers(reader *bufio.Reader) []string {
 	var trailers []string
-	cyan.Println("\n🏷  Git Trailers (e.g., Reviewed-by: Name)")
+	styles.Cyan.Println("\n🏷  Git Trailers (e.g., Reviewed-by: Name)")
 	yellow.Println("◎ Leave empty to finish")
 	for {
 		input := promptInput(reader, "   Add trailer", "Key: Value")
@@ -181,7 +181,7 @@ func runGitCommand(args ...string) {
 
 // Helper functions
 func promptInput(reader *bufio.Reader, label string, placeholder string) string {
-	cyan.Printf("%s ", label)
+	styles.Cyan.Printf("%s ", label)
 	if placeholder != "" {
 		yellow.Printf("(%s) ", placeholder)
 	}
@@ -211,8 +211,8 @@ func isValidTrailer(trailer string) bool {
 // GitPush handles standard push workflow
 func GitPush() {
 	reader := bufio.NewReader(os.Stdin)
-	cyan.Println("\n🚀 Quick Push")
-	cyan.Println("─────────────")
+	styles.Cyan.Println("\n🚀 Quick Push")
+	styles.Cyan.Println("─────────────")
 	
 	message := promptInput(reader, "💌 Message", "")
 	if message == "" {
@@ -225,15 +225,15 @@ func GitPush() {
 
 // GitPull executes git pull with feedback
 func GitPull() {
-	cyan.Println("\n🔄 Pulling Changes")
-	cyan.Println("─────────────────")
+	styles.Cyan.Println("\n🔄 Pulling Changes")
+	styles.Cyan.Println("─────────────────")
 	runGitCommand("pull")
 	successStyle.Println("✅ Pull completed")
 }
 
 // GitStatus shows enhanced status output
 func GitStatus() {
-	cyan.Println("\n🔍 Repository Status")
-	cyan.Println("───────────────────")
+	styles.Cyan.Println("\n🔍 Repository Status")
+	styles.Cyan.Println("───────────────────")
 	runGitCommand("status", "-sb")
 }
