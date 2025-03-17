@@ -10,7 +10,7 @@ import (
 	"github.com/tacheraSasi/ellie/utils"
 )
 
-// Run executes system commands cross-platform
+// Run executes system commands
 func Run(args []string) {
 	if len(args) < 2 {
 		fmt.Println("Please specify a command to run")
@@ -33,7 +33,7 @@ func Run(args []string) {
 	fmt.Printf("%s\n", output)
 }
 
-// Pwd prints working directory cross-platform
+// Pwd prints working directory
 func Pwd() {
 	dir, err := os.Getwd()
 	if err != nil {
@@ -139,7 +139,7 @@ func StopAll() {
 	StopMysql()
 }
 
-// SysInfo gets system information cross-platform
+// SysInfo gets system information
 func SysInfo() {
 	var cmd *exec.Cmd
 	switch runtime.GOOS {
@@ -161,7 +161,7 @@ func SysInfo() {
 	fmt.Printf("System Info:\n%s\n", output)
 }
 
-// InstallPackage installs packages cross-platform
+// InstallPackage installs packages
 func InstallPackage(pkg string) {
 	var cmd *exec.Cmd
 	switch runtime.GOOS {
@@ -181,7 +181,7 @@ func InstallPackage(pkg string) {
 	fmt.Printf("Installed %s:\n%s\n", pkg, output)
 }
 
-// UpdatePackages updates system packages cross-platform
+// UpdatePackages updates system packages
 func UpdatePackages() {
 	var cmd *exec.Cmd
 	switch runtime.GOOS {
@@ -221,7 +221,7 @@ func controlService(service, action string) error {
 	return nil
 }
 
-// OpenExplorer opens file manager cross-platform
+// OpenExplorer opens file manager
 func OpenExplorer() {
 	var cmd *exec.Cmd
 	switch runtime.GOOS {
