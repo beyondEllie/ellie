@@ -39,7 +39,7 @@ func Run(args []string) {
 func Pwd() {
 	dir, err := os.Getwd()
 	if err != nil {
-		fmt.Printf("Error: %v\n", err)
+		styles.ErrorStyle.Printf("🚫 Error: %v\n", err)
 		return
 	}
 	fmt.Println(dir)
@@ -49,7 +49,7 @@ func GitSetup(pat, username string) {
 	cmd := exec.Command("git", "status")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("Error: %s\n", err)
+		styles.ErrorStyle.Printf("🚫 Error: %v\n", err)
 		return
 	}
 
@@ -61,7 +61,7 @@ func GitSetup(pat, username string) {
 func ListFiles(dir string) {
 	files, err := os.ReadDir(dir)
 	if err != nil {
-		fmt.Println("Error reading directory:", err)
+		styles.ErrorStyle.Println("Error reading directory:", err)
 		return
 	}
 	fmt.Println("Files:")
@@ -73,7 +73,7 @@ func ListFiles(dir string) {
 func CreateFile(filePath string) {
 	file, err := os.Create(filePath)
 	if err != nil {
-		fmt.Println("Error creating file:", err)
+		styles.ErrorStyle.Println("Error creating file:", err)
 		return
 	}
 	file.Close()
