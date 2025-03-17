@@ -7,6 +7,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/tacheraSasi/ellie/styles"
 	"github.com/tacheraSasi/ellie/utils"
 )
 
@@ -27,7 +28,8 @@ func Run(args []string) {
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("Error: %v\n", err)
+		styles.ErrorStyle.Printf("🚫 Error: %v\n", err)
+		os.Exit(0)
 		return
 	}
 	fmt.Printf("%s\n", output)
@@ -43,7 +45,6 @@ func Pwd() {
 	fmt.Println(dir)
 }
 
-
 func GitSetup(pat, username string) {
 	cmd := exec.Command("git", "status")
 	output, err := cmd.CombinedOutput()
@@ -56,8 +57,6 @@ func GitSetup(pat, username string) {
 		fmt.Printf("Output: %s\n", string(output))
 	}
 }
-
-
 
 func ListFiles(dir string) {
 	files, err := os.ReadDir(dir)
@@ -239,33 +238,33 @@ func OpenExplorer() {
 }
 
 func Play(args []string) {
-	if runtime.GOOS != "linux"{
+	if runtime.GOOS != "linux" {
 		fmt.Println("Play functinality is only supported on Linux for now.")
 		return
 	}
 
 	// fmt.Println(args) //For debugging
-	command := []string{"mpv",args[1]}//TODO: check if mpv is installed
+	command := []string{"mpv", args[1]} //TODO: check if mpv is installed
 	//TODO:Will create a custom way of playing files in the future
 	fmt.Println("Playing file...")
-	utils.RunCommand(command,"Error playing the file:")
+	utils.RunCommand(command, "Error playing the file:")
 }
 
-func Focus(args []string){//Doesnot work properly
+func Focus(args []string) { //Doesnot work properly
 	fmt.Println(args)
-	var cmd *exec.Cmd;
-	if len(args) < 2{
+	var cmd *exec.Cmd
+	if len(args) < 2 {
 		cmd = exec.Command(args[0])
-	}else{
+	} else {
 		cmd = exec.Command(args[0], args[1:]...)
 	}
-	output,err := cmd.CombinedOutput()
-	if err != nil{
-		fmt.Println("Error: ",err)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println("Error: ", err)
 		return
 	}
-	if output != nil || len(output) == 0{
-		fmt.Printf("%s",output)
+	if output != nil || len(output) == 0 {
+		fmt.Printf("%s", output)
 	}
 
 }
