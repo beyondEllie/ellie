@@ -5,12 +5,13 @@ import (
 	"os"
 	"time"
 
-	"github.com/joho/godotenv"
 	actions "github.com/tacheraSasi/ellie/action"
+	"github.com/tacheraSasi/ellie/configs"
+	"github.com/tacheraSasi/ellie/styles"
 )
 
 const (
-	VERSION    = "0.0.5"
+	VERSION    = "0.0.6"
 	configPath = "/home/tach/tach/go/ellie/.env" //TODO: Will make this configurable.
 )
 
@@ -99,25 +100,28 @@ var commandRegistry = map[string]Command{
 	"--help":  {Handler: showHelp},
 	"--version": {
 		Handler: func(args []string) {
-			fmt.Println("Ellie CLI Version:", VERSION)
+			styles.InfoStyle.Println("Ellie CLI Version:", VERSION)
+		},
+	},
+	"whoami": {
+		Handler: func(_ []string){
+			styles.InfoStyle.Println("Your majesty,",configs.GetEnv("USERNAME"))
 		},
 	},
 	"--v": {
 		Handler: func(args []string) {
-			fmt.Println("Ellie CLI Version:", VERSION)
+			styles.InfoStyle.Println("Ellie CLI Version:", VERSION)
 		},
 	},
 }
 
 func main() {
-	// Load environment variables.
-	if err := godotenv.Load(configPath); err != nil {
-		fmt.Println("Warning: .env file could not be loaded.")
-	}
+	// Ensure configuration is initialized
+	configs.Init()
 
-	// If no command is provided, fallback to a default interactive mode.
+	// If no command is provided, fallback to interactive mode
 	if len(os.Args) < 2 {
-		actions.Chat(getEnv("OPENAI_API_KEY"))
+		actions.Chat(configs.GetEnv("OPENAI_API_KEY"))
 		return
 	}
 
