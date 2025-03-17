@@ -94,7 +94,7 @@ func ConnectWiFi(ssid, password string) {
 	cmd := exec.Command("nmcli", "dev", "wifi", "connect", ssid, "password", password)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("Error connecting to Wi-Fi %s: %s\n", ssid, err)
+		styles.ErrorStyle.Printf("Error connecting to Wi-Fi %s: %s\n", ssid, err)
 		return
 	}
 	fmt.Printf("Connected to Wi-Fi %s successfully:\n%s\n", ssid, string(output))
@@ -154,7 +154,7 @@ func SysInfo() {
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("Error getting system info: %v\n", err)
+		styles.ErrorStyle.Printf("Error getting system info: %v\n", err)
 		return
 	}
 	fmt.Printf("System Info:\n%s\n", output)
@@ -174,7 +174,7 @@ func InstallPackage(pkg string) {
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("Install error: %v\n", err)
+		styles.ErrorStyle.Printf("Install error: %v\n", err)
 		return
 	}
 	fmt.Printf("Installed %s:\n%s\n", pkg, output)
@@ -194,7 +194,7 @@ func UpdatePackages() {
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Printf("Update error: %v\n", err)
+		styles.ErrorStyle.Printf("Update error: %v\n", err)
 		return
 	}
 	fmt.Printf("Updates:\n%s\n", output)
@@ -214,6 +214,7 @@ func controlService(service, action string) error {
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
+		styles.ErrorStyle.Printf("service control failed: %v\nOutput: %s", err, output)
 		return fmt.Errorf("service control failed: %v\nOutput: %s", err, output)
 	}
 	fmt.Printf("Service %s %sed\nOutput: %s\n", service, action, output)
@@ -233,7 +234,7 @@ func OpenExplorer() {
 	}
 
 	if err := cmd.Start(); err != nil {
-		fmt.Printf("Error opening explorer: %v\n", err)
+		styles.ErrorStyle.Printf("Error opening explorer: %v\n", err)
 	}
 }
 
@@ -260,11 +261,11 @@ func Focus(args []string) { //Doesnot work properly
 	}
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		fmt.Println("Error: ", err)
+		styles.ErrorStyle.Println("Error: ", err)
 		return
 	}
 	if output != nil || len(output) == 0 {
-		fmt.Printf("%s", output)
+		styles.ErrorStyle.Printf("%s", output)
 	}
 
 }
