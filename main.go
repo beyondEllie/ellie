@@ -5,9 +5,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/joho/godotenv"
 	actions "github.com/tacheraSasi/ellie/action"
 	"github.com/tacheraSasi/ellie/configs"
+	"github.com/tacheraSasi/ellie/styles"
 )
 
 const (
@@ -100,12 +100,17 @@ var commandRegistry = map[string]Command{
 	"--help":  {Handler: showHelp},
 	"--version": {
 		Handler: func(args []string) {
-			fmt.Println("Ellie CLI Version:", VERSION)
+			styles.InfoStyle.Println("Ellie CLI Version:", VERSION)
+		},
+	},
+	"whoami": {
+		Handler: func(_ []string){
+			styles.InfoStyle.Println("Your majesty,",configs.GetEnv("username"))
 		},
 	},
 	"--v": {
 		Handler: func(args []string) {
-			fmt.Println("Ellie CLI Version:", VERSION)
+			styles.InfoStyle.Println("Ellie CLI Version:", VERSION)
 		},
 	},
 }
