@@ -17,7 +17,7 @@ func init() {
 		fmt.Println("Error: Unable to determine user home directory")
 		os.Exit(1)
 	}
-	configPath = filepath.Join(homeDir, ".ellie.env")
+	configPath = filepath.Join(homeDir, "ellie/.ellie.env")
 
 	// Initialize configuration
 	Init()
@@ -40,7 +40,7 @@ func createDefaultConfig() {
 	defaultConfig := `# Ellie CLI Configuration
 OPENAI_API_KEY=
 PAT=
-USERNAME=
+USERNAME=ellie
 `
 	err := os.WriteFile(configPath, []byte(defaultConfig), 0644)
 	if err != nil {
