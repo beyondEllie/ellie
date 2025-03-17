@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/glamour"
+	"github.com/tacheraSasi/ellie/styles"
 )
 
 // Ads for random promotion messages
@@ -23,7 +24,7 @@ var Ads []string = []string{
 // GetInput prompts the user for input and returns the trimmed string.
 func GetInput(prompt string) (string, error) {
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print(prompt)
+	styles.Cyan.Print(prompt)
 	input, err := reader.ReadString('\n')
 	if err != nil {
 		return "", err
