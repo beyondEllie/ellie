@@ -2,7 +2,55 @@
 
 **Meet Ellie** - Your all-in-one terminal buddy for system management, Git workflows, and productivity hacks. Built with ❤️ by **Tachera Sasi**
 
+## Getting Started with Ellie 🌟
+
+### 🛠️ Configuration Setup
+
+When you first run **Ellie**, you'll need to configure it with your details. Here's how to do it across all operating systems:
+
+1. **Run the Configuration Setup**: Upon first use, Ellie will automatically prompt you to enter the configuration details.
+
+```bash
+$ ellie
+🔧 Setting up Ellie CLI configuration...
+-> Enter your username: Tach
+-> Enter your OpenAI API key: sk-123...
+-> Enter your Email (optional): this@that.com
+✅ Configuration saved successfully at /home/tach/ellie/.ellie.env
+🔧 Want to edit it? Open: /home/tach/ellie/.ellie.env
+```
+
+- **Username**: Your preferred username.
+- **OpenAI API Key**: The API key for ChatGPT integration.
+- **Email**: Optional, used for personalizing interactions.
+
+2. **Manual Configuration Editing**:
+   - If you'd like to modify the configuration later, simply open the `.ellie.env` file located in your home directory (or equivalent) and adjust the values.
+   
+   **Linux/MacOS**:
+   ```bash
+   nano ~/.ellie/.ellie.env
+   ```
+
+   **Windows**:
+   ```bash
+   notepad %HOMEPATH%\.ellie\.ellie.env
+   ```
+
+### Where is Your Configuration File Located?
+
+- **Linux/MacOS**:  
+  `/home/username/ellie/.ellie.env`
+  
+- **Windows**:  
+  `C:\Users\YourUsername\ellie\.ellie.env`
+
+The configuration file is created automatically, and you can edit it anytime to update details like your OpenAI key or username.
+
+---
+
 ## What's New in v0.0.5? 🎉
+
 - **Git Superpowers** 🚀 - Full Conventional Commits workflow with interactive prompts
 - **Smarter UI** 🎨 - Colorized output and emoji-driven interface
 - **Enhanced Service Control** 🔧 - Manage Apache/MySQL with single commands
@@ -40,6 +88,8 @@ Refs #42
 ✅ Successfully committed and pushed!
 ```
 
+---
+
 ## Installation ⚡
 
 ```bash
@@ -57,6 +107,8 @@ go build -o ellie
 # 4. Run with personality!
 ./ellie greet
 ```
+
+---
 
 ## Core Features 🌟
 
@@ -99,6 +151,8 @@ ellie git push         # Smart push with pre-checks
 ellie setup-git        # Configure credentials securely
 ```
 
+---
+
 ## Conventional Commits Made Easy 📝
 
 Ellie guides you through professional commit messages:
@@ -132,6 +186,8 @@ ellie stop all
 ellie check-service nginx  # Coming soon!
 ```
 
+---
+
 ## Why Ellie? 🤔
 
 1. **Human-Friendly** 😊 - Designed for actual humans
@@ -139,6 +195,8 @@ ellie check-service nginx  # Coming soon!
 3. **Safe & Secure** 🔒 - Validation on every operation
 4. **Cross-Platform** 🖥️ - Works where you work
 5. **Extensible** 🔌 - Add your own modules
+
+---
 
 ## Real-World Magic ✨
 ```bash
@@ -148,6 +206,8 @@ ellie git commit         # Create perfect commit
 ellie connect-wifi Work_Network $PASSWORD  # Stay connected
 ellie sysinfo            # Monitor resources
 ```
+
+---
 
 ## Contribution Guide 🌱
 Found a bug? Got an idea? Let's build together!
