@@ -11,8 +11,10 @@ import (
 )
 
 const (
-	VERSION    = "0.0.7"
+	VERSION = "0.0.7"
 )
+
+var CurrentUser string = configs.GetEnv("USERNAME")
 
 // Command holds CLI command details
 type Command struct {
@@ -93,7 +95,7 @@ var commandRegistry = map[string]Command{
 	"restart": createServiceCommand("restart"),
 	"whoami": {
 		Handler: func(_ []string) {
-			styles.Highlight.Println("Your majesty,", configs.GetEnv("USERNAME"))
+			styles.Highlight.Println("Your majesty,", CurrentUser)
 		},
 	},
 }
@@ -195,7 +197,7 @@ func createServiceCommand(action string) Command {
 func handleService(action, service string) {
 	actionVerb := action + "ing"
 	styles.InfoStyle.Printf("%s %s service...\n", actionVerb, service)
-	
+
 	switch action {
 	case "start":
 		switch service {
@@ -244,16 +246,16 @@ func greetUser(args []string) {
 		greeting = styles.InfoStyle.Println
 	}
 
-	greeting(message)
+	greeting(message+",", CurrentUser)
 }
 
 func showHelpFunc(args []string) {
 	styles.HeaderStyle.Println("Ellie CLI - AI-Powered System Management Tool")
-	styles.InfoStyle.Println("Usage: ellie [--help] [--version] <command> [arguments]\n")
+	styles.InfoStyle.Println("Usage: ellie [--help] [--version] <command> [arguments]")
 
 	styles.HeaderStyle.Println("Global Flags:")
 	styles.InfoStyle.Println("  --help\tShow this help message")
-	styles.InfoStyle.Println("  --version\tShow version information\n")
+	styles.InfoStyle.Println("  --version\tShow version information")
 
 	styles.HeaderStyle.Println("Core Commands:")
 	styles.InfoStyle.Println("  run <command>\t\tExecute system commands")
@@ -272,7 +274,7 @@ func showHelpFunc(args []string) {
 	styles.InfoStyle.Println("  git push\t\tPush commits")
 	styles.InfoStyle.Println("  git commit\t\tCreate Conventional Commit")
 	styles.InfoStyle.Println("  git pull\t\tPull latest changes")
-	styles.InfoStyle.Println("  start/stop/restart\tManage services (apache, mysql, all)\n")
+	styles.InfoStyle.Println("  start/stop/restart\tManage services (apache, mysql, all)")
 
 	styles.DimText.Println("For detailed command help, use 'ellie <command> --help'")
 }
