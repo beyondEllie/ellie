@@ -20,8 +20,8 @@ func init() {
 		os.Exit(1)
 	}
 	
-	configDir = filepath.Join(homeDir, "ellie")         // Set directory
-	configPath = filepath.Join(configDir, ".ellie.env") // Set full .env path
+	configDir = filepath.Join(homeDir, "ellie")         // directory
+	configPath = filepath.Join(configDir, ".ellie.env") // full .env path
 
 	// Ensure the directory exists
 	if err := os.MkdirAll(configDir, os.ModePerm); err != nil {
