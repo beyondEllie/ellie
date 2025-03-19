@@ -17,12 +17,14 @@ var (
 	Underline = color.New(color.Underline)
 
 	// Custom styles
-	HeaderStyle  = color.New(color.FgHiGreen, color.Bold)
-	ErrorStyle   = color.New(color.FgHiRed, color.Bold)
-	SuccessStyle = color.New(color.FgHiGreen, color.Bold)
-	WarningStyle = color.New(color.FgHiYellow, color.Bold)
-	InfoStyle    = color.New(color.FgHiCyan, color.Bold)
-	DebugStyle   = color.New(color.FgHiMagenta, color.Bold)
-	Highlight    = color.New(color.FgHiBlue, color.Bold)
-	DimText      = color.New(color.FgHiWhite, color.Faint)
+	HeaderStyle   = color.New(color.FgGreen, color.Bold)         // Titles & headers
+	ErrorStyle    = color.New(color.FgRed, color.Bold, color.BgBlack) // Errors
+	SuccessStyle  = color.New(color.FgHiGreen, color.Bold)       // Success messages
+	WarningStyle  = color.New(color.FgYellow, color.Bold)        // Warnings
+	InfoStyle     = color.New(color.FgCyan, color.Bold)          // Information
+	DebugStyle    = color.New(color.FgMagenta, color.Bold)       // Debug messages
+	InputPrompt   = color.New(color.FgBlue, color.Bold)          // Input prompts
+	Highlight     = color.New(color.FgHiBlue, color.Bold)        // Highlights key info
+	DimText       = color.New(color.FgWhite, color.Faint)        // Subtle text
+	InvertedStyle = color.New(color.FgBlack, color.BgWhite)      // Inverted text
 )

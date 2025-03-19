@@ -11,8 +11,7 @@ import (
 )
 
 const (
-	VERSION    = "0.0.6"
-	configPath = "/home/tach/tach/go/ellie/.env" // TODO: Make configurable
+	VERSION    = "0.0.7"
 )
 
 // Command holds CLI command details
