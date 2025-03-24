@@ -6,6 +6,7 @@ import (
 	"time"
 
 	actions "github.com/tacheraSasi/ellie/action"
+	"github.com/tacheraSasi/ellie/command"
 	"github.com/tacheraSasi/ellie/configs"
 	"github.com/tacheraSasi/ellie/styles"
 )
@@ -16,16 +17,8 @@ const (
 
 var CurrentUser string = configs.GetEnv("USERNAME")
 
-// Command holds CLI command details
-type Command struct {
-	MinArgs     int
-	Usage       string
-	Handler     func([]string)
-	SubCommands map[string]Command
-	PreHook     func()
-}
 
-var commandRegistry = map[string]Command{
+var commandRegistry = map[string]command.Command{
 	"run": {
 		Handler: actions.Run,
 	},
@@ -83,7 +76,7 @@ var commandRegistry = map[string]Command{
 		Handler: greetUser,
 	},
 	"git": {
-		SubCommands: map[string]Command{
+		SubCommands: map[string]command.Command{
 			"status": {Handler: func(_ []string) { actions.GitStatus() }},
 			"push":   {Handler: func(_ []string) { actions.GitPush() }},
 			"commit": {Handler: func(args []string) { actions.GitConventionalCommit() }},
@@ -163,7 +156,7 @@ func handleCommand(args []string) {
 	cmd.Handler(args)
 }
 
-func handleSubCommand(parentCmd Command, args []string) {
+func handleSubCommand(parentCmd command.Command, args []string) {
 	subCmdName := args[0]
 	subCmd, exists := parentCmd.SubCommands[subCmdName]
 	if !exists {
@@ -184,9 +177,9 @@ func handleSubCommand(parentCmd Command, args []string) {
 	subCmd.Handler(args)
 }
 
-func createServiceCommand(action string) Command {
-	return Command{
-		SubCommands: map[string]Command{
+func createServiceCommand(action string) command.Command {
+	return command.Command{
+		SubCommands: map[string]command.Command{
 			"apache": {Handler: func(args []string) { handleService(action, "apache") }},
 			"mysql":  {Handler: func(args []string) { handleService(action, "mysql") }},
 			"all":    {Handler: func(args []string) { handleService(action, "all") }},
