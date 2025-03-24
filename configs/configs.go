@@ -68,11 +68,18 @@ func createDefaultConfig() {
 		return
 	}
 
+	relayKey, err := utils.GetInput("-> Enter your ekiliRelay API key\nWill be used to send emails \nGet One https://relay.ekilie.com/console (Optional): ")
+	if err != nil {
+		styles.ErrorStyle.Printf("❌ Error: %v\n", err)
+		return
+	}
+
 	// Save config
 	envData := map[string]string{
 		"USERNAME":       username,
 		"EMAIL":       email,
 		"OPENAI_API_KEY": openaiKey,
+		"RELAY_API_KEY": relayKey,
 	}
 
 	// Ensure .env file is written correctly
