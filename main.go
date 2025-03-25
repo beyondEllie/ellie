@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 	"time"
 
@@ -251,23 +252,23 @@ func showHelpFunc(args []string) {
 	styles.InfoStyle.Println("  --version\tShow version information")
 
 	styles.HeaderStyle.Println("Core Commands:")
-	styles.InfoStyle.Println("  run <command>\t\tExecute system commands")
-	styles.InfoStyle.Println("  pwd\t\t\tPrint working directory")
-	styles.InfoStyle.Println("  open-explorer\t\tOpen file explorer")
-	styles.InfoStyle.Println("  play <media>\t\tPlay media files")
-	styles.InfoStyle.Println("  setup-git\t\tConfigure Git credentials")
-	styles.InfoStyle.Println("  sysinfo\t\tShow system information")
-	styles.InfoStyle.Println("  install <package>\tInstall software packages")
-	styles.InfoStyle.Println("  update\t\tUpdate system packages")
-	styles.InfoStyle.Println("  list <dir>\t\tList directory contents")
-	styles.InfoStyle.Println("  create-file <path>\tCreate new files")
-	styles.InfoStyle.Println("  network-status\tShow network information")
-	styles.InfoStyle.Println("  connect-wifi <creds>\tManage WiFi connections")
-	styles.InfoStyle.Println("  git status\t\tShow Git status")
-	styles.InfoStyle.Println("  git push\t\tPush commits")
-	styles.InfoStyle.Println("  git commit\t\tCreate Conventional Commit")
-	styles.InfoStyle.Println("  git pull\t\tPull latest changes")
-	styles.InfoStyle.Println("  start/stop/restart\tManage services (apache, mysql, all)")
+	fmt.Println("  run <command>\t\tExecute system commands")
+	fmt.Println("  pwd\t\t\tPrint working directory")
+	fmt.Println("  open-explorer\t\tOpen file explorer")
+	fmt.Println("  play <media>\t\tPlay media files")
+	fmt.Println("  setup-git\t\tConfigure Git credentials")
+	fmt.Println("  sysinfo\t\tShow system information")
+	fmt.Println("  install <package>\tInstall software packages")
+	fmt.Println("  update\t\tUpdate system packages")
+	fmt.Println("  list <dir>\t\tList directory contents")
+	fmt.Println("  create-file <path>\tCreate new files")
+	fmt.Println("  network-status\tShow network information")
+	fmt.Println("  connect-wifi <creds>\tManage WiFi connections")
+	fmt.Println("  git status\t\tShow Git status")
+	fmt.Println("  git push\t\tPush commits")
+	fmt.Println("  git commit\t\tCreate Conventional Commit")
+	fmt.Println("  git pull\t\tPull latest changes")
+	fmt.Println("  start/stop/restart\tManage services (apache, mysql, all)")
 
 	styles.DimText.Println("For detailed command help, use 'ellie <command> --help'")
 }
