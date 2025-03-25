@@ -5,18 +5,20 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-	
+	"log"
+
 	"github.com/joho/godotenv"
 	"github.com/tacheraSasi/ellie/styles"
 	"github.com/tacheraSasi/ellie/utils"
 )
 
 const (
-	configDirName  = "ellie"
-	configFileName = ".ellie.env"
-	gitignoreName  = ".gitignore"
-	readmeName     = "README.md"
-	exampleEnvName = "config.example.env"
+	configDirName     = "ellie"
+	configFileName    = ".ellie.env"
+	gitignoreName     = ".gitignore"
+	readmeName        = "README.md"
+	exampleEnvName    = "config.example.env"
+	configVersionFile = "config.version" // Keep track of config versions
 )
 
 var (
@@ -36,7 +38,7 @@ func initConfigPaths() {
 		styles.ErrorStyle.Println("❌ Error: Unable to determine user home directory:", err)
 		os.Exit(1)
 	}
-	
+
 	ConfigDir = filepath.Join(homeDir, configDirName)
 	ConfigPath = filepath.Join(ConfigDir, configFileName)
 }
@@ -52,6 +54,7 @@ func ensureConfigStructure() {
 	createGitignore()
 	createReadme()
 	createExampleEnv()
+	createVersionFile()
 }
 
 func createGitignore() {
@@ -97,10 +100,19 @@ USERNAME="your_username"
 EMAIL="your@email.com"
 OPENAI_API_KEY="sk-...your-openai-key"
 RELAY_API_KEY="your-relay-key"
-GITHUB_PAT="your-github-personal-access-token"
 `
 		if err := os.WriteFile(examplePath, []byte(content), 0644); err != nil {
 			styles.WarningStyle.Println("⚠️ Warning: Failed to create example config:", err)
+		}
+	}
+}
+
+func createVersionFile() {
+	versionPath := filepath.Join(ConfigDir, configVersionFile)
+	if _, err := os.Stat(versionPath); os.IsNotExist(err) {
+		content := "v1.0.0" // Initial version of the config
+		if err := os.WriteFile(versionPath, []byte(content), 0644); err != nil {
+			styles.WarningStyle.Println("⚠️ Warning: Failed to create version file:", err)
 		}
 	}
 }
@@ -118,7 +130,7 @@ func createDefaultConfig() {
 
 	config := collectConfiguration()
 	backupExistingConfig()
-	
+
 	if err := godotenv.Write(config, ConfigPath); err != nil {
 		styles.ErrorStyle.Println("❌ Error: Failed to create config file:", err)
 		os.Exit(1)
@@ -134,7 +146,6 @@ func collectConfiguration() map[string]string {
 		"EMAIL":          getOptionalInput("Email"),
 		"OPENAI_API_KEY": getRequiredInput("OpenAI API Key"),
 		"RELAY_API_KEY":  getOptionalInput("EkiliRelay API Key (https://relay.ekilie.com/console)"),
-		"GITHUB_PAT":     getOptionalInput("GitHub Personal Access Token"),
 	}
 }
 
@@ -199,4 +210,36 @@ func GetEnv(key string) string {
 func ConfigExists() bool {
 	_, err := os.Stat(ConfigPath)
 	return !os.IsNotExist(err)
+}
+
+func ResetConfig() {
+	styles.InfoStyle.Println("🔄 Resetting the configuration...")
+	backupExistingConfig()
+	// Delete the current configuration file
+	if err := os.Remove(ConfigPath); err != nil {
+		styles.ErrorStyle.Println("❌ Error: Failed to remove config file:", err)
+		os.Exit(1)
+	}
+	createDefaultConfig()
+}
+
+func AuditFilePermissions() {
+	info, err := os.Stat(ConfigPath)
+	if err != nil {
+		styles.ErrorStyle.Printf("❌ Error: Unable to retrieve file info for %s: %v\n", ConfigPath, err)
+		return
+	}
+
+	mode := info.Mode().Perm()
+	styles.InfoStyle.Printf("🔒 Current file permissions for %s: %s\n", ConfigPath, mode)
+}
+
+func GetConfigVersion() string {
+	versionPath := filepath.Join(ConfigDir, configVersionFile)
+	data, err := os.ReadFile(versionPath)
+	if err != nil {
+		styles.WarningStyle.Println("⚠️ Warning: Unable to read version file:", err)
+		return "Unknown Version"
+	}
+	return string(data)
 }
