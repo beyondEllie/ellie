@@ -1,9 +1,6 @@
 package actions
 
 import (
-	// "bufio"
-	// "os"
-
 	"fmt"
 
 	"github.com/tacheraSasi/ellie/styles"
@@ -27,9 +24,44 @@ func getSubject() string{
 	if err != nil{
 		styles.ErrorStyle.Println("Error:",err)
 	}
-	
-	if subject == ""{
+
+	for {
+		if subject != ""{
+			return subject
+		}
 		styles.ErrorStyle.Println("🚫 Subject can not be empty")
 	}
-	return subject
+	
 }
+
+func getEmail() string{
+	recipientEmail,err := utils.GetInput("Enter the recipient email")
+	
+	if err != nil{
+		styles.ErrorStyle.Println("Error:",err)
+	}
+
+	for {
+		if recipientEmail != ""{
+			return recipientEmail
+		}
+		styles.ErrorStyle.Println("🚫 recipient email can not be empty")
+	}
+}
+
+func getMessage()string{
+	message,err := utils.GetInput("Enter the message")
+	
+	if err != nil{
+		styles.ErrorStyle.Println("Error:",err)
+	}
+
+	for {
+		if message != ""{
+			return message
+		}
+		styles.ErrorStyle.Println("🚫 message can not be empty")
+	}
+
+}
+

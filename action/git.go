@@ -61,7 +61,7 @@ func getScope(reader *bufio.Reader) string {
 func getRequiredInput(reader *bufio.Reader, label string) string {
 	for {
 		input := promptInput(reader, label, "")
-		if input != "" {
+		if input != "" { 
 			return input
 		}
 		styles.ErrorStyle.Println("⚠️  This field is required")
