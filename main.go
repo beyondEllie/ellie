@@ -76,6 +76,9 @@ var commandRegistry = map[string]command.Command{
 	"greet": {
 		Handler: greetUser,
 	},
+	"send-mail":{
+		Handler: func(_ []string){actions.Mailer()},
+	},
 	"git": {
 		SubCommands: map[string]command.Command{
 			"status": {Handler: func(_ []string) { actions.GitStatus() }},
