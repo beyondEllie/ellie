@@ -18,50 +18,38 @@ func Mailer(){
 	
 }
 
-func getSubject() string{
-	subject,err := utils.GetInput("Enter the subject")
-	
-	if err != nil{
-		styles.ErrorStyle.Println("Error:",err)
+func getSubject() string {
+	subject, err := utils.GetInput("Enter the subject")
+	if err != nil {
+		styles.ErrorStyle.Println("Error:", err)
 	}
-
-	for {
-		if subject != ""{
-			return subject
-		}
-		styles.ErrorStyle.Println("🚫 Subject can not be empty")
+	for subject == "" {
+		styles.ErrorStyle.Println("🚫 Subject cannot be empty")
+		subject, _ = utils.GetInput("Enter the subject")
 	}
-	
+	return subject
 }
 
-func getEmail() string{
-	recipientEmail,err := utils.GetInput("Enter the recipient email")
-	
-	if err != nil{
-		styles.ErrorStyle.Println("Error:",err)
+func getEmail() string {
+	email, err := utils.GetInput("Enter the recipient email")
+	if err != nil {
+		styles.ErrorStyle.Println("Error:", err)
 	}
-
-	for {
-		if recipientEmail != ""{
-			return recipientEmail
-		}
-		styles.ErrorStyle.Println("🚫 recipient email can not be empty")
+	for email == "" {
+		styles.ErrorStyle.Println("🚫 Recipient email cannot be empty")
+		email, _ = utils.GetInput("Enter the recipient email")
 	}
+	return email
 }
 
-func getMessage()string{
-	message,err := utils.GetInput("Enter the message")
-	
-	if err != nil{
-		styles.ErrorStyle.Println("Error:",err)
+func getMessage() string {
+	message, err := utils.GetInput("Enter the message")
+	if err != nil {
+		styles.ErrorStyle.Println("Error:", err)
 	}
-
-	for {
-		if message != ""{
-			return message
-		}
-		styles.ErrorStyle.Println("🚫 message can not be empty")
+	for message == "" {
+		styles.ErrorStyle.Println("🚫 Message cannot be empty")
+		message, _ = utils.GetInput("Enter the message")
 	}
-
+	return message
 }
-
