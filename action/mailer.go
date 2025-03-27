@@ -1,8 +1,6 @@
 package actions
 
 import (
-	"fmt"
-
 	"github.com/tacheraSasi/ellie/styles"
 	"github.com/tacheraSasi/ellie/utils"
 )
@@ -20,8 +18,10 @@ func Mailer(){
 	styles.Cyan.Print("Send an email")
 	styles.DimText.Println(" (powered by ekilirelay) ")
 	
+	apiKey := getAPIKey()
+	to := getEmail()
 	subject := getSubject()
-	fmt.Println("The subject entered",subject)
+	message := getMessage()
 	
 	
 }
