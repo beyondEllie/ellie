@@ -1,6 +1,11 @@
 package actions
 
 import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+
+	"github.com/tacheraSasi/ellie/configs"
 	"github.com/tacheraSasi/ellie/styles"
 	"github.com/tacheraSasi/ellie/utils"
 )
@@ -13,51 +18,83 @@ type EmailRequest struct {
 	Headers string `json:"headers"`
 }
 
-func Mailer(){
-	
+func Mailer() {
 	styles.Cyan.Print("Send an email")
 	styles.DimText.Println(" (powered by ekilirelay) ")
-	
+
 	apiKey := getAPIKey()
+	if apiKey == "" {
+		return
+	}
+
 	to := getEmail()
 	subject := getSubject()
 	message := getMessage()
-	
-	
+	headers := "From: Ellie Mailer"
+
+	requestBody := EmailRequest{
+		APIKey:  apiKey,
+		To:      to,
+		Subject: subject,
+		Message: message,
+		Headers: headers,
+	}
+
+	jsonData, err := json.Marshal(requestBody)
+	if err != nil {
+		styles.ErrorStyle.Println("Error encoding JSON:", err)
+		return
+	}
+
+	resp, err := http.Post("https://relay.ekilie.com/api/index.php", "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		styles.ErrorStyle.Println("Error sending email:", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+		styles.SuccessStyle.Println("✅ Email sent successfully!")
+	} else {
+		styles.ErrorStyle.Println("🚫 Failed to send email. Status:", resp.Status)
+	}
 }
 
 func getSubject() string {
-	subject, err := utils.GetInput("Enter the subject")
-	if err != nil {
-		styles.ErrorStyle.Println("Error:", err)
-	}
-	for subject == "" {
+	for {
+		subject, err := utils.GetInput("Enter the subject")
+		if err == nil && subject != "" {
+			return subject
+		}
 		styles.ErrorStyle.Println("🚫 Subject cannot be empty")
-		subject, _ = utils.GetInput("Enter the subject")
 	}
-	return subject
 }
 
 func getEmail() string {
-	email, err := utils.GetInput("Enter the recipient email")
-	if err != nil {
-		styles.ErrorStyle.Println("Error:", err)
-	}
-	for email == "" {
+	for {
+		email, err := utils.GetInput("Enter the recipient email")
+		if err == nil && email != "" {
+			return email
+		}
 		styles.ErrorStyle.Println("🚫 Recipient email cannot be empty")
-		email, _ = utils.GetInput("Enter the recipient email")
 	}
-	return email
 }
 
 func getMessage() string {
-	message, err := utils.GetInput("Enter the message")
-	if err != nil {
-		styles.ErrorStyle.Println("Error:", err)
-	}
-	for message == "" {
+	for {
+		message, err := utils.GetInput("Enter the message")
+		if err == nil && message != "" {
+			return message
+		}
 		styles.ErrorStyle.Println("🚫 Message cannot be empty")
-		message, _ = utils.GetInput("Enter the message")
 	}
-	return message
+}
+
+func getAPIKey() string {
+	apiKey := configs.GetEnv("API_KEY")
+	if apiKey == "" {
+		styles.ErrorStyle.Println("❌ Missing required configuration: API_KEY")
+		styles.DimText.Println("💡 Run 'ellie config' to reconfigure (Get the API key at https://relay.ekilie.com/console )")
+	}
+	return apiKey
 }
