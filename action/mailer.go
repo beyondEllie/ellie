@@ -7,6 +7,14 @@ import (
 	"github.com/tacheraSasi/ellie/utils"
 )
 
+type EmailRequest struct {
+	APIKey  string `json:"apikey"`
+	To      string `json:"to"`
+	Subject string `json:"subject"`
+	Message string `json:"message"`
+	Headers string `json:"headers"`
+}
+
 func Mailer(){
 	
 	styles.Cyan.Print("Send an email")
