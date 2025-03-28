@@ -85,7 +85,7 @@ func getMessage() string {
 		message, err := utils.GetInput("Enter the message")
 		if err == nil && message != "" {
 			return message
-		}
+		} 
 		styles.ErrorStyle.Println("🚫 Message cannot be empty")
 	}
 }
