@@ -101,16 +101,16 @@ func ConnectWiFi(ssid, password string) {
 }
 
 func StartApache() {
-	fmt.Println("STARTING APACHE...")
+	styles.InfoStyle.Println("STARTING APACHE...")
 	if err := controlService("apache2", "start"); err == nil {
-		fmt.Println("Apache server started successfully.")
+		styles.SuccessStyle.Println("Apache server started successfully.")
 	}
 }
 
 func StartMysql() {
-	fmt.Println("STARTING MYSQL...")
+	styles.InfoStyle.Println("STARTING MYSQL...")
 	if err := controlService("mysql", "start"); err == nil {
-		fmt.Println("MySQL server started successfully.")
+		styles.SuccessStyle.Println("MySQL server started successfully.")
 	}
 }
 
@@ -120,16 +120,16 @@ func StartAll() {
 }
 
 func StopApache() {
-	fmt.Println("STOPPING APACHE...")
+	styles.InfoStyle.Println("STOPPING APACHE...")
 	if err := controlService("apache2", "stop"); err == nil {
-		fmt.Println("Apache server stopped successfully.")
+		styles.SuccessStyle.Println("Apache server stopped successfully.")
 	}
 }
 
 func StopMysql() {
-	fmt.Println("STOPPING MYSQL...")
+	styles.InfoStyle.Println("STOPPING MYSQL...")
 	if err := controlService("mysql", "stop"); err == nil {
-		fmt.Println("MySQL server stopped successfully.")
+		styles.SuccessStyle.Println("MySQL server stopped successfully.")
 	}
 }
 
