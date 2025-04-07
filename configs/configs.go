@@ -140,7 +140,7 @@ func createDefaultConfig() {
 }
 
 func collectConfiguration() map[string]string {
-	return map[string]string{
+	return map[string]string{ 
 		"USERNAME":       getRequiredInput("Username"),
 		"EMAIL":          getOptionalInput("Email"), 
 		"OPENAI_API_KEY": getOptionalInput("OpenAI API Key"),
