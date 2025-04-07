@@ -142,7 +142,7 @@ func createDefaultConfig() {
 func collectConfiguration() map[string]string {
 	return map[string]string{
 		"USERNAME":       getRequiredInput("Username"),
-		"EMAIL":          getOptionalInput("Email"),
+		"EMAIL":          getOptionalInput("Email"), 
 		"OPENAI_API_KEY": getOptionalInput("OpenAI API Key"),
 		"RELAY_API_KEY":  getOptionalInput("EkiliRelay API Key (https://relay.ekilie.com/console)\n Will be used by the ellie email sender "),
 	}
