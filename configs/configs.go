@@ -193,7 +193,7 @@ func loadExistingConfig() {
 }
 
 func validateRequiredFields() {
-	required := []string{"USERNAME", "OPENAI_API_KEY"}
+	required := []string{"USERNAME"}
 	for _, field := range required {
 		if GetEnv(field) == "" {
 			styles.ErrorStyle.Printf("❌ Missing required configuration: %s\n", field)

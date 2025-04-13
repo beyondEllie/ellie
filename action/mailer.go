@@ -84,17 +84,17 @@ func getMessage() string {
 	for {
 		message, err := utils.GetInput("Enter the message")
 		if err == nil && message != "" {
-			return message 
-		} 
+			return message
+		}
 		styles.ErrorStyle.Println("🚫 Message cannot be empty")
 	}
 }
 
 func getAPIKey() string {
-	apiKey := configs.GetEnv("API_KEY")
+	apiKey := configs.GetEnv("RELAY_API_KEY")
 	if apiKey == "" {
 		styles.ErrorStyle.Println("❌ Missing required configuration: API_KEY")
-		styles.DimText.Println("💡 Run 'ellie config' to reconfigure (Get the API key at https://relay.ekilie.com/console )")
+		styles.DimText.Printf("💡 Open '%s' to set the api key (Get the API key at https://relay.ekilie.com/console )",configs.ConfigPath)
 	}
 	return apiKey
 }
