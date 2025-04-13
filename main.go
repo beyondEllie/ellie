@@ -89,6 +89,12 @@ var commandRegistry = map[string]command.Command{
 	"start":   createServiceCommand("start"),
 	"stop":    createServiceCommand("stop"),
 	"restart": createServiceCommand("restart"),
+	"config":{
+		Handler: func(_ []string) { configs.Init() },
+	},
+	"reset-config":{
+		Handler: func(_ []string) { configs.ResetConfig() },
+	},
 	"whoami": {
 		Handler: func(_ []string) {
 			styles.Highlight.Println("Your majesty,", CurrentUser)
