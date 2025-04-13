@@ -268,6 +268,12 @@ func showHelpFunc() {
 	styles.InfoStyle.Println("  --version\tShow version information")
 
 	styles.HeaderStyle.Println("Core Commands:")
+	fmt.Println("  config \t\tConfigure Ellie CLI")
+	fmt.Println("  reset-config\t\tReset Ellie CLI configuration")
+	fmt.Println("  whoami\t\tShow current user")
+	fmt.Println("  greet\t\t\tGreet the user")
+	fmt.Println("  send-mail\t\tSend an email")
+	fmt.Println("  focus\t\t\tActivate focus mode")
 	fmt.Println("  run <command>\t\tExecute system commands")
 	fmt.Println("  pwd\t\t\tPrint working directory")
 	fmt.Println("  open-explorer\t\tOpen file explorer")
