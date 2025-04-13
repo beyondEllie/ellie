@@ -13,11 +13,10 @@ import (
 )
 
 const (
-	VERSION = "0.0.7"
+	VERSION = configs.VERSION
 )
 
 var CurrentUser string = configs.GetEnv("USERNAME")
-
 
 var commandRegistry = map[string]command.Command{
 	"run": {
@@ -76,8 +75,8 @@ var commandRegistry = map[string]command.Command{
 	"greet": {
 		Handler: greetUser,
 	},
-	"send-mail":{
-		Handler: func(_ []string){actions.Mailer()},
+	"send-mail": {
+		Handler: func(_ []string) { actions.Mailer() },
 	},
 	"git": {
 		SubCommands: map[string]command.Command{
@@ -109,7 +108,7 @@ func main() {
 		return
 	}
 	if *showHelp {
-		showHelpFunc(nil)
+		showHelpFunc()
 		return
 	}
 
@@ -138,7 +137,7 @@ func handleCommand(args []string) {
 	cmd, exists := commandRegistry[cmdName]
 	if !exists {
 		styles.ErrorStyle.Println("Unknown command:", cmdName)
-		showHelpFunc(nil)
+		showHelpFunc()
 		os.Exit(1)
 	}
 
@@ -246,7 +245,7 @@ func greetUser(args []string) {
 	greeting(message+",", CurrentUser)
 }
 
-func showHelpFunc(args []string) {
+func showHelpFunc() {
 	styles.HeaderStyle.Println("Ellie CLI - AI-Powered System Management Tool")
 	styles.InfoStyle.Println("Usage: ellie [--help] [--version] <command> [arguments]")
 

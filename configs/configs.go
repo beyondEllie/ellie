@@ -17,7 +17,8 @@ const (
 	gitignoreName     = ".gitignore"
 	readmeName        = "README.md"
 	exampleEnvName    = "config.example.env"
-	configVersionFile = "config.version" // Keep track of config versions
+	configVersionFile = "config.version" 
+	VERSION = "0.0.7"
 )
 
 var (
@@ -109,7 +110,7 @@ RELAY_API_KEY="your-relay-key"
 func createVersionFile() {
 	versionPath := filepath.Join(ConfigDir, configVersionFile)
 	if _, err := os.Stat(versionPath); os.IsNotExist(err) {
-		content := "v1.0.0" // Initial version of the config
+		content := VERSION
 		if err := os.WriteFile(versionPath, []byte(content), 0644); err != nil {
 			styles.WarningStyle.Println("⚠️ Warning: Failed to create version file:", err)
 		}
