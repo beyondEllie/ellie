@@ -114,9 +114,18 @@ func StartMysql() {
 	}
 }
 
+func StartPostgres() {
+	styles.InfoStyle.Println("STARTING POSTGRES...")
+	if err := controlService("postgresql", "start"); err == nil {
+		styles.SuccessStyle.Println("PostgreSQL server started successfully.")
+	}
+}
+
+
 func StartAll() {
 	StartApache()
 	StartMysql()
+	StartPostgres()
 }
 
 func StopApache() {
@@ -132,10 +141,17 @@ func StopMysql() {
 		styles.SuccessStyle.Println("MySQL server stopped successfully.")
 	}
 }
+func StopPostgres() {
+	styles.InfoStyle.Println("STOPPING POSTGRES...")
+	if err := controlService("postgresql", "stop"); err == nil {
+		styles.SuccessStyle.Println("PostgreSQL server stopped successfully.")
+	}
+}
 
 func StopAll() {
 	StopApache()
 	StopMysql()
+	StopPostgres()
 }
 
 // SysInfo gets system information

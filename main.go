@@ -191,6 +191,7 @@ func createServiceCommand(action string) command.Command {
 		SubCommands: map[string]command.Command{
 			"apache": {Handler: func(args []string) { handleService(action, "apache") }},
 			"mysql":  {Handler: func(args []string) { handleService(action, "mysql") }},
+			"postgres":  {Handler: func(args []string) { handleService(action, "postgres") }},
 			"all":    {Handler: func(args []string) { handleService(action, "all") }},
 		},
 	}
@@ -207,6 +208,8 @@ func handleService(action, service string) {
 			actions.StartApache()
 		case "mysql":
 			actions.StartMysql()
+		case "postgres":
+			actions.StartPostgres()
 		case "all":
 			actions.StartAll()
 		}
@@ -216,6 +219,8 @@ func handleService(action, service string) {
 			actions.StopApache()
 		case "mysql":
 			actions.StopMysql()
+		case "postgres":
+			actions.StopPostgres()
 		case "all":
 			actions.StopAll()
 		}
@@ -227,6 +232,9 @@ func handleService(action, service string) {
 		case "mysql":
 			actions.StopMysql()
 			actions.StartMysql()
+		case "postgres":
+			actions.StopPostgres()
+			actions.StartPostgres()
 		case "all":
 			actions.StopAll()
 			actions.StartAll()
