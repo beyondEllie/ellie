@@ -46,6 +46,9 @@ var commandRegistry = map[string]command.Command{
 	"sysinfo": {
 		Handler: func(_ []string) { actions.SysInfo() },
 	},
+	"dev-init": {
+		Handler: func(_ []string) { actions.DevInit() },
+	},
 	"install": {
 		MinArgs: 1,
 		Usage:   "install <package>",
@@ -271,6 +274,7 @@ func showHelpFunc() {
 	fmt.Println("  config \t\tConfigure Ellie CLI")
 	fmt.Println("  reset-config\t\tReset Ellie CLI configuration")
 	fmt.Println("  whoami\t\tShow current user")
+	fmt.Println("  dev-init\t\tInitialize development environment")
 	fmt.Println("  greet\t\t\tGreet the user")
 	fmt.Println("  send-mail\t\tSend an email")
 	fmt.Println("  focus\t\t\tActivate focus mode")
