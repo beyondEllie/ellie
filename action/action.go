@@ -66,7 +66,7 @@ func ListFiles(dir string) {
 	}
 	fmt.Println("Files:")
 	for _, file := range files {
-		fmt.Println(file.Name())
+		styles.Bold.Println("--",file.Name())
 	}
 }
 
