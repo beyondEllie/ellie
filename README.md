@@ -1,5 +1,8 @@
 # Ellie - The AI-Powered CLI Companion 🤖✨
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/tacheraSasi/ellie)](https://goreportcard.com/report/github.com/tacheraSasi/ellie)
+[![Code Coverage](https://codecov.io/gh/tacheraSasi/ellie/branch/main/graph/badge.svg)](https://codecov.io/gh/tacheraSasi/ellie)
+
 **Meet Ellie** - Your all-in-one terminal buddy for system management, Git workflows, and productivity hacks. Built with ❤️ by **Tachera Sasi**
 
 ## Getting Started with Ellie 🌟
