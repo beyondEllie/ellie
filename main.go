@@ -89,9 +89,33 @@ var commandRegistry = map[string]command.Command{
 			"pull":   {Handler: func(_ []string) { actions.GitPull() }},
 		},
 	},
-	"start":   createServiceCommand("start"),
-	"stop":    createServiceCommand("stop"),
-	"restart": createServiceCommand("restart"),
+	"start": {
+		SubCommands: map[string]command.Command{
+			"apache":   {Handler: func(args []string) { actions.HandleService("start", "apache") }},
+			"mysql":    {Handler: func(args []string) { actions.HandleService("start", "mysql") }},
+			"postgres": {Handler: func(args []string) { actions.HandleService("start", "postgres") }},
+			"all":      {Handler: func(args []string) { actions.HandleService("start", "all") }},
+			"list":     {Handler: func(args []string) { actions.ListServices() }},
+		},
+	},
+	"stop": {
+		SubCommands: map[string]command.Command{
+			"apache":   {Handler: func(args []string) { actions.HandleService("stop", "apache") }},
+			"mysql":    {Handler: func(args []string) { actions.HandleService("stop", "mysql") }},
+			"postgres": {Handler: func(args []string) { actions.HandleService("stop", "postgres") }},
+			"all":      {Handler: func(args []string) { actions.HandleService("stop", "all") }},
+			"list":     {Handler: func(args []string) { actions.ListServices() }},
+		},
+	},
+	"restart": {
+		SubCommands: map[string]command.Command{
+			"apache":   {Handler: func(args []string) { actions.HandleService("restart", "apache") }},
+			"mysql":    {Handler: func(args []string) { actions.HandleService("restart", "mysql") }},
+			"postgres": {Handler: func(args []string) { actions.HandleService("restart", "postgres") }},
+			"all":      {Handler: func(args []string) { actions.HandleService("restart", "all") }},
+			"list":     {Handler: func(args []string) { actions.ListServices() }},
+		},
+	},
 	"config": {
 		Handler: func(_ []string) { configs.Init() },
 	},
