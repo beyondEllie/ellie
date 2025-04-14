@@ -90,6 +90,34 @@ Refs #42
 
 ---
 
+## What's New in v0.0.9? 🎉
+
+- **Todo Management** 📝 - Lightweight task tracking with completion status
+- **Project Switcher** 🚀 - Quick navigation between projects
+- **Enhanced Alias System** ⚡ - Create custom command shortcuts
+- **Cross-Platform Support** 🖥️ - Works seamlessly on Windows, macOS, and Linux
+- **Persistent Storage** 💾 - All data saved in Ellie's config directory
+
+```bash
+# Manage your tasks like a pro! ✨
+$ ellie todo add "Implement OAuth2"
+✅ Added todo #1: Implement OAuth2
+
+$ ellie todo list
+Your todos:
+❌ #1: Implement OAuth2
+✅ #2: Fix login bug
+
+# Switch projects in a flash! ⚡
+$ ellie project add api ~/projects/api
+✅ Added project 'api'
+
+$ ellie switch api
+✅ Switched to project 'api'
+```
+
+---
+
 ## Installation ⚡
 
 ```bash
@@ -127,6 +155,17 @@ ellie network-status  # Detailed network analysis
 ellie alias add gs="git status"  # Create custom shortcuts
 ellie alias list                 # View all aliases
 ellie alias delete gs            # Remove an alias
+
+# Todo Management
+ellie todo add "Fix login bug"   # Add a new task
+ellie todo list                  # View all tasks
+ellie todo complete 1            # Mark task as done
+ellie todo delete 1              # Remove a task
+
+# Project Management
+ellie project add api ~/projects/api  # Bookmark a project
+ellie project list                    # View all projects
+ellie switch api                      # Quick switch to project
 ```
 
 ### 📂 File Operations

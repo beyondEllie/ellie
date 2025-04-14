@@ -120,6 +120,50 @@ var commandRegistry = map[string]command.Command{
 			},
 		},
 	},
+	"todo": {
+		SubCommands: map[string]command.Command{
+			"add": {
+				MinArgs: 1,
+				Usage:   "todo add \"<task>\"",
+				Handler: actions.TodoAdd,
+			},
+			"list": {
+				Handler: actions.TodoList,
+			},
+			"complete": {
+				MinArgs: 1,
+				Usage:   "todo complete <id>",
+				Handler: actions.TodoComplete,
+			},
+			"delete": {
+				MinArgs: 1,
+				Usage:   "todo delete <id>",
+				Handler: actions.TodoDelete,
+			},
+		},
+	},
+	"project": {
+		SubCommands: map[string]command.Command{
+			"add": {
+				MinArgs: 2,
+				Usage:   "project add <name> <path>",
+				Handler: actions.ProjectAdd,
+			},
+			"list": {
+				Handler: actions.ProjectList,
+			},
+			"delete": {
+				MinArgs: 1,
+				Usage:   "project delete <name>",
+				Handler: actions.ProjectDelete,
+			},
+		},
+	},
+	"switch": {
+		MinArgs: 1,
+		Usage:   "switch <project-name>",
+		Handler: actions.ProjectSwitch,
+	},
 }
 
 func main() {
