@@ -122,6 +122,11 @@ ellie stop all        # Stop all services
 # System Insights
 ellie sysinfo         # Show hardware/software specs
 ellie network-status  # Detailed network analysis
+
+# Command Aliases
+ellie alias add gs="git status"  # Create custom shortcuts
+ellie alias list                 # View all aliases
+ellie alias delete gs            # Remove an alias
 ```
 
 ### 📂 File Operations

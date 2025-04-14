@@ -92,15 +92,32 @@ var commandRegistry = map[string]command.Command{
 	"start":   createServiceCommand("start"),
 	"stop":    createServiceCommand("stop"),
 	"restart": createServiceCommand("restart"),
-	"config":{
+	"config": {
 		Handler: func(_ []string) { configs.Init() },
 	},
-	"reset-config":{
+	"reset-config": {
 		Handler: func(_ []string) { configs.ResetConfig() },
 	},
 	"whoami": {
 		Handler: func(_ []string) {
 			styles.Highlight.Println("Your majesty,", CurrentUser)
+		},
+	},
+	"alias": {
+		SubCommands: map[string]command.Command{
+			"add": {
+				MinArgs: 1,
+				Usage:   "alias add <name>=\"<command>\"",
+				Handler: actions.AliasAdd,
+			},
+			"list": {
+				Handler: actions.AliasList,
+			},
+			"delete": {
+				MinArgs: 1,
+				Usage:   "alias delete <name>",
+				Handler: actions.AliasDelete,
+			},
 		},
 	},
 }
@@ -143,6 +160,12 @@ func handleCommand(args []string) {
 	}
 
 	cmdName := args[0]
+
+	// Check if the command is an alias
+	if actions.ExecuteAlias(cmdName) {
+		return
+	}
+
 	cmd, exists := commandRegistry[cmdName]
 	if !exists {
 		styles.ErrorStyle.Println("Unknown command:", cmdName)
@@ -192,10 +215,10 @@ func handleSubCommand(parentCmd command.Command, args []string) {
 func createServiceCommand(action string) command.Command {
 	return command.Command{
 		SubCommands: map[string]command.Command{
-			"apache": {Handler: func(args []string) { handleService(action, "apache") }},
-			"mysql":  {Handler: func(args []string) { handleService(action, "mysql") }},
-			"postgres":  {Handler: func(args []string) { handleService(action, "postgres") }},
-			"all":    {Handler: func(args []string) { handleService(action, "all") }},
+			"apache":   {Handler: func(args []string) { handleService(action, "apache") }},
+			"mysql":    {Handler: func(args []string) { handleService(action, "mysql") }},
+			"postgres": {Handler: func(args []string) { handleService(action, "postgres") }},
+			"all":      {Handler: func(args []string) { handleService(action, "all") }},
 		},
 	}
 }

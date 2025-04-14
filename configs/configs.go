@@ -17,8 +17,8 @@ const (
 	gitignoreName     = ".gitignore"
 	readmeName        = "README.md"
 	exampleEnvName    = "config.example.env"
-	configVersionFile = "config.version" 
-	VERSION = "0.0.8"
+	configVersionFile = "config.version"
+	VERSION           = "0.0.8"
 )
 
 var (
@@ -141,9 +141,9 @@ func createDefaultConfig() {
 }
 
 func collectConfiguration() map[string]string {
-	return map[string]string{ 
+	return map[string]string{
 		"USERNAME":       getRequiredInput("Username"),
-		"EMAIL":          getOptionalInput("Email"), 
+		"EMAIL":          getOptionalInput("Email"),
 		"OPENAI_API_KEY": getOptionalInput("OpenAI API Key"),
 		"RELAY_API_KEY":  getOptionalInput("EkiliRelay API Key (https://relay.ekilie.com/console)\n Will be used by the ellie email sender "),
 	}
@@ -242,4 +242,8 @@ func GetConfigVersion() string {
 		return "Unknown Version"
 	}
 	return string(data)
+}
+
+func GetEllieDir() string {
+	return ConfigDir
 }
