@@ -10,6 +10,31 @@ import (
 	"github.com/tacheraSasi/ellie/styles"
 )
 
+// CommandRunner interface for executing commands
+type CommandRunner interface {
+	Run(name string, args ...string) error
+	Output(name string, args ...string) ([]byte, error)
+	CombinedOutput(name string, args ...string) ([]byte, error)
+}
+
+// RealCommandRunner implements CommandRunner using actual exec.Command
+type RealCommandRunner struct{}
+
+func (r *RealCommandRunner) Run(name string, args ...string) error {
+	return exec.Command(name, args...).Run()
+}
+
+func (r *RealCommandRunner) Output(name string, args ...string) ([]byte, error) {
+	return exec.Command(name, args...).Output()
+}
+
+func (r *RealCommandRunner) CombinedOutput(name string, args ...string) ([]byte, error) {
+	return exec.Command(name, args...).CombinedOutput()
+}
+
+// Default command runner
+var cmdRunner CommandRunner = &RealCommandRunner{}
+
 type Service struct {
 	Name        string
 	DisplayName string
@@ -51,22 +76,17 @@ var services = map[string]Service{
 }
 
 func isServiceInstalled(service Service) bool {
-	cmd := exec.Command("which", service.Name)
+	checkCmd := "which"
 	if runtime.GOOS == "windows" {
-		cmd = exec.Command("where", service.Name)
+		checkCmd = "where"
 	}
 
-	err := cmd.Run()
+	err := cmdRunner.Run(checkCmd, service.Name)
 	return err == nil
 }
 
 func getServiceStatus(service Service) string {
-	cmd := exec.Command(service.StatusCmd)
-	if runtime.GOOS == "windows" {
-		cmd = exec.Command("sc", "query", service.Windows)
-	}
-
-	output, err := cmd.Output()
+	output, err := cmdRunner.Output(service.StatusCmd)
 	if err != nil {
 		return "unknown"
 	}
