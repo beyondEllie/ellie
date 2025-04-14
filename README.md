@@ -167,15 +167,17 @@ ellie alias list                 # View all aliases
 ellie alias delete gs            # Remove an alias
 
 # Todo Management
-ellie todo add "Fix login bug"   # Add a new task
-ellie todo list                  # View all tasks
-ellie todo complete 1            # Mark task as done
-ellie todo delete 1              # Remove a task
+ellie todo add "Fix login bug" api high  # Add task with category and priority
+ellie todo list                          # View categorized tasks
+ellie todo complete 1                    # Mark task as done
+ellie todo delete 1                      # Remove a task
+ellie todo edit 1 priority high          # Update task priority
 
 # Project Management
-ellie project add api ~/projects/api  # Bookmark a project
-ellie project list                    # View all projects
-ellie switch api                      # Quick switch to project
+ellie project add api ~/projects/api "API Service" backend,nodejs  # Add project with description and tags
+ellie project list                                                    # View all projects with details
+ellie project search nodejs                                           # Search projects by name/tag/description
+ellie switch api                                                      # Quick switch to project
 ```
 
 ### 📂 File Operations
@@ -306,4 +308,35 @@ Pending tasks:
 ❌ #1: Fix login bug
 ✅ #2: Update docs
 Your development environment is ready! 🚀
+```
+
+## What's New in v0.0.11? 🎉
+
+- **Enhanced Todo System** 📝 - Categories, priorities, and editing
+- **Smart Project Management** 🚀 - Tags, descriptions, and search
+- **Usage Tracking** ⏰ - Last used timestamps for projects
+- **Better Organization** 📁 - Categorized todos and tagged projects
+- **Improved Search** 🔍 - Find projects by name, tag, or description
+
+```bash
+# Manage todos with categories and priorities! 📝
+$ ellie todo add "Fix login bug" api high
+✅ Added todo #1: Fix login bug [api] 🔴 High
+
+$ ellie todo list
+Your todos:
+📁 api:
+  ❌ #1: Fix login bug 🔴 High
+  ✅ #2: Update docs 🟡 Medium
+
+# Organize projects with tags and descriptions! 🚀
+$ ellie project add api ~/projects/api "API Service" backend,nodejs
+✅ Added project 'api'
+
+$ ellie project search nodejs
+Search results:
+📁 api
+   📝 API Service
+   📂 /Users/me/projects/api
+   🏷️  backend, nodejs
 ```

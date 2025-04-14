@@ -124,7 +124,7 @@ var commandRegistry = map[string]command.Command{
 		SubCommands: map[string]command.Command{
 			"add": {
 				MinArgs: 1,
-				Usage:   "todo add \"<task>\"",
+				Usage:   "todo add \"<task>\" [category] [priority]",
 				Handler: actions.TodoAdd,
 			},
 			"list": {
@@ -140,13 +140,18 @@ var commandRegistry = map[string]command.Command{
 				Usage:   "todo delete <id>",
 				Handler: actions.TodoDelete,
 			},
+			"edit": {
+				MinArgs: 3,
+				Usage:   "todo edit <id> <field> <value>",
+				Handler: actions.TodoEdit,
+			},
 		},
 	},
 	"project": {
 		SubCommands: map[string]command.Command{
 			"add": {
 				MinArgs: 2,
-				Usage:   "project add <name> <path>",
+				Usage:   "project add <name> <path> [description] [tags...]",
 				Handler: actions.ProjectAdd,
 			},
 			"list": {
@@ -156,6 +161,11 @@ var commandRegistry = map[string]command.Command{
 				MinArgs: 1,
 				Usage:   "project delete <name>",
 				Handler: actions.ProjectDelete,
+			},
+			"search": {
+				MinArgs: 1,
+				Usage:   "project search <query>",
+				Handler: actions.ProjectSearch,
 			},
 		},
 	},
