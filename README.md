@@ -151,6 +151,16 @@ ellie stop all        # Stop all services
 ellie sysinfo         # Show hardware/software specs
 ellie network-status  # Detailed network analysis
 
+# Command History
+ellie history         # View recent commands (cross-platform)
+
+# Daily Setup
+ellie start-day       # Start your dev day (opens apps, services, checks Git)
+ellie day-start add apps "code"  # Add apps to open
+ellie day-start add services "mysql"  # Add services to start
+ellie day-start add git_repos "~/projects/api"  # Add Git repos to check
+ellie day-start list  # View your daily setup configuration
+
 # Command Aliases
 ellie alias add gs="git status"  # Create custom shortcuts
 ellie alias list                 # View all aliases
@@ -269,3 +279,31 @@ Ellie CLI Version: 0.0.3
 ---
 
 **Maintained with ❤️ by Tachera Sasi** - Because terminal shouldn't mean terminal boredom!
+
+## What's New in v0.0.10? 🎉
+
+- **Command History Viewer** 📜 - Cross-platform command history with pretty printing
+- **Daily Setup Routine** 🌅 - One command to start your dev day
+- **Enhanced Project Management** 🚀 - Quick project switching and Git status
+- **Cross-Platform App Launcher** 🖥️ - Open apps on any OS
+- **Smart Service Management** 🔧 - Start services and check Git status
+
+```bash
+# View your command history! 📜
+$ ellie history
+Recent Commands:
+  1: git status
+  2: cd ~/projects
+  3: ellie todo add "Fix bug"
+
+# Start your day with one command! 🌅
+$ ellie start-day
+Starting your development day...
+Opening applications...
+Starting services...
+Checking Git repositories...
+Pending tasks:
+❌ #1: Fix login bug
+✅ #2: Update docs
+Your development environment is ready! 🚀
+```

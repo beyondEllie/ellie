@@ -164,6 +164,24 @@ var commandRegistry = map[string]command.Command{
 		Usage:   "switch <project-name>",
 		Handler: actions.ProjectSwitch,
 	},
+	"history": {
+		Handler: actions.History,
+	},
+	"start-day": {
+		Handler: actions.StartDay,
+	},
+	"day-start": {
+		SubCommands: map[string]command.Command{
+			"add": {
+				MinArgs: 2,
+				Usage:   "day-start add <type> <value>",
+				Handler: actions.DayStartConfigAdd,
+			},
+			"list": {
+				Handler: actions.DayStartConfigList,
+			},
+		},
+	},
 }
 
 func main() {
@@ -259,56 +277,11 @@ func handleSubCommand(parentCmd command.Command, args []string) {
 func createServiceCommand(action string) command.Command {
 	return command.Command{
 		SubCommands: map[string]command.Command{
-			"apache":   {Handler: func(args []string) { handleService(action, "apache") }},
-			"mysql":    {Handler: func(args []string) { handleService(action, "mysql") }},
-			"postgres": {Handler: func(args []string) { handleService(action, "postgres") }},
-			"all":      {Handler: func(args []string) { handleService(action, "all") }},
+			"apache":   {Handler: func(args []string) { actions.HandleService(action, "apache") }},
+			"mysql":    {Handler: func(args []string) { actions.HandleService(action, "mysql") }},
+			"postgres": {Handler: func(args []string) { actions.HandleService(action, "postgres") }},
+			"all":      {Handler: func(args []string) { actions.HandleService(action, "all") }},
 		},
-	}
-}
-
-func handleService(action, service string) {
-	actionVerb := action + "ing"
-	styles.InfoStyle.Printf("%s %s service...\n", actionVerb, service)
-
-	switch action {
-	case "start":
-		switch service {
-		case "apache":
-			actions.StartApache()
-		case "mysql":
-			actions.StartMysql()
-		case "postgres":
-			actions.StartPostgres()
-		case "all":
-			actions.StartAll()
-		}
-	case "stop":
-		switch service {
-		case "apache":
-			actions.StopApache()
-		case "mysql":
-			actions.StopMysql()
-		case "postgres":
-			actions.StopPostgres()
-		case "all":
-			actions.StopAll()
-		}
-	case "restart":
-		switch service {
-		case "apache":
-			actions.StopApache()
-			actions.StartApache()
-		case "mysql":
-			actions.StopMysql()
-			actions.StartMysql()
-		case "postgres":
-			actions.StopPostgres()
-			actions.StartPostgres()
-		case "all":
-			actions.StopAll()
-			actions.StartAll()
-		}
 	}
 }
 
