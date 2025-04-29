@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"runtime"
 	"strings"
 
 	"github.com/tacheraSasi/ellie/styles"
@@ -103,8 +102,10 @@ func isInstalled(cmd string) bool {
 	return err == nil && len(out) > 0
 }
 
-func runInstallCommand(toolName, cmd string) bool {
-	styles.InfoStyle.Printf("🚀 Installing %s...\n", toolName)
+func runInstallCommand(tool DevTool, currentOS string) bool {
+	styles.InfoStyle.Printf("🚀 Installing %s...\n", tool.Name)
+
+	cmd := tool.Install[currentOS]
 	styles.DimText.Println("Running:", cmd)
 
 	parts := strings.Split(cmd, " ")
@@ -113,19 +114,20 @@ func runInstallCommand(toolName, cmd string) bool {
 	c.Stderr = os.Stderr
 
 	if err := c.Run(); err != nil {
-		styles.ErrorStyle.Printf("❌ Failed to install %s: %v\n", toolName, err)
-		return false
-	}
-	
-	// Verify installation
-	if !isInstalled(tool.CheckCmd) {
-		styles.ErrorStyle.Printf("❌ Installation verification failed for %s\n", toolName)
+		styles.ErrorStyle.Printf("❌ Failed to install %s: %v\n", tool.Name, err)
 		return false
 	}
 
-	styles.SuccessStyle.Printf("✅ Successfully installed %s\n", toolName)
+	// Verify installation
+	if !isInstalled(tool.CheckCmd) {
+		styles.ErrorStyle.Printf("❌ Installation verification failed for %s\n", tool.Name)
+		return false
+	}
+
+	styles.SuccessStyle.Printf("✅ Successfully installed %s\n", tool.Name)
 	return true
 }
+
 
 func DevInit(installAll bool) {
 	currentOS := utils.GetOS()
@@ -167,14 +169,14 @@ func DevInit(installAll bool) {
 			continue
 		}
 
-		installCmd, exists := tool.Install[currentOS]
+		_, exists := tool.Install[currentOS]
 		if !exists {
 			styles.ErrorStyle.Printf("❌ No installation command for %s on %s\n", tool.Name, currentOS)
 			failedCount++
 			continue
 		}
 
-		if runInstallCommand(tool.Name, installCmd) {
+		if runInstallCommand(tool, utils.GetOS()) {
 			successCount++
 		} else {
 			failedCount++

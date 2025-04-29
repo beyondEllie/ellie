@@ -48,7 +48,12 @@ var commandRegistry = map[string]command.Command{
 		Handler: func(_ []string) { actions.SysInfo() },
 	},
 	"dev-init": {
-		Handler: func(_ []string) { actions.DevInit() },
+		Handler: func(args []string) {
+			fs := flag.NewFlagSet("dev-init", flag.ExitOnError)
+			allFlag := fs.Bool("all", false, "Install all recommended tools")
+			fs.Parse(args[1:])
+			actions.DevInit(*allFlag)
+		},
 	},
 	"install": {
 		MinArgs: 1,
