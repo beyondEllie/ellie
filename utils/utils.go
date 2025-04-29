@@ -180,3 +180,20 @@ func GetOS() string {
 		return "unknown"
 	}
 }
+
+func AskYesNo(question string, defaultYes bool) bool {
+	options := "[Y/n]"
+	if !defaultYes {
+		options = "[y/N]"
+	}
+
+	styles.InfoStyle.Printf("%s %s ", question, options)
+	var response string
+	fmt.Scanln(&response)
+
+	response = strings.ToLower(strings.TrimSpace(response))
+	if response == "" {
+		return defaultYes
+	}
+	return response == "y" || response == "yes"
+}
