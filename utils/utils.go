@@ -167,3 +167,16 @@ func IsErrFatalWithMsg(err error,msg string) {
 		os.Exit(1)
 	}
 }
+
+func GetOS() string {
+	switch os := runtime.GOOS; os {
+	case "darwin":
+		return "mac"
+	case "linux":
+		return "linux"
+	case "windows":
+		return "windows"
+	default:
+		return "unknown"
+	}
+}
