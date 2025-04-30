@@ -13,21 +13,18 @@ func ServerInit() {
 	// 	return
 	// }
 
-	// Get the server name from the user
 	serverName, err := utils.GetInput("Enter the server name: ")
 	if err != nil {
 		fmt.Println("Error reading input:", err)
 		return
 	}
 
-	// Create the server directory
 	err = os.Mkdir(serverName, 0755)
 	if err != nil {
 		fmt.Println("Error creating server directory:", err)
 		return
 	}
 
-	// Initialize the server with default settings
 	err = os.WriteFile(serverName+"/config.json", []byte("{}"), 0644)
 	if err != nil {
 		fmt.Println("Error creating config file:", err)
