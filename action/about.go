@@ -1,64 +1,29 @@
 package actions
 
 import (
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
+	"fmt"
+
+	"github.com/tacheraSasi/ellie/styles"
 )
 
-// ShowAboutWindow displays the about window for Ellie
+// ShowAboutWindow displays the about information for Ellie
 func ShowAboutWindow(args []string) {
-	// Create a new Fyne application
-	a := app.New()
-	w := a.NewWindow("About Ellie")
+	styles.HeaderStyle.Println("Ellie - The AI-Powered CLI Companion")
+	styles.InfoStyle.Println("Version: 0.0.11")
+	fmt.Println()
 
-	// Set window size
-	w.Resize(fyne.NewSize(600, 400))
+	styles.Highlight.Println("Description:")
+	styles.InfoStyle.Println("Your all-in-one terminal buddy for system management, Git workflows, and productivity hacks.")
+	fmt.Println()
 
-	// Create content
-	title := widget.NewLabel("Ellie - The AI-Powered CLI Companion")
-	title.TextStyle = fyne.TextStyle{Bold: true}
-	title.Alignment = fyne.TextAlignCenter
+	styles.Highlight.Println("Core Features:")
+	styles.InfoStyle.Println("• System Management")
+	styles.InfoStyle.Println("• Git Workflows")
+	styles.InfoStyle.Println("• Todo Management")
+	styles.InfoStyle.Println("• Project Management")
+	styles.InfoStyle.Println("• Network Management")
+	styles.InfoStyle.Println("• AI Integration")
+	fmt.Println()
 
-	version := widget.NewLabel("Version: 0.0.11")
-	version.Alignment = fyne.TextAlignCenter
-
-	description := widget.NewLabel("Your all-in-one terminal buddy for system management, Git workflows, and productivity hacks.")
-	description.Wrapping = fyne.TextWrapWord
-	description.Alignment = fyne.TextAlignCenter
-
-	features := widget.NewLabel("Core Features:\n" +
-		"• System Management\n" +
-		"• Git Workflows\n" +
-		"• Todo Management\n" +
-		"• Project Management\n" +
-		"• Network Management\n" +
-		"• AI Integration")
-	features.Wrapping = fyne.TextWrapWord
-
-	author := widget.NewLabel("Built with ❤️ by Tachera Sasi")
-	author.Alignment = fyne.TextAlignCenter
-
-	// Create a scrollable container for the content
-	content := container.NewVBox(
-		title,
-		version,
-		description,
-		widget.NewSeparator(),
-		features,
-		widget.NewSeparator(),
-		author,
-	)
-
-	// Create a scroll container
-	scroll := container.NewScroll(content)
-	scroll.Resize(fyne.NewSize(580, 380))
-
-	// Set the content
-	w.SetContent(scroll)
-
-	// Show and run the window
-	w.Show()
-	a.Run()
+	styles.SuccessStyle.Println("Built with ❤️ by Tachera Sasi")
 }
