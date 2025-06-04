@@ -1,37 +1,41 @@
 package actions
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
 	"os"
 	"strings"
 
+	"github.com/tacheraSasi/ellie/chat"
+	"github.com/tacheraSasi/ellie/llm"
 	"github.com/tacheraSasi/ellie/utils"
 )
 
-type OpenAIRequest struct {
-	Model    string    `json:"model"`
-	Messages []Message `json:"messages"`
-}
-
-type Message struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
-}
-
-type OpenAIResponse struct {
-	Choices []Choice `json:"choices"`
-}
-
-type Choice struct {
-	Message Message `json:"message"`
-}
-
+// Chat starts an interactive chat session with the AI
 func Chat(openaiApikey string) {
+	// Create a new LLM provider (OpenAI by default)
+	config := llm.Config{
+		APIKey:  openaiApikey,
+		Model:   "gpt-4",
+		Timeout: 30,
+	}
+
+	provider, err := llm.NewProvider("openai", config)
+	if err != nil {
+		fmt.Printf("Error creating provider: %v\n", err)
+		return
+	}
+
+	// Create a new chat session
+	session := chat.NewChatSession(provider)
+
+	// Add system message with instructions
+	instructions := fmt.Sprintf("You are Ellie, a local Linux AI assistant and friend. Everything about you: %s, You were created by Tachera sasi he is so brilliant and handsome", getReadmeContent())
+	session.SendMessage(instructions)
+
+	fmt.Println("Welcome to Ellie! Type 'exit' to quit.")
+	fmt.Println("----------------------------------------")
+
 	for {
 		msg, err := utils.GetInput("Talk to me: ")
 		if err != nil {
@@ -43,86 +47,87 @@ func Chat(openaiApikey string) {
 			fmt.Println("Goodbye!")
 			break
 		}
-		// fmt.Println(utils.Ads[1])
 
-		output := chatWithOpenAI(msg, openaiApikey)
-		if output == "" {
-			fmt.Println("No response received.")
+		// Send the message and get the response
+		response, err := session.SendMessage(msg)
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
 			continue
 		}
 
 		// Rendering markdown with glamour
-		renderedOutput, err := utils.RenderMarkdown(output)
+		renderedOutput, err := utils.RenderMarkdown(response)
 		if err != nil {
 			fmt.Println("Error rendering Markdown:", err)
 			continue
 		}
-		if utils.IsEven(utils.RandNum()){
+
+		if utils.IsEven(utils.RandNum()) {
 			fmt.Println(utils.Ads[1])
 		}
 		fmt.Println(renderedOutput)
+		fmt.Println("----------------------------------------")
 	}
 }
 
-func chatWithOpenAI(message, openaiApikey string) string {
-	url := "https://api.openai.com/v1/chat/completions"
-	instructions := fmt.Sprintf("You are Ellie, a local Linux AI assistant and friend. Everything about you: %s, You were created by Tachera sasi he is so  brilliant and handsome", getReadmeContent())
-
-	reqBody := OpenAIRequest{
-		Model: "gpt-4",
-		Messages: []Message{
-			{Role: "system", Content: instructions},
-			{Role: "user", Content: message},
-		},
+// ChatWithGemini starts an interactive chat session with Gemini
+func ChatWithGemini(geminiApikey string) {
+	// Create a new LLM provider (Gemini)
+	config := llm.Config{
+		APIKey:  geminiApikey,
+		Model:   "gemini-pro",
+		Timeout: 30,
 	}
 
-	body, err := json.Marshal(reqBody)
+	provider, err := llm.NewProvider("gemini", config)
 	if err != nil {
-		log.Printf("Error marshalling JSON: %v", err)
-		return ""
+		fmt.Printf("Error creating provider: %v\n", err)
+		return
 	}
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
-	if err != nil {
-		log.Printf("Error creating request: %v", err)
-		return ""
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+openaiApikey)
+	// Create a new chat session
+	session := chat.NewChatSession(provider)
 
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Printf("Error sending request: %v", err)
-		return ""
-	}
-	defer resp.Body.Close()
+	// Add system message with instructions
+	instructions := fmt.Sprintf("You are Ellie, a local Linux AI assistant and friend. Everything about you: %s, You were created by Tachera sasi he is so brilliant and handsome", getReadmeContent())
+	session.SendMessage(instructions)
 
-	if resp.StatusCode != http.StatusOK {
-		log.Printf("Error: received status code %d", resp.StatusCode)
-		return ""
-	}
+	fmt.Println("Welcome to Ellie (Gemini)! Type 'exit' to quit.")
+	fmt.Println("----------------------------------------")
 
-	respBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Printf("Error reading response: %v", err)
-		return ""
-	}
+	for {
+		msg, err := utils.GetInput("Talk to me: ")
+		if err != nil {
+			fmt.Println("Error reading input:", err)
+			continue
+		}
 
-	var openAIResponse OpenAIResponse
-	if err := json.Unmarshal(respBody, &openAIResponse); err != nil {
-		log.Printf("Error unmarshalling response: %v", err)
-		return ""
-	}
+		if strings.EqualFold(msg, "exit") {
+			fmt.Println("Goodbye!")
+			break
+		}
 
-	if len(openAIResponse.Choices) > 0 {
-		return openAIResponse.Choices[0].Message.Content
-	}
+		// Send the message and get the response
+		response, err := session.SendMessage(msg)
+		if err != nil {
+			fmt.Printf("Error: %v\n", err)
+			continue
+		}
 
-	return "No response received from OpenAI."
+		// Rendering markdown with glamour
+		renderedOutput, err := utils.RenderMarkdown(response)
+		if err != nil {
+			fmt.Println("Error rendering Markdown:", err)
+			continue
+		}
+
+		if utils.IsEven(utils.RandNum()) {
+			fmt.Println(utils.Ads[1])
+		}
+		fmt.Println(renderedOutput)
+		fmt.Println("----------------------------------------")
+	}
 }
-
-func ChatWithGemini(){}
 
 func getReadmeContent() string {
 	content, err := os.ReadFile("./README.md")
@@ -132,5 +137,3 @@ func getReadmeContent() string {
 	}
 	return string(content)
 }
-
-
