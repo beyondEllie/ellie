@@ -116,3 +116,8 @@ test:
 
 clean:
 	go clean
+
+
+set_global:
+	@echo 'Setting global version to $(VERSION)...'
+	@sudo mv ellie /usr/local/bin

@@ -61,7 +61,7 @@ func Chat(openaiApikey string) {
 			continue
 		}
 		fmt.Println(renderedOutput)
-		fmt.Println("----------------------------------------")
+		// fmt.Println("----------------------------------------")
 	}
 }
 
