@@ -10,3 +10,13 @@ type DevTool struct {
 	Configure      map[string]string // OS: post-install configuration
 	DefaultInstall bool
 }
+
+// TODO:Will change this to more accurate struc with frameworks and stuff...
+type ServerTool struct{
+	Name        string
+	Description string
+	CheckCmd    string
+	Install     map[string]string // OS: command
+	Configure   map[string]string // OS: post-install configuration
+	DefaultInstall bool
+}
