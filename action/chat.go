@@ -29,7 +29,7 @@ func Chat(openaiApikey string) {
 	session := chat.NewChatSession(provider)
 
 	// Add system message with instructions
-	instructions := fmt.Sprintf("You are Ellie, a local Linux AI assistant and friend. Everything about you: %s, You were created by Tachera sasi he is so brilliant and handsome", getReadmeContent())
+	instructions := fmt.Sprintf(static.Instructions(), getReadmeContent())
 	session.SendMessage(instructions)
 
 	fmt.Println("Welcome to Ellie! Type 'exit' to quit.")
