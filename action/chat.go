@@ -16,6 +16,10 @@ func Chat(openaiApikey string) {
 	config := llm.Config{
 		APIKey:  openaiApikey,
 		Model:   "gpt-3.5-turbo",
+		// Model:   "gpt-4", // Uncomment for GPT-4
+		// Model:   "gpt-4o", // Uncomment for GPT-4o
+		// Model:   "gpt-4o-mini", // Uncomment for GPT-4o-mini
+		// Model:   "gpt-3.5-turbo-16k", // Uncomment for 16k context length
 		Timeout: 30,
 	}
 
