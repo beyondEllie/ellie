@@ -197,3 +197,36 @@ func AskYesNo(question string, defaultYes bool) bool {
 	}
 	return response == "y" || response == "yes"
 }
+
+// Shows a loading spinner in the terminal
+func ShowLoadingSpinner(message string) {
+	styles.InfoStyle.Printf("%s ", message)
+	spinner := []string{"|", "/", "-", "\\"}
+	for i := 0; i < 10; i++ {
+		fmt.Printf("\r%s %s", message, spinner[i%len(spinner)])
+		time.Sleep(100 * time.Millisecond)
+	}
+}
+
+// ShowLoadingSpinnerWithMessage shows a loading spinner with a custom message.
+func ShowLoadingSpinnerWithMessage(message string) {
+	styles.InfoStyle.Printf("%s ", message)
+	spinner := []string{"|", "/", "-", "\\"}
+	for i := 0; i < 10; i++ {
+		fmt.Printf("\r%s %s", message, spinner[i%len(spinner)])
+		time.Sleep(100 * time.Millisecond)
+	}
+	fmt.Println("\r" + message + " done!")
+}
+
+// ShowLoadingSpinnerWithMessageAndDuration shows a loading spinner with a custom message and duration.
+func ShowLoadingSpinnerWithMessageAndDuration(message string, duration time.Duration) {
+	styles.InfoStyle.Printf("%s ", message)
+	spinner := []string{"|", "/", "-", "\\"}
+	endTime := time.Now().Add(duration)
+	for time.Now().Before(endTime) {
+		fmt.Printf("\r%s %s", message, spinner[time.Now().UnixNano()/100000000%int64(len(spinner))])
+		time.Sleep(100 * time.Millisecond)
+	}
+	fmt.Println("\r" + message + " done!")
+}

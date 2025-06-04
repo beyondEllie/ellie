@@ -3,13 +3,14 @@ package actions
 import (
 	"fmt"
 
+	"github.com/tacheraSasi/ellie/configs"
 	"github.com/tacheraSasi/ellie/styles"
 )
 
 // ShowAboutWindow displays the about information for Ellie
 func ShowAboutWindow(args []string) {
 	styles.HeaderStyle.Println("Ellie - The AI-Powered CLI Companion")
-	styles.InfoStyle.Println("Version: 0.0.11")
+	styles.InfoStyle.Println("Version:",configs.VERSION)
 	fmt.Println()
 
 	styles.Highlight.Println("Description:")
