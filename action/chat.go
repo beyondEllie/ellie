@@ -2,12 +2,11 @@ package actions
 
 import (
 	"fmt"
-	"log"
-	"os"
 	"strings"
 
 	"github.com/tacheraSasi/ellie/chat"
 	"github.com/tacheraSasi/ellie/llm"
+	"github.com/tacheraSasi/ellie/static"
 	"github.com/tacheraSasi/ellie/utils"
 )
 
@@ -122,10 +121,6 @@ func ChatWithGemini(geminiApikey string) {
 }
 
 func getReadmeContent() string {
-	content, err := os.ReadFile("./README.md")
-	if err != nil {
-		log.Printf("Error reading README.md: %v", err)
-		return "README.md file not found or unreadable."
-	}
+	content := static.GetAbout()
 	return string(content)
 }

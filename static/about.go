@@ -1,7 +1,7 @@
 package static
 
 
-func GetReadme() string {
+func GetAbout() string {
 	readme,err := GetStaticFile("ABOUT.md")
 	if err != nil {
 		// log.Println("Error loading ABOUT.md:", err)
