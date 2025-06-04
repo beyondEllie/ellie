@@ -5,7 +5,7 @@ import (
 	"io/fs"
 )
 
-// go:embed *
+//go:embed *
 var Static embed.FS
 
 func GetStaticFile(path string) (string, error) {

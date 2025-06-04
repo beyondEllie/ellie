@@ -9,6 +9,7 @@ import (
 	actions "github.com/tacheraSasi/ellie/action"
 	"github.com/tacheraSasi/ellie/command"
 	"github.com/tacheraSasi/ellie/configs"
+	"github.com/tacheraSasi/ellie/static"
 	"github.com/tacheraSasi/ellie/styles"
 )
 
@@ -346,6 +347,8 @@ func greetUser(args []string) {
 }
 
 func showHelpFunc() {
+	fmt.Print(static.GetReadme())
+	os.Exit(0);
 	styles.HeaderStyle.Println("Ellie CLI - AI-Powered System Management Tool")
 	styles.InfoStyle.Println("Usage: ellie [--help] [--version] <command> [arguments]")
 
