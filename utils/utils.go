@@ -14,12 +14,12 @@ import (
 	"github.com/tacheraSasi/ellie/styles"
 )
 
-// Ads for random promotion messages
-var Ads []string = []string{
-	"🚀 Boost your productivity with ekilie!",
-	"🔥 Check out ekiliSense for smarter school management!",
-	"💻 Need a project tracker? Try ekilie!",
-}
+// // Ads for random promotion messages
+// var Ads []string = []string{
+// 	"🚀 Boost your productivity with ekilie!",
+// 	"🔥 Check out ekiliSense for smarter school management!",
+// 	"💻 Need a project tracker? Try ekilie!",
+// }
 
 // GetInput prompts the user for input and returns the trimmed string.
 func GetInput(prompt string) (string, error) {
@@ -144,9 +144,9 @@ func ClearScreen() {
 }
 
 // GetRandomAd returns a random promotional message from Ads.
-func GetRandomAd() string {
-	return Ads[rand.IntN(len(Ads))]
-}
+// func GetRandomAd() string {
+// 	return Ads[rand.IntN(len(Ads))]
+// }
 
 func IsErr(err error,msg string) bool {
 	if err != nil {
