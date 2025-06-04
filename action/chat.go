@@ -16,7 +16,7 @@ func Chat(openaiApikey string) {
 	// Create a new LLM provider (OpenAI by default)
 	config := llm.Config{
 		APIKey:  openaiApikey,
-		Model:   "gpt-4",
+		Model:   "gpt-3.5-turbo",
 		Timeout: 30,
 	}
 
@@ -75,7 +75,7 @@ func ChatWithGemini(geminiApikey string) {
 	// Create a new LLM provider (Gemini)
 	config := llm.Config{
 		APIKey:  geminiApikey,
-		Model:   "gemini-pro",
+		Model:   "gemini-1.5-flash",
 		Timeout: 30,
 	}
 
@@ -125,7 +125,6 @@ func ChatWithGemini(geminiApikey string) {
 			fmt.Println(utils.Ads[1])
 		}
 		fmt.Println(renderedOutput)
-		fmt.Println("----------------------------------------")
 	}
 }
 
