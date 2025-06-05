@@ -24,7 +24,7 @@ import (
 // GetInput prompts the user for input and returns the trimmed string.
 func GetInput(prompt string) (string, error) {
 	reader := bufio.NewReader(os.Stdin)
-	styles.InputPrompt.Print(prompt," ")
+	styles.InputPrompt.Print(prompt, " ")
 	input, err := reader.ReadString('\n')
 	if err != nil {
 		return "", err
@@ -58,7 +58,7 @@ func RunCommand(cmdArgs []string, errMsg string) {
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Printf("%s %s\n", errMsg, err)
-		return 
+		return
 	}
 	if len(output) > 0 {
 		fmt.Printf("Output:\n%s\n", output)
@@ -148,20 +148,20 @@ func ClearScreen() {
 // 	return Ads[rand.IntN(len(Ads))]
 // }
 
-func IsErr(err error,msg string) bool {
+func IsErr(err error, msg string) bool {
 	if err != nil {
-		styles.ErrorStyle.Println(msg,err)
+		styles.ErrorStyle.Println(msg, err)
 		return true
 	}
 	return false
 }
-func IsErrFatal(err error,msg string) {
+func IsErrFatal(err error, msg string) {
 	if err != nil {
-		fmt.Println(msg,err)
+		fmt.Println(msg, err)
 		os.Exit(1)
 	}
 }
-func IsErrFatalWithMsg(err error,msg string) {
+func IsErrFatalWithMsg(err error, msg string) {
 	if err != nil {
 		fmt.Println(msg)
 		os.Exit(1)
@@ -199,13 +199,21 @@ func AskYesNo(question string, defaultYes bool) bool {
 }
 
 // Shows a loading spinner in the terminal
-func ShowLoadingSpinner(message string) {
+func ShowLoadingSpinner(message string, done chan bool) {
 	styles.InfoStyle.Printf("%s ", message)
-	spinner := []string{"|", "/", "-", "\\"}
-	for i := 0; i < 10; i++ {
-		fmt.Printf("\r%s %s", message, spinner[i%len(spinner)])
-		time.Sleep(100 * time.Millisecond)
-	}
+	spinner := []string{"⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"}
+	go func() {
+		for i := 0; i < 10; i++ {
+			select {
+			case <-done:
+				// fmt.Printf("\r%s done!\n", message)
+				return
+			default:
+				fmt.Printf("\r%s %s", message, spinner[i%len(spinner)])
+				time.Sleep(100 * time.Millisecond)
+			}
+		}
+	}()
 }
 
 // ShowLoadingSpinnerWithMessage shows a loading spinner with a custom message.
