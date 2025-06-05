@@ -209,7 +209,7 @@ func ShowLoadingSpinner(message string, done chan bool) {
 			// fmt.Printf("\r%s done!           \n", message)
 			return
 		default:
-			fmt.Printf("\r%s %s", message, spinner[i%len(spinner)])
+			styles.DimText.Printf("\r%s %s", message, spinner[i%len(spinner)])
 			time.Sleep(100 * time.Millisecond)
 			i++
 		}

@@ -16,7 +16,7 @@ var (
 	Bold      = color.New(color.Bold)
 	Underline = color.New(color.Underline)
 
-	// Custom styles
+	// Ellie styles
 	HeaderStyle   = color.New(color.FgGreen, color.Bold)         // Titles & headers
 	ErrorStyle    = color.New(color.FgRed, color.Bold, color.BgBlack) // Errors
 	SuccessStyle  = color.New(color.FgHiGreen, color.Bold)       // Success messages
@@ -27,4 +27,5 @@ var (
 	Highlight     = color.New(color.FgHiBlue, color.Bold)        // Highlights key info
 	DimText       = color.New(color.FgWhite, color.Faint)        // Subtle text
 	InvertedStyle = color.New(color.FgBlack, color.BgWhite)      // Inverted text
+
 )
