@@ -17,5 +17,5 @@ func Size(){
 }
 
 func SizeMac(){
-
+	styles.SuccessStyle.Println("yoyyooooo")
 }
