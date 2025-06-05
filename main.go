@@ -30,6 +30,10 @@ var commandRegistry = map[string]command.Command{
 	"pwd": {
 		Handler: func(_ []string) { actions.Pwd() },
 	},
+	"size":{
+		MinArgs: 1,
+		Handler: func(s []string) { actions.Size()},
+	},
 	"open-explorer": {
 		Handler: func(_ []string) { actions.OpenExplorer() },
 	},

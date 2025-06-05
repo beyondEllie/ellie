@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"bufio"
 	"fmt"
 	"math/rand/v2"
 	"os"
@@ -21,16 +20,6 @@ import (
 // 	"💻 Need a project tracker? Try ekilie!",
 // }
 
-// GetInput prompts the user for input and returns the trimmed string.
-func GetInput(prompt string) (string, error) {
-	reader := bufio.NewReader(os.Stdin)
-	styles.InputPrompt.Print(prompt, " ")
-	input, err := reader.ReadString('\n')
-	if err != nil {
-		return "", err
-	}
-	return strings.TrimSpace(input), nil
-}
 
 // RandNum generates a random number between 0 and 100.
 func RandNum() int {
