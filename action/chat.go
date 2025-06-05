@@ -7,6 +7,7 @@ import (
 	"github.com/tacheraSasi/ellie/chat"
 	"github.com/tacheraSasi/ellie/llm"
 	"github.com/tacheraSasi/ellie/static"
+	"github.com/tacheraSasi/ellie/styles"
 	"github.com/tacheraSasi/ellie/utils"
 )
 
@@ -14,8 +15,8 @@ import (
 func Chat(openaiApikey string) {
 	// Create a new LLM provider (OpenAI by default)
 	config := llm.Config{
-		APIKey:  openaiApikey,
-		Model:   "gpt-3.5-turbo",
+		APIKey: openaiApikey,
+		Model:  "gpt-3.5-turbo",
 		// Model:   "gpt-4", // Uncomment for GPT-4
 		// Model:   "gpt-4o", // Uncomment for GPT-4o
 		// Model:   "gpt-4o-mini", // Uncomment for GPT-4o-mini
@@ -33,11 +34,11 @@ func Chat(openaiApikey string) {
 	session := chat.NewChatSession(provider)
 
 	// Add system message with instructions
-	instructions := fmt.Sprintf("!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s %s",getReadmeContent(),static.Instructions())
+	instructions := fmt.Sprintf("!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s %s", getReadmeContent(), static.Instructions())
 	session.SendMessage(instructions)
 
-	fmt.Println("Welcome to Ellie! Type 'exit' to quit.")
-	fmt.Println("----------------------------------------")
+	styles.InfoStyle.Println("Welcome to Ellie! Type 'exit' to quit.")
+	styles.DimText.Println("----------------------------------------")
 
 	for {
 		msg, err := utils.GetInput("Talk to me: ")
@@ -50,22 +51,41 @@ func Chat(openaiApikey string) {
 			fmt.Println("Goodbye!")
 			break
 		}
+		done := make(chan bool)
+		errorChan := make(chan error)
+		responseChan := make(chan string)
+
+		//Loading spinner
+		utils.ShowLoadingSpinner("Thinking...", done)
 
 		// Send the message and get the response
-		response, err := session.SendMessage(msg)
-		if err != nil {
-			fmt.Printf("Error: %v\n", err)
+		go func() {
+			response, err := session.SendMessage(msg)
+			if err != nil {
+				errorChan <- err
+				return
+			}
+			responseChan <- response
+		}()
+
+		select {
+		case err := <-errorChan:
+			done <- true
+			fmt.Printf("\nError: %v\n", err)
 			continue
+
+		case response := <-responseChan:
+			// Try to render markdown
+			renderedOutput, err := utils.RenderMarkdown(response)
+			done <- true
+			if err != nil {
+				fmt.Println("\nRaw response:", response)
+				fmt.Println("Error rendering Markdown:", err)
+				continue
+			}
+			fmt.Println("\n" + renderedOutput)
 		}
 
-		// Rendering markdown with glamour
-		renderedOutput, err := utils.RenderMarkdown(response)
-		if err != nil {
-			fmt.Println("Error rendering Markdown:", err)
-			continue
-		}
-		fmt.Println(renderedOutput)
-		// fmt.Println("----------------------------------------")
 	}
 }
 

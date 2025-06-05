@@ -200,21 +200,22 @@ func AskYesNo(question string, defaultYes bool) bool {
 
 // Shows a loading spinner in the terminal
 func ShowLoadingSpinner(message string, done chan bool) {
-	styles.InfoStyle.Printf("%s ", message)
 	spinner := []string{"⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"}
-	go func() {
-		for i := 0; i < 10; i++ {
-			select {
-			case <-done:
-				// fmt.Printf("\r%s done!\n", message)
-				return
-			default:
-				fmt.Printf("\r%s %s", message, spinner[i%len(spinner)])
-				time.Sleep(100 * time.Millisecond)
-			}
+	i := 0
+
+	for {
+		select {
+		case <-done:
+			// fmt.Printf("\r%s done!           \n", message)
+			return
+		default:
+			fmt.Printf("\r%s %s", message, spinner[i%len(spinner)])
+			time.Sleep(100 * time.Millisecond)
+			i++
 		}
-	}()
+	}
 }
+
 
 // ShowLoadingSpinnerWithMessage shows a loading spinner with a custom message.
 func ShowLoadingSpinnerWithMessage(message string) {
