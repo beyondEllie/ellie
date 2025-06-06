@@ -8,6 +8,7 @@ import (
 	"github.com/tacheraSasi/ellie/llm"
 	"github.com/tacheraSasi/ellie/static"
 	"github.com/tacheraSasi/ellie/styles"
+	"github.com/tacheraSasi/ellie/types"
 	"github.com/tacheraSasi/ellie/utils"
 )
 
@@ -33,8 +34,14 @@ func Chat(openaiApikey string) {
 	// Create a new chat session
 	session := chat.NewChatSession(provider)
 
-	// Add system message with instructions
-	instructions := fmt.Sprintf("!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s %s", getReadmeContent(), static.Instructions())
+	// Create user context
+	userCtx := types.NewUserContext()
+
+	// Add system message with instructions and context
+	instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s %s`,
+		getReadmeContent(),
+		static.Instructions(*userCtx))
+
 	if _, err := session.SendMessage(instructions); err != nil {
 		styles.ErrorStyle.Printf("Error setting up initial instructions: %v\n", err)
 		return
@@ -55,6 +62,14 @@ func Chat(openaiApikey string) {
 			break
 		}
 
+		// Update context before processing the message
+		userCtx.UpdateContext()
+		userCtx.LastCommand = msg
+		userCtx.CommandCount++
+
+		// Add context to the message
+		contextualMsg := fmt.Sprintf("%s\n\nCurrent Context:\n%s", msg, userCtx.GetContextString())
+
 		done := make(chan bool)
 		errorChan := make(chan error)
 		responseChan := make(chan string)
@@ -64,7 +79,7 @@ func Chat(openaiApikey string) {
 
 		// Send the message and get the response
 		go func() {
-			response, err := session.SendMessage(msg)
+			response, err := session.SendMessage(contextualMsg)
 			if err != nil {
 				errorChan <- err
 				return
@@ -112,8 +127,14 @@ func ChatWithGemini(geminiApikey string) {
 	// Create a new chat session
 	session := chat.NewChatSession(provider)
 
-	// Add system message with instructions
-	instructions := fmt.Sprintf("!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s %s", getReadmeContent(), static.Instructions())
+	// Create user context
+	userCtx := types.NewUserContext()
+
+	// Add system message with instructions and context
+	instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s %s`,
+		getReadmeContent(),
+		static.Instructions(*userCtx))
+
 	if _, err := session.SendMessage(instructions); err != nil {
 		styles.ErrorStyle.Printf("Error setting up initial instructions: %v\n", err)
 		return
@@ -134,6 +155,14 @@ func ChatWithGemini(geminiApikey string) {
 			break
 		}
 
+		// Update context before processing the message
+		userCtx.UpdateContext()
+		userCtx.LastCommand = msg
+		userCtx.CommandCount++
+
+		// Add context to the message
+		contextualMsg := fmt.Sprintf("%s\n\nCurrent Context:\n%s", msg, userCtx.GetContextString())
+
 		done := make(chan bool)
 		errorChan := make(chan error)
 		responseChan := make(chan string)
@@ -143,7 +172,7 @@ func ChatWithGemini(geminiApikey string) {
 
 		// Send the message and get the response
 		go func() {
-			response, err := session.SendMessage(msg)
+			response, err := session.SendMessage(contextualMsg)
 			if err != nil {
 				errorChan <- err
 				return
@@ -168,7 +197,7 @@ func ChatWithGemini(geminiApikey string) {
 				continue
 			}
 			fmt.Println("\n" + renderedOutput)
-			styles.DimText.Println("----------------------------------------")
+			// styles.DimText.Println("----------------------------------------")
 		}
 	}
 }
