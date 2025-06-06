@@ -20,7 +20,6 @@ import (
 // 	"💻 Need a project tracker? Try ekilie!",
 // }
 
-
 // RandNum generates a random number between 0 and 100.
 func RandNum() int {
 	return rand.IntN(100)
@@ -191,20 +190,20 @@ func AskYesNo(question string, defaultYes bool) bool {
 func ShowLoadingSpinner(message string, done chan bool) {
 	spinner := []string{"⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷"}
 	i := 0
+	ticker := time.NewTicker(100 * time.Millisecond)
+	defer ticker.Stop()
 
 	for {
 		select {
 		case <-done:
-			// fmt.Printf("\r%s done!           \n", message)
+			fmt.Print("\r\033[K") // Clear the current line
 			return
-		default:
-			styles.DimText.Printf("\r%s %s", message, spinner[i%len(spinner)])
-			time.Sleep(100 * time.Millisecond)
+		case <-ticker.C:
+			fmt.Printf("\r%s %s", message, spinner[i%len(spinner)])
 			i++
 		}
 	}
 }
-
 
 // ShowLoadingSpinnerWithMessage shows a loading spinner with a custom message.
 func ShowLoadingSpinnerWithMessage(message string) {

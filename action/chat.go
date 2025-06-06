@@ -26,7 +26,7 @@ func Chat(openaiApikey string) {
 
 	provider, err := llm.NewProvider("openai", config)
 	if err != nil {
-		fmt.Printf("Error creating provider: %v\n", err)
+		styles.ErrorStyle.Printf("Error creating provider: %v\n", err)
 		return
 	}
 
@@ -35,7 +35,10 @@ func Chat(openaiApikey string) {
 
 	// Add system message with instructions
 	instructions := fmt.Sprintf("!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s %s", getReadmeContent(), static.Instructions())
-	session.SendMessage(instructions)
+	if _, err := session.SendMessage(instructions); err != nil {
+		styles.ErrorStyle.Printf("Error setting up initial instructions: %v\n", err)
+		return
+	}
 
 	styles.InfoStyle.Println("Welcome to Ellie! Type 'exit' to quit.")
 	styles.DimText.Println("----------------------------------------")
@@ -43,20 +46,21 @@ func Chat(openaiApikey string) {
 	for {
 		msg, err := utils.GetInput("Talk to me: ")
 		if err != nil {
-			fmt.Println("Error reading input:", err)
+			styles.ErrorStyle.Printf("Error reading input: %v\n", err)
 			continue
 		}
 
 		if strings.EqualFold(msg, "exit") {
-			fmt.Println("Goodbye!")
+			styles.InfoStyle.Println("Goodbye!")
 			break
 		}
+
 		done := make(chan bool)
 		errorChan := make(chan error)
 		responseChan := make(chan string)
 
-		//Loading spinner
-		utils.ShowLoadingSpinner("Thinking...", done)
+		// Start loading spinner in a goroutine
+		go utils.ShowLoadingSpinner("Thinking...", done)
 
 		// Send the message and get the response
 		go func() {
@@ -68,24 +72,25 @@ func Chat(openaiApikey string) {
 			responseChan <- response
 		}()
 
+		// Wait for either response or error
 		select {
 		case err := <-errorChan:
-			done <- true
-			fmt.Printf("\nError: %v\n", err)
+			done <- true // Stop the spinner
+			styles.ErrorStyle.Printf("\nError: %v\n", err)
 			continue
 
 		case response := <-responseChan:
+			done <- true // Stop the spinner
 			// Try to render markdown
 			renderedOutput, err := utils.RenderMarkdown(response)
-			done <- true
 			if err != nil {
-				fmt.Println("\nRaw response:", response)
-				fmt.Println("Error rendering Markdown:", err)
+				styles.ErrorStyle.Println("\nRaw response:", response)
+				styles.ErrorStyle.Println("Error rendering Markdown:", err)
 				continue
 			}
 			fmt.Println("\n" + renderedOutput)
+			styles.DimText.Println("----------------------------------------")
 		}
-
 	}
 }
 
@@ -100,7 +105,7 @@ func ChatWithGemini(geminiApikey string) {
 
 	provider, err := llm.NewProvider("gemini", config)
 	if err != nil {
-		fmt.Printf("Error creating provider: %v\n", err)
+		styles.ErrorStyle.Printf("Error creating provider: %v\n", err)
 		return
 	}
 
@@ -108,39 +113,63 @@ func ChatWithGemini(geminiApikey string) {
 	session := chat.NewChatSession(provider)
 
 	// Add system message with instructions
-	instructions := fmt.Sprintf("You are Ellie, a local Linux AI assistant and friend. Everything about you: %s, You were created by Tachera sasi he is so brilliant and handsome", getReadmeContent())
-	session.SendMessage(instructions)
+	instructions := fmt.Sprintf("!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s %s", getReadmeContent(), static.Instructions())
+	if _, err := session.SendMessage(instructions); err != nil {
+		styles.ErrorStyle.Printf("Error setting up initial instructions: %v\n", err)
+		return
+	}
 
-	fmt.Println("Welcome to Ellie (Gemini)! Type 'exit' to quit.")
-	fmt.Println("----------------------------------------")
+	styles.InfoStyle.Println("Welcome to Ellie (Gemini)! Type 'exit' to quit.")
+	styles.DimText.Println("----------------------------------------")
 
 	for {
 		msg, err := utils.GetInput("Talk to me: ")
 		if err != nil {
-			fmt.Println("Error reading input:", err)
+			styles.ErrorStyle.Printf("Error reading input: %v\n", err)
 			continue
 		}
 
 		if strings.EqualFold(msg, "exit") {
-			fmt.Println("Goodbye!")
+			styles.InfoStyle.Println("Goodbye!")
 			break
 		}
 
+		done := make(chan bool)
+		errorChan := make(chan error)
+		responseChan := make(chan string)
+
+		// Start loading spinner in a goroutine
+		go utils.ShowLoadingSpinner("Thinking...", done)
+
 		// Send the message and get the response
-		response, err := session.SendMessage(msg)
-		if err != nil {
-			fmt.Printf("Error: %v\n", err)
-			continue
-		}
+		go func() {
+			response, err := session.SendMessage(msg)
+			if err != nil {
+				errorChan <- err
+				return
+			}
+			responseChan <- response
+		}()
 
-		// Rendering markdown with glamour
-		renderedOutput, err := utils.RenderMarkdown(response)
-		if err != nil {
-			fmt.Println("Error rendering Markdown:", err)
+		// Wait for either response or error
+		select {
+		case err := <-errorChan:
+			done <- true // Stop the spinner
+			styles.ErrorStyle.Printf("\nError: %v\n", err)
 			continue
-		}
 
-		fmt.Println(renderedOutput)
+		case response := <-responseChan:
+			done <- true // Stop the spinner
+			// Try to render markdown
+			renderedOutput, err := utils.RenderMarkdown(response)
+			if err != nil {
+				styles.ErrorStyle.Println("\nRaw response:", response)
+				styles.ErrorStyle.Println("Error rendering Markdown:", err)
+				continue
+			}
+			fmt.Println("\n" + renderedOutput)
+			styles.DimText.Println("----------------------------------------")
+		}
 	}
 }
 
