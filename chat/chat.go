@@ -36,7 +36,8 @@ func (s *ChatSession) SendMessage(content string) (string, error) {
 	// Get response from LLM
 	response, err := s.provider.Chat(s.messages)
 	if err != nil {
-		return "", fmt.Errorf("failed to get response from LLM: %w", err)
+		return "", fmt.Errorf("failed to get response from LLM: %w", err) //Note: If this occurs
+		//Its probably because the user is offline
 	}
 
 	// Add assistant message to history

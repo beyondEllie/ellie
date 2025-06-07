@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	configDirName     = "ellie"
+	ConfigDirName     = "ellie"
 	configFileName    = ".ellie.env"
 	gitignoreName     = ".gitignore"
 	readmeName        = "README.md"
@@ -39,7 +39,7 @@ func initConfigPaths() {
 		os.Exit(1)
 	}
 
-	ConfigDir = filepath.Join(homeDir, configDirName)
+	ConfigDir = filepath.Join(homeDir, ConfigDirName)
 	ConfigPath = filepath.Join(ConfigDir, configFileName)
 }
 
