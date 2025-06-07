@@ -9,7 +9,9 @@ import (
 	actions "github.com/tacheraSasi/ellie/action"
 	"github.com/tacheraSasi/ellie/command"
 	"github.com/tacheraSasi/ellie/configs"
+	"github.com/tacheraSasi/ellie/static"
 	"github.com/tacheraSasi/ellie/styles"
+	"github.com/tacheraSasi/ellie/types"
 )
 
 const (
@@ -23,6 +25,17 @@ var commandRegistry = map[string]command.Command{
 	"run": {
 		Handler: actions.Run,
 	},
+	"user-env": {
+		Handler: func(s []string) {
+			// Create user context
+			userCtx := types.NewUserContext()
+
+			// Add system message with instructions and context
+			instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s `,
+				static.Instructions(*userCtx))
+			fmt.Println(instructions)
+		},
+	},
 	"focus": {
 		PreHook: func() { styles.InfoStyle.Println("Activating focus mode...") },
 		Handler: actions.Focus,
@@ -30,9 +43,9 @@ var commandRegistry = map[string]command.Command{
 	"pwd": {
 		Handler: func(_ []string) { actions.Pwd() },
 	},
-	"size":{
+	"size": {
 		MinArgs: 1,
-		Handler: func(s []string) { actions.Size()},
+		Handler: func(s []string) { actions.Size() },
 	},
 	"open-explorer": {
 		Handler: func(_ []string) { actions.OpenExplorer() },

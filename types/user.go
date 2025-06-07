@@ -8,6 +8,8 @@ import (
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/tacheraSasi/ellie/configs"
 )
 
 // UserContext holds realtime information about the user and their environment
@@ -24,6 +26,7 @@ type UserContext struct {
 	CPUUsage     string
 	LastCommand  string
 	CommandCount int
+	EllieDir     string
 }
 
 // NewUserContext creates a new UserContext with current system information
@@ -42,6 +45,7 @@ func NewUserContext() *UserContext {
 	ctx.GitStatus = getGitStatus()
 	ctx.MemoryUsage = getMemoryUsage()
 	ctx.CPUUsage = getCPUUsage()
+	ctx.EllieDir = getEllieDir()
 
 	return ctx
 }
@@ -106,6 +110,14 @@ func getCurrentDir() string {
 		return "unknown"
 	}
 	return dir
+}
+
+func getEllieDir() string {
+	homeDir,err := os.UserHomeDir()
+	if err != nil{
+		return ""
+	}
+	return homeDir + "/" + configs.ConfigDirName
 }
 
 func getGitBranch() string {

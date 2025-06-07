@@ -7,7 +7,7 @@ import (
 )
 
 func Instructions(userCtx types.UserContext) string {
-	prompt, err := GetStaticFile("./prompt.txt")
+	prompt, err := GetStaticFile("prompt.txt")
 	if err != nil {
 		return "Error loading instructions"
 	}
@@ -26,7 +26,7 @@ func Instructions(userCtx types.UserContext) string {
 		userCtx.LastCommand,  // Last Command: <last_command>
 		userCtx.CommandCount, // Command Count: <command_count>
 		userCtx.OS,           // OS version in user_info
-		userCtx.CurrentDir,   // Workspace path in user_info
+		userCtx.EllieDir,   // Workspace path in user_info
 		userCtx.Shell,        // Shell in user_info
 	)
 
