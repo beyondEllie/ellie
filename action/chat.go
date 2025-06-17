@@ -14,7 +14,13 @@ import (
 
 // Chat starts an interactive chat session with the AI
 func Chat(openaiApikey string) {
-	// Creates a new LLM provider (OpenAI by default)
+	// Validate API key
+	if openaiApikey == "" {
+		styles.ErrorStyle.Println("Error: OpenAI API key is required. Please set your OPENAI_API_KEY environment variable.")
+		return
+	}
+
+	// Create a new LLM provider (OpenAI by default)
 	config := llm.Config{
 		APIKey: openaiApikey,
 		Model:  "gpt-3.5-turbo",
@@ -62,22 +68,22 @@ func Chat(openaiApikey string) {
 			break
 		}
 
-		// Updates context before processing the message
+		// Update context before processing the message
 		userCtx.UpdateContext()
 		userCtx.LastCommand = msg
 		userCtx.CommandCount++
 
-		// Adds context to the message
+		// Add context to the message
 		contextualMsg := fmt.Sprintf("%s\n\nCurrent Context:\n%s", msg, userCtx.GetContextString())
 
 		done := make(chan bool)
 		errorChan := make(chan error)
 		responseChan := make(chan string)
 
-		// Starts loading spinner in a goroutine
+		// Start loading spinner in a goroutine
 		go utils.ShowLoadingSpinner("Thinking...", done)
 
-		// Sends the message and get the response
+		// Send the message and get the response
 		go func() {
 			response, err := session.SendMessage(contextualMsg)
 			if err != nil {
@@ -87,29 +93,48 @@ func Chat(openaiApikey string) {
 			responseChan <- response
 		}()
 
-		// Waits for either response or error
+		// Wait for either response or error
 		select {
 		case err := <-errorChan:
-			done <- true 
+			done <- true // Stop the spinner
 			styles.ErrorStyle.Printf("\nError: %v\n", err)
+			styles.DimText.Println("----------------------------------------")
 			continue
 
 		case response := <-responseChan:
-			done <- true
+			done <- true // Stop the spinner
+
+			// Check if response is empty
+			if strings.TrimSpace(response) == "" {
+				styles.WarningStyle.Println("\nNo response received from AI.")
+				styles.DimText.Println("----------------------------------------")
+				continue
+			}
+
+			// Try to render markdown
 			renderedOutput, err := utils.RenderMarkdown(response)
 			if err != nil {
 				styles.ErrorStyle.Println("\nRaw response:", response)
 				styles.ErrorStyle.Println("Error rendering Markdown:", err)
+				styles.DimText.Println("----------------------------------------")
 				continue
 			}
+
+			// Display the response
 			fmt.Println("\n" + renderedOutput)
-			// styles.DimText.Println("----------------------------------------")
+			styles.DimText.Println("----------------------------------------")
 		}
 	}
 }
 
 // ChatWithGemini starts an interactive chat session with Gemini
 func ChatWithGemini(geminiApikey string) {
+	// Validate API key
+	if geminiApikey == "" {
+		styles.ErrorStyle.Println("Error: Gemini API key is required. Please set your GEMINI_API_KEY environment variable.")
+		return
+	}
+
 	// Create a new LLM provider (Gemini)
 	config := llm.Config{
 		APIKey:  geminiApikey,
@@ -123,13 +148,13 @@ func ChatWithGemini(geminiApikey string) {
 		return
 	}
 
-	// Creates a new chat session
+	// Create a new chat session
 	session := chat.NewChatSession(provider)
 
-	// Creates user context
+	// Create user context
 	userCtx := types.NewUserContext()
 
-	// Adds system message with instructions and context
+	// Add system message with instructions and context
 	instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s %s`,
 		getReadmeContent(),
 		static.Instructions(*userCtx))
@@ -154,22 +179,22 @@ func ChatWithGemini(geminiApikey string) {
 			break
 		}
 
-		// Updates context before processing the message
+		// Update context before processing the message
 		userCtx.UpdateContext()
 		userCtx.LastCommand = msg
 		userCtx.CommandCount++
 
-		// Adds context to the message
+		// Add context to the message
 		contextualMsg := fmt.Sprintf("%s\n\nCurrent Context:\n%s", msg, userCtx.GetContextString())
 
 		done := make(chan bool)
 		errorChan := make(chan error)
 		responseChan := make(chan string)
 
-		// Starts loading spinner in a goroutine
+		// Start loading spinner in a goroutine
 		go utils.ShowLoadingSpinner("Thinking...", done)
 
-		// Sends the message and get the response
+		// Send the message and get the response
 		go func() {
 			response, err := session.SendMessage(contextualMsg)
 			if err != nil {
@@ -179,23 +204,36 @@ func ChatWithGemini(geminiApikey string) {
 			responseChan <- response
 		}()
 
-		// Waits for either response or error
+		// Wait for either response or error
 		select {
 		case err := <-errorChan:
-			done <- true // Stops the spinner
+			done <- true // Stop the spinner
 			styles.ErrorStyle.Printf("\nError: %v\n", err)
+			styles.DimText.Println("----------------------------------------")
 			continue
 
 		case response := <-responseChan:
-			done <- true
+			done <- true // Stop the spinner
+
+			// Check if response is empty
+			if strings.TrimSpace(response) == "" {
+				styles.WarningStyle.Println("\nNo response received from AI.")
+				styles.DimText.Println("----------------------------------------")
+				continue
+			}
+
+			// Try to render markdown
 			renderedOutput, err := utils.RenderMarkdown(response)
 			if err != nil {
 				styles.ErrorStyle.Println("\nRaw response:", response)
 				styles.ErrorStyle.Println("Error rendering Markdown:", err)
+				styles.DimText.Println("----------------------------------------")
 				continue
 			}
+
+			// Display the response
 			fmt.Println("\n" + renderedOutput)
-			// styles.DimText.Println("----------------------------------------")
+			styles.DimText.Println("----------------------------------------")
 		}
 	}
 }

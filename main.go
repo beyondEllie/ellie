@@ -104,6 +104,9 @@ var commandRegistry = map[string]command.Command{
 	"send-mail": {
 		Handler: func(_ []string) { actions.Mailer() },
 	},
+	"chat": {
+		Handler: func(_ []string) { actions.Chat(configs.GetEnv("OPENAI_API_KEY")) },
+	},
 	"git": {
 		SubCommands: map[string]command.Command{
 			"status": {Handler: func(_ []string) { actions.GitStatus() }},

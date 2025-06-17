@@ -22,8 +22,6 @@ type UserContext struct {
 	GitBranch    string
 	GitStatus    string
 	TimeOfDay    string
-	MemoryUsage  string
-	CPUUsage     string
 	LastCommand  string
 	CommandCount int
 	EllieDir     string
@@ -43,8 +41,6 @@ func NewUserContext() *UserContext {
 	ctx.CurrentDir = getCurrentDir()
 	ctx.GitBranch = getGitBranch()
 	ctx.GitStatus = getGitStatus()
-	ctx.MemoryUsage = getMemoryUsage()
-	ctx.CPUUsage = getCPUUsage()
 	ctx.EllieDir = getEllieDir()
 
 	return ctx
@@ -61,12 +57,10 @@ Current User Context:
 - Git Branch: %s
 - Git Status: %s
 - Time of Day: %s
-- Memory Usage: %s
-- CPU Usage: %s
 - Last Command: %s
 - Command Count: %d
 `, ctx.Username, ctx.Hostname, ctx.OS, ctx.Shell, ctx.CurrentDir, ctx.GitBranch, ctx.GitStatus,
-		ctx.TimeOfDay, ctx.MemoryUsage, ctx.CPUUsage, ctx.LastCommand, ctx.CommandCount)
+		ctx.TimeOfDay, ctx.LastCommand, ctx.CommandCount)
 }
 
 // UpdateContext updates the context with new information
@@ -75,8 +69,6 @@ func (ctx *UserContext) UpdateContext() {
 	ctx.CurrentDir = getCurrentDir()
 	ctx.GitBranch = getGitBranch()
 	ctx.GitStatus = getGitStatus()
-	ctx.MemoryUsage = getMemoryUsage()
-	ctx.CPUUsage = getCPUUsage()
 }
 
 // Helper functions to get system information
@@ -113,8 +105,8 @@ func getCurrentDir() string {
 }
 
 func getEllieDir() string {
-	homeDir,err := os.UserHomeDir()
-	if err != nil{
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
 		return ""
 	}
 	return homeDir + "/" + configs.ConfigDirName
@@ -151,38 +143,4 @@ func getTimeOfDay() string {
 	default:
 		return "evening"
 	}
-}
-
-func getMemoryUsage() string {
-	var cmd *exec.Cmd
-	switch runtime.GOOS {
-	case "darwin":
-		cmd = exec.Command("top", "-l", "1", "-stats", "mem")
-	case "linux":
-		cmd = exec.Command("free", "-h")
-	default:
-		return "unknown"
-	}
-	output, err := cmd.Output()
-	if err != nil {
-		return "unknown"
-	}
-	return strings.TrimSpace(string(output))
-}
-
-func getCPUUsage() string {
-	var cmd *exec.Cmd
-	switch runtime.GOOS {
-	case "darwin":
-		cmd = exec.Command("top", "-l", "1", "-stats", "cpu")
-	case "linux":
-		cmd = exec.Command("top", "-bn1")
-	default:
-		return "unknown"
-	}
-	output, err := cmd.Output()
-	if err != nil {
-		return "unknown"
-	}
-	return strings.TrimSpace(string(output))
 }

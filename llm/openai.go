@@ -53,18 +53,29 @@ func (p *OpenAIProvider) Chat(messages []Message) (*Response, error) {
 			Message Message `json:"message"`
 		} `json:"choices"`
 		Usage Usage `json:"usage"`
+		Error *struct {
+			Message string `json:"message"`
+			Type    string `json:"type"`
+		} `json:"error"`
 	}
 
 	if err := json.Unmarshal(responseBody, &response); err != nil {
 		return nil, fmt.Errorf("error parsing OpenAI response: %w", err)
 	}
 
+	// Check for API errors
+	if response.Error != nil {
+		return nil, fmt.Errorf("OpenAI API error: %s - %s", response.Error.Type, response.Error.Message)
+	}
+
 	if len(response.Choices) == 0 {
 		return nil, fmt.Errorf("no choices in OpenAI response")
 	}
 
+	content := response.Choices[0].Message.Content
+
 	return &Response{
-		Content: response.Choices[0].Message.Content,
+		Content: content,
 		Usage:   response.Usage,
 	}, nil
 }

@@ -21,13 +21,8 @@ func Instructions(userCtx types.UserContext) string {
 		userCtx.GitBranch,    // Git Branch: <git_branch>
 		userCtx.GitStatus,    // Git Status: <git_status>
 		userCtx.TimeOfDay,    // Time of Day: <time_of_day>
-		userCtx.MemoryUsage,  // Memory Usage: <memory_usage>
-		userCtx.CPUUsage,     // CPU Usage: <cpu_usage>
 		userCtx.LastCommand,  // Last Command: <last_command>
 		userCtx.CommandCount, // Command Count: <command_count>
-		userCtx.OS,           // OS version in user_info
-		userCtx.EllieDir,   // Workspace path in user_info
-		userCtx.Shell,        // Shell in user_info
 	)
 
 	return formattedPrompt
