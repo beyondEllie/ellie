@@ -6,21 +6,21 @@
 
 ### macOS (Intel)
 ```bash
-curl -O -L https://github.com/tacheraSasi/ellie/releases/download/v0.0.91/ellie_mac_amd64.tar.gz
+curl -O -L https://github.com/tacheraSasi/ellie/releases/download/0.0.91/ellie_mac_amd64.tar.gz
 sudo tar -C /usr/local/bin -xzvf ellie_mac_amd64.tar.gz
 ```
 
 ### macOS (Apple Silicon)
 ```bash
-curl -O -L https://github.com/tacheraSasi/ellie/releases/download/v0.0.91/ellie_mac_arm64.tar.gz
+curl -O -L https://github.com/tacheraSasi/ellie/releases/download/0.0.91/ellie_mac_amd64.tar.gz
 sudo tar -C /usr/local/bin -xzvf ellie_mac_arm64.tar.gz
 ```
 
-### Linux
+<!-- ### Linux
 ```bash
 curl -O -L https://github.com/tacheraSasi/ellie/releases/download/v0.0.91/ellie_linux_amd64.tar.gz
 sudo tar -C /usr/local/bin -xzvf ellie_linux_amd64.tar.gz
-```
+``` -->
 
 ### Verify Installation
 ```bash
