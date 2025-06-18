@@ -4,6 +4,15 @@
 
 ## Quick Installation ⚡
 
+## Brew
+``` bash
+# One-time setup 
+brew tap beyondEllie/ellie
+
+# Install CLI
+brew install ellie
+```
+
 ### macOS (Intel)
 ```bash
 curl -O -L https://github.com/tacheraSasi/ellie/releases/download/0.0.91/ellie_mac_amd64.tar.gz
