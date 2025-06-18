@@ -53,7 +53,7 @@ Code:
 	responseChan := make(chan string)
 	errorChan := make(chan error)
 
-	go utils.ShowLoadingSpinner("Thinking...", done)
+	go utils.ShowLoadingSpinner("Reviewing...", done)
 
 	go func() {
 		response, err := session.SendMessage(prompt)
