@@ -50,6 +50,13 @@ var commandRegistry = map[string]command.Command{
 	"open-explorer": {
 		Handler: func(_ []string) { actions.OpenExplorer() },
 	},
+	"open": {
+		Usage: "open <path>",
+		MinArgs: 1,
+		Handler: func(args []string) {
+			actions.OpenExplorer(args[1])
+		},
+	},
 	"play": {
 		MinArgs: 1,
 		Usage:   "play <media>",

@@ -6,7 +6,11 @@ import (
 	"os/exec"
 	"runtime"
 	"strings"
+	"time"
 
+	"github.com/faiface/beep"
+	"github.com/faiface/beep/mp3"
+	"github.com/faiface/beep/speaker"
 	"github.com/tacheraSasi/ellie/styles"
 	"github.com/tacheraSasi/ellie/utils"
 )
@@ -238,15 +242,19 @@ func controlService(service, action string) error {
 }
 
 // OpenExplorer opens file manager
-func OpenExplorer() {
+func OpenExplorer(optionalPath ...string) {
+	var path string = "."
+	if len(optionalPath) > 0 {
+		path = optionalPath[0]
+	}
 	var cmd *exec.Cmd
 	switch runtime.GOOS {
 	case "windows":
-		cmd = exec.Command("explorer", ".")
+		cmd = exec.Command("explorer", path)
 	case "darwin":
-		cmd = exec.Command("open", ".")
+		cmd = exec.Command("open", path)
 	default:
-		cmd = exec.Command("xdg-open", ".")
+		cmd = exec.Command("xdg-open", path)
 	}
 
 	if err := cmd.Start(); err != nil {
@@ -255,16 +263,46 @@ func OpenExplorer() {
 }
 
 func Play(args []string) {
-	if runtime.GOOS != "linux" {
-		fmt.Println("Play functinality is only supported on Linux for now.")
+	if len(args) < 2 {
+		styles.ErrorStyle.Println("Please provide a file path to play.")
 		return
 	}
 
-	// fmt.Println(args) //For debugging
-	command := []string{"mpv", args[1]} //TODO: check if mpv is installed
-	//TODO:Will create a custom way of playing files in the future
-	fmt.Println("Playing file...")
-	utils.RunCommand(command, "Error playing the file:")
+	audioPath := args[1]
+
+	if runtime.GOOS == "linux" {
+		// Try mpv first
+		cmd := exec.Command("which", "mpv")
+		if err := cmd.Run(); err == nil {
+			command := []string{"mpv", audioPath}
+			fmt.Println("Playing file with mpv...")
+			utils.RunCommand(command, "Error playing the file:")
+			return
+		}
+	}
+
+	// Fallback to custom beep-based player
+	fmt.Println("Playing file using Go beep...")
+	f, err := os.Open(audioPath)
+	if err != nil {
+		styles.ErrorStyle.Printf("Error opening file: %v\n", err)
+		return
+	}
+	defer f.Close()
+
+	streamer, format, err := mp3.Decode(f)
+	if err != nil {
+		styles.ErrorStyle.Printf("Error decoding file: %v\n", err)
+		return
+	}
+	defer streamer.Close()
+
+	speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
+	done := make(chan bool)
+	speaker.Play(beep.Seq(streamer, beep.Callback(func() {
+		done <- true
+	})))
+	<-done
 }
 
 func Focus(args []string) { //Doesnot work properly
