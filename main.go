@@ -255,6 +255,11 @@ var commandRegistry = map[string]command.Command{
 			},
 		},
 	},
+
+	//Pending commands
+	"weather":{},
+	"joke": {},
+	"remind": {},
 	"about": {
 		Handler: actions.ShowAboutWindow,
 	},
