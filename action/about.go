@@ -7,10 +7,10 @@ import (
 	"github.com/tacheraSasi/ellie/styles"
 )
 
-// ShowAboutWindow displays the about information for Ellie
-func ShowAboutWindow(args []string) {
+// ShowAbout displays the about information for Ellie
+func ShowAbout(args []string) {
 	styles.HeaderStyle.Println("Ellie - The AI-Powered CLI Companion")
-	styles.InfoStyle.Println("Version:",configs.VERSION)
+	styles.InfoStyle.Println("Version:", configs.VERSION)
 	fmt.Println()
 
 	styles.Highlight.Println("Description:")

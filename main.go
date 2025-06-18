@@ -51,7 +51,7 @@ var commandRegistry = map[string]command.Command{
 		Handler: func(_ []string) { actions.OpenExplorer() },
 	},
 	"open": {
-		Usage: "open <path>",
+		Usage:   "open <path>",
 		MinArgs: 1,
 		Handler: func(args []string) {
 			actions.OpenExplorer(args[1])
@@ -114,10 +114,10 @@ var commandRegistry = map[string]command.Command{
 	"chat": {
 		Handler: func(_ []string) { actions.Chat(configs.GetEnv("OPENAI_API_KEY")) },
 	},
-	"review":{
-		Usage: "review <filename/filepath>",
+	"review": {
+		Usage:   "review <filename/filepath>",
 		MinArgs: 1,
-		Handler: func(args []string) { actions.Review(args[1])},
+		Handler: func(args []string) { actions.Review(args[1]) },
 		// PreHook: ,
 	},
 	"git": {
@@ -257,11 +257,11 @@ var commandRegistry = map[string]command.Command{
 	},
 
 	//Pending commands
-	"weather":{},
-	"joke": {},
-	"remind": {},
+	"weather": {},
+	"joke":    {},
+	"remind":  {},
 	"about": {
-		Handler: actions.ShowAboutWindow,
+		Handler: actions.ShowAbout,
 	},
 }
 
