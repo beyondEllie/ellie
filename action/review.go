@@ -1,134 +1,82 @@
 package actions
 
 import (
-	"fmt"
-	"strings"
+    "fmt"
+    "os"
+    "strings"
 
-	"github.com/tacheraSasi/ellie/chat"
-	"github.com/tacheraSasi/ellie/configs"
-	"github.com/tacheraSasi/ellie/llm"
-	"github.com/tacheraSasi/ellie/static"
-	"github.com/tacheraSasi/ellie/styles"
-	"github.com/tacheraSasi/ellie/types"
-	"github.com/tacheraSasi/ellie/utils"
+    "github.com/tacheraSasi/ellie/llm"
+    "github.com/tacheraSasi/ellie/styles"
+    "github.com/tacheraSasi/ellie/utils"
 )
 
-func Review(file string){
+// Review reads a file and asks the LLM to review the code.
+func Review(file string) {
+    openaiApikey := os.Getenv("OPENAI_API_KEY")
+    if openaiApikey == "" {
+        styles.ErrorStyle.Println("Error: OpenAI API key is required. Please set your OPENAI_API_KEY environment variable.")
+        return
+    }
 
-}
+    code, err := os.ReadFile(file)
+    if err != nil {
+        styles.ErrorStyle.Printf("Error reading file: %v\n", err)
+        return
+    }
 
-// Chat starts an interactive chat session with the AI
-func _Review() {
-	openaiApikey := configs.GetEnv("OPENAI_API_KEY")
-	// Validates API key
-	if openaiApikey == "" {
-		styles.ErrorStyle.Println("Error: OpenAI API key is required. Please set your OPENAI_API_KEY ellie config file.", configs.ConfigDirName)
-		return
-	}
+    config := llm.Config{
+        APIKey:  openaiApikey,
+        Model:   "gpt-4",
+        Timeout: 60,
+    }
 
-	// Creates a new LLM provider (OpenAI by default)
-	config := llm.Config{
-		APIKey: openaiApikey,
-		Model:  "gpt-3.5-turbo",
-		// Model:   "gpt-4", // Uncomment for GPT-4
-		// Model:   "gpt-4o", // Uncomment for GPT-4o
-		// Model:   "gpt-4o-mini", // Uncomment for GPT-4o-mini
-		// Model:   "gpt-3.5-turbo-16k", // Uncomment for 16k context length
-		Timeout: 30,
-	}
+    provider, err := llm.NewProvider("openai", config)
+    if err != nil {
+        styles.ErrorStyle.Printf("Error creating provider: %v\n", err)
+        return
+    }
 
-	provider, err := llm.NewProvider("openai", config)
-	if err != nil {
-		styles.ErrorStyle.Printf("Error creating provider: %v\n", err)
-		return
-	}
+    session := llm.NewSession(provider)
 
-	// Creates a new chat session
-	session := chat.NewChatSession(provider)
+    prompt := fmt.Sprintf(
+        `You are an expert software engineer. Please review the following code for bugs, security issues, code quality, and best practices. Provide actionable suggestions and a summary. 
+File: %s
 
-	// Creates user context
-	userCtx := types.NewUserContext()
+Code:
+%s
+`, file, string(code))
 
-	// Adds system message with instructions and context
-	instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s %s`,
-		getReadmeContent(),
-		static.Instructions(*userCtx))
+    styles.InfoStyle.Println("Reviewing code with Ellie...")
 
-	if _, err := session.SendMessage(instructions); err != nil {
-		styles.ErrorStyle.Printf("Error setting up initial instructions: %v\n", err)
-		return
-	}
+    done := make(chan bool)
+    responseChan := make(chan string)
+    errorChan := make(chan error)
 
-	styles.InfoStyle.Println("Welcome to Ellie! Type 'exit' to quit.")
-	styles.DimText.Println("----------------------------------------")
+    go utils.ShowLoadingSpinner("Thinking...", done)
 
-	for {
-		msg, err := utils.GetInput("Talk to me: ")
-		if err != nil {
-			styles.ErrorStyle.Printf("Error reading input: %v\n", err)
-			continue
-		}
+    go func() {
+        response, err := session.SendMessage(prompt)
+        if err != nil {
+            errorChan <- err
+            return
+        }
+        responseChan <- response
+    }()
 
-		if strings.EqualFold(msg, "exit") {
-			styles.InfoStyle.Println("Goodbye!")
-			break
-		}
-
-		// Updates context before processing the message
-		userCtx.UpdateContext()
-		userCtx.LastCommand = msg
-		userCtx.CommandCount++
-
-		// Adds context to the message
-		contextualMsg := fmt.Sprintf("%s\n\nCurrent Context:\n%s", msg, userCtx.GetContextString())
-
-		done := make(chan bool)
-		errorChan := make(chan error)
-		responseChan := make(chan string)
-
-		// Starts loading spinner in a goroutine
-		go utils.ShowLoadingSpinner("Thinking...", done)
-
-		// Sends the message and get the response
-		go func() {
-			response, err := session.SendMessage(contextualMsg)
-			if err != nil {
-				errorChan <- err
-				return
-			}
-			responseChan <- response
-		}()
-
-		// Waits for either response or error
-		select {
-		case err := <-errorChan:
-			done <- true // Stop the spinner
-			styles.ErrorStyle.Printf("\nError: %v\n", err)
-			styles.DimText.Println("----------------------------------------")
-			continue
-
-		case response := <-responseChan:
-			done <- true // Stop the spinner
-
-			// Checks if response is empty
-			if strings.TrimSpace(response) == "" {
-				styles.WarningStyle.Println("\nNo response received from AI.")
-				styles.DimText.Println("----------------------------------------")
-				continue
-			}
-
-			// Trys to render markdown
-			renderedOutput, err := utils.RenderMarkdown(response)
-			if err != nil {
-				styles.ErrorStyle.Println("\nRaw response:", response)
-				styles.ErrorStyle.Println("Error rendering Markdown:", err)
-				styles.DimText.Println("----------------------------------------")
-				continue
-			}
-
-			// Display the response
-			fmt.Println("\n" + renderedOutput)
-			styles.DimText.Println("----------------------------------------")
-		}
-	}
-}
+    select {
+    case err := <-errorChan:
+        done <- true
+        styles.ErrorStyle.Printf("\nError: %v\n", err)
+    case response := <-responseChan:
+        done <- true
+        if strings.TrimSpace(response) == "" {
+            styles.WarningStyle.Println("\nNo response received from AI.")
+            return
+        }
+        renderedOutput, err := utils.RenderMarkdown(response)
+        if err != nil {
+            styles.ErrorStyle.Println("\nRaw response:", response)
+            styles.ErrorStyle.Println("Error rendering Markdown:", err)
+            return
+        }
+        fmt.Println("\n" + renderedOutput)
