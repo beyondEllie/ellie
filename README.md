@@ -231,7 +231,8 @@ ellie network-status                         # Real-time connection stats
 ### 🤖 AI Integration
 ```bash
 # Chat mode (when no command specified)
-ellie How do I fix a 500 error in Apache?
+ellie 
+Talk to me: How do I fix a 500 error in Apache?
 ```
 
 ### 🚀 Git Workflows
