@@ -80,3 +80,5 @@ Code:
             return
         }
         fmt.Println("\n" + renderedOutput)
+    }
+}
