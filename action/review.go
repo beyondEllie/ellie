@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/tacheraSasi/ellie/chat"
+	"github.com/tacheraSasi/ellie/configs"
 	"github.com/tacheraSasi/ellie/llm"
 	"github.com/tacheraSasi/ellie/static"
 	"github.com/tacheraSasi/ellie/styles"
@@ -17,10 +18,11 @@ func Review(file string){
 }
 
 // Chat starts an interactive chat session with the AI
-func _Review(openaiApikey string) {
+func _Review() {
+	openaiApikey := configs.GetEnv("OPENAI_API_KEY")
 	// Validate API key
 	if openaiApikey == "" {
-		styles.ErrorStyle.Println("Error: OpenAI API key is required. Please set your OPENAI_API_KEY environment variable.")
+		styles.ErrorStyle.Println("Error: OpenAI API key is required. Please set your OPENAI_API_KEY ellie config file.", configs.ConfigDirName)
 		return
 	}
 

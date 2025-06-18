@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/tacheraSasi/ellie/chat"
+	"github.com/tacheraSasi/ellie/configs"
 	"github.com/tacheraSasi/ellie/llm"
 	"github.com/tacheraSasi/ellie/static"
 	"github.com/tacheraSasi/ellie/styles"
@@ -16,7 +17,7 @@ import (
 func Chat(openaiApikey string) {
 	// Validate API key
 	if openaiApikey == "" {
-		styles.ErrorStyle.Println("Error: OpenAI API key is required. Please set your OPENAI_API_KEY environment variable.")
+		styles.ErrorStyle.Println("Error: OpenAI API key is required. Please set your OPENAI_API_KEY ellie config file.", configs.ConfigDirName)
 		return
 	}
 
@@ -131,7 +132,7 @@ func Chat(openaiApikey string) {
 func ChatWithGemini(geminiApikey string) {
 	// Validate API key
 	if geminiApikey == "" {
-		styles.ErrorStyle.Println("Error: Gemini API key is required. Please set your GEMINI_API_KEY environment variable.")
+		styles.ErrorStyle.Println("Error: Gemini API key is required. Please set your GEMINI_API_KEY ellie config file.", configs.ConfigDirName)
 		return
 	}
 
