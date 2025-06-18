@@ -12,7 +12,7 @@ import (
 
 const (
 	LOG_FILENAME = "ellie.combined.log"
-	CONFIG_DIR   = configs.ConfigDirName
+	CONFIG_DIR   = "/"+configs.ConfigDirName
 )
 
 var (

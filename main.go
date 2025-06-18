@@ -107,6 +107,12 @@ var commandRegistry = map[string]command.Command{
 	"chat": {
 		Handler: func(_ []string) { actions.Chat(configs.GetEnv("OPENAI_API_KEY")) },
 	},
+	"review":{
+		Usage: "review <filename/filepath>",
+		MinArgs: 1,
+		Handler: func(args []string) { actions.Review(args[1])},
+		// PreHook: ,
+	},
 	"git": {
 		SubCommands: map[string]command.Command{
 			"status": {Handler: func(_ []string) { actions.GitStatus() }},
