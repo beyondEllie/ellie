@@ -54,13 +54,13 @@ func initialize() {
 }
 
 // Info logs an informational message
-func Info(format string, v ...interface{}) {
+func Info(format string, v ...any) {
 	initialize()
 	infoLogger.Printf(format, v...)
 }
 
 // Warning logs a warning message
-func Warning(format string, v ...interface{}) {
+func Warning(format string, v ...any) {
 	initialize()
 	warningLogger.Printf(format, v...)
 }
@@ -74,13 +74,13 @@ func Error(err error) {
 }
 
 // Errorf logs a formatted error message
-func Errorf(format string, v ...interface{}) {
+func Errorf(format string, v ...any) {
 	initialize()
 	errorLogger.Printf(format, v...)
 }
 
 // Debug logs a debug message
-func Debug(format string, v ...interface{}) {
+func Debug(format string, v ...any) {
 	initialize()
 	debugLogger.Printf(format, v...)
 }
@@ -94,7 +94,7 @@ func Fatal(err error) {
 }
 
 // Fatalf logs a formatted fatal error and exits the program
-func Fatalf(format string, v ...interface{}) {
+func Fatalf(format string, v ...any) {
 	initialize()
 	errorLogger.Fatalf(format, v...)
 }

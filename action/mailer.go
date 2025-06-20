@@ -51,6 +51,7 @@ func Mailer() {
 		styles.ErrorStyle.Println("Error sending email:", err)
 		return
 	}
+	// logger.Info("MAILER:response:%s",resp)
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusOK {
