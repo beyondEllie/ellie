@@ -263,6 +263,28 @@ var commandRegistry = map[string]command.Command{
 	"about": {
 		Handler: actions.ShowAbout,
 	},
+	"theme": {
+		SubCommands: map[string]command.Command{
+			"set": {
+				MinArgs: 1,
+				Usage:   "theme set <light|dark|auto>",
+				Handler: func(args []string) {
+					mode := args[1]
+					if mode != "light" && mode != "dark" && mode != "auto" {
+						styles.GetErrorStyle().Println("Invalid theme. Use 'light', 'dark', or 'auto'.")
+						return
+					}
+					styles.SetTheme(mode)
+					styles.GetSuccessStyle().Printf("Theme set to %s.\n", styles.GetTheme())
+				},
+			},
+			"show": {
+				Handler: func(_ []string) {
+					styles.GetInfoStyle().Printf("Current theme: %s\n", styles.GetTheme())
+				},
+			},
+		},
+	},
 }
 
 func main() {
@@ -273,7 +295,7 @@ func main() {
 
 	// Handle global flags
 	if *showVersion {
-		styles.SuccessStyle.Printf("Ellie CLI v%s\n", VERSION)
+		styles.GetSuccessStyle().Printf("Ellie CLI v%s\n", VERSION)
 		return
 	}
 	if *showHelp {
@@ -311,7 +333,7 @@ func handleCommand(args []string) {
 
 	cmd, exists := commandRegistry[cmdName]
 	if !exists {
-		styles.ErrorStyle.Println("Unknown command:", cmdName)
+		styles.GetErrorStyle().Println("Unknown command:", cmdName)
 		showHelpFunc()
 		os.Exit(1)
 	}
@@ -326,8 +348,8 @@ func handleCommand(args []string) {
 	}
 
 	if len(args)-1 < cmd.MinArgs {
-		styles.ErrorStyle.Printf("Invalid usage for %s\n", cmdName)
-		styles.InfoStyle.Println("Usage:", cmd.Usage)
+		styles.GetErrorStyle().Printf("Invalid usage for %s\n", cmdName)
+		styles.GetInfoStyle().Println("Usage:", cmd.Usage)
 		os.Exit(1)
 	}
 
@@ -338,13 +360,13 @@ func handleSubCommand(parentCmd command.Command, args []string) {
 	subCmdName := args[0]
 	subCmd, exists := parentCmd.SubCommands[subCmdName]
 	if !exists {
-		styles.ErrorStyle.Println("Unknown subcommand:", subCmdName)
+		styles.GetErrorStyle().Println("Unknown subcommand:", subCmdName)
 		os.Exit(1)
 	}
 
 	if len(args)-1 < subCmd.MinArgs {
-		styles.ErrorStyle.Printf("Invalid usage for %s\n", subCmdName)
-		styles.InfoStyle.Println("Usage:", subCmd.Usage)
+		styles.GetErrorStyle().Printf("Invalid usage for %s\n", subCmdName)
+		styles.GetInfoStyle().Println("Usage:", subCmd.Usage)
 		os.Exit(1)
 	}
 
@@ -368,30 +390,30 @@ func createServiceCommand(action string) command.Command {
 
 func greetUser(args []string) {
 	hour := time.Now().Hour()
-	greeting := styles.SuccessStyle.Println
+	greeting := styles.GetSuccessStyle().Println
 	message := "Good evening!"
 
 	switch {
 	case hour < 12:
 		message = "Good morning!"
-		greeting = styles.Highlight.Println
+		greeting = styles.GetHighlightStyle().Println
 	case hour < 18:
 		message = "Good afternoon!"
-		greeting = styles.InfoStyle.Println
+		greeting = styles.GetInfoStyle().Println
 	}
 
 	greeting(message+",", CurrentUser)
 }
 
 func showHelpFunc() {
-	styles.HeaderStyle.Println("Ellie CLI - AI-Powered System Management Tool")
-	styles.InfoStyle.Println("Usage: ellie [--help] [--version] <command> [arguments]")
+	styles.GetHeaderStyle().Println("Ellie CLI - AI-Powered System Management Tool")
+	styles.GetInfoStyle().Println("Usage: ellie [--help] [--version] <command> [arguments]")
 
-	styles.HeaderStyle.Println("Global Flags:")
-	styles.InfoStyle.Println("  --help\tShow this help message")
-	styles.InfoStyle.Println("  --version\tShow version information")
+	styles.GetHeaderStyle().Println("Global Flags:")
+	styles.GetInfoStyle().Println("  --help\tShow this help message")
+	styles.GetInfoStyle().Println("  --version\tShow version information")
 
-	styles.HeaderStyle.Println("Core Commands:")
+	styles.GetHeaderStyle().Println("Core Commands:")
 	fmt.Println("  config \t\tConfigure Ellie CLI")
 	fmt.Println("  reset-config\t\tReset Ellie CLI configuration")
 	fmt.Println("  whoami\t\tShow current user")
