@@ -335,6 +335,7 @@ func handleCommand(args []string) {
 	cmd, exists := commandRegistry[cmdName]
 	if !exists {
 		matches := getClosestMatchingCmd(commandRegistry, cmdName)
+		// fmt.Println(matches)
 		if len(matches) > 0 {
 			styles.GetErrorStyle().Printf("Unknown command: %s\n", cmdName)
 			styles.GetInfoStyle().Println("Did you mean:")
@@ -376,7 +377,7 @@ func getClosestMatchingCmd(cmdMap map[string]command.Command, cmdArg string) []s
 			maxLen = len(cmd)
 		}
 		similarity := 1.0 - (float64(distance) / float64(maxLen))
-		if similarity > 0.7 {
+		if similarity > 0.4 {
 			list = append(list, cmd)
 		}
 	}
