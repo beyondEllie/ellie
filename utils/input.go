@@ -31,7 +31,7 @@ func isTerminalInteractive() bool {
 	return isatty.IsTerminal(os.Stdin.Fd())
 }
 
-// completer is a no-op for now, but can be extended for suggestions
+// completer is a no-op for now
 func completer(in prompt.Document) []prompt.Suggest {
 	return []prompt.Suggest{}
 }
