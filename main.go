@@ -12,6 +12,7 @@ import (
 	"github.com/tacheraSasi/ellie/static"
 	"github.com/tacheraSasi/ellie/styles"
 	"github.com/tacheraSasi/ellie/types"
+	"github.com/texttheater/golang-levenshtein/levenshtein"
 )
 
 const (
@@ -333,8 +334,18 @@ func handleCommand(args []string) {
 
 	cmd, exists := commandRegistry[cmdName]
 	if !exists {
-		styles.GetErrorStyle().Println("Unknown command:", cmdName)
-		showHelpFunc()
+		matches := getClosestMatchingCmd(commandRegistry, cmdName)
+		// fmt.Println(matches)
+		if len(matches) > 0 {
+			styles.GetErrorStyle().Printf("Unknown command: %s\n", cmdName)
+			styles.GetInfoStyle().Println("Did you mean:")
+			for _, m := range matches {
+				styles.GetInfoStyle().Printf("  %s\n", m)
+			}
+		} else {
+			styles.GetErrorStyle().Printf("Unknown command: %s\n", cmdName)
+			showHelpFunc()
+		}
 		os.Exit(1)
 	}
 
@@ -354,6 +365,23 @@ func handleCommand(args []string) {
 	}
 
 	cmd.Handler(args)
+}
+
+// Returns a list of command names that closely match the input
+func getClosestMatchingCmd(cmdMap map[string]command.Command, cmdArg string) []string {
+	var list []string
+	for cmd := range cmdMap {
+		distance := levenshtein.DistanceForStrings([]rune(cmdArg), []rune(cmd), levenshtein.DefaultOptions)
+		maxLen := len(cmdArg)
+		if len(cmd) > maxLen {
+			maxLen = len(cmd)
+		}
+		similarity := 1.0 - (float64(distance) / float64(maxLen))
+		if similarity > 0.4 {
+			list = append(list, cmd)
+		}
+	}
+	return list
 }
 
 func handleSubCommand(parentCmd command.Command, args []string) {

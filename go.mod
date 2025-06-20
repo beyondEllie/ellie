@@ -53,6 +53,7 @@ require (
 	github.com/pkg/term v1.2.0-beta.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
+	github.com/texttheater/golang-levenshtein/levenshtein v0.0.0-20200805054039-cae8b0eaed6c // indirect
 	github.com/yuin/goldmark v1.7.8 // indirect
 	github.com/yuin/goldmark-emoji v1.0.3 // indirect
 	go.opencensus.io v0.24.0 // indirect
