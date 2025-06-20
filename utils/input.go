@@ -12,9 +12,8 @@ import (
 
 // GetInput prompts the user for input and returns the trimmed string.
 func GetInput(promptText string) (string, error) {
-	// Try to use go-prompt for interactive input
 	if isTerminalInteractive() {
-		result := prompt.Input(styles.InputPrompt.Sprintf("%s ", promptText), completer)
+		result := prompt.Input(promptText+" ", completer, prompt.OptionTitle("Ellie Input"))
 		return strings.TrimSpace(result), nil
 	}
 	// Fallback to bufio for non-interactive environments
@@ -33,6 +32,6 @@ func isTerminalInteractive() bool {
 }
 
 // completer is a no-op for now, but can be extended for suggestions
-func completer(d prompt.Document) []prompt.Suggest {
-	return nil
+func completer(in prompt.Document) []prompt.Suggest {
+	return []prompt.Suggest{}
 }
