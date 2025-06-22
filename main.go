@@ -258,9 +258,13 @@ var commandRegistry = map[string]command.Command{
 	},
 
 	//Pending commands
-	"weather": {},
-	"joke":    {},
-	"remind":  {},
+	"weather": {
+		Handler: func(args []string) { actions.Weather() },
+	},
+	"joke": {
+		Handler: func(args []string) { actions.Joke() },
+	},
+	"remind": {},
 	"about": {
 		Handler: actions.ShowAbout,
 	},
