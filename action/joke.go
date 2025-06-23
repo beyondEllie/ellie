@@ -2,6 +2,7 @@ package actions
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -10,48 +11,65 @@ import (
 	"github.com/tacheraSasi/ellie/utils"
 )
 
-type JokeData struct {
+const (
+	jokeAPIEndpoint = "https://icanhazdadjoke.com/"
+	requestTimeout  = 10 * time.Second
+)
+
+type JokeResponse struct {
 	Joke string `json:"joke"`
 }
 
+// Joke fetches and displays a random dad joke from the API
 func Joke() {
 	done := make(chan bool)
 	go utils.ShowLoadingSpinner("Fetching a hilarious joke for you...", done)
 
-	client := &http.Client{Timeout: 10 * time.Second}
-	req, err := http.NewRequest("GET", "https://icanhazdadjoke.com/", nil)
+	joke, err := fetchJoke()
+	done <- true
+
 	if err != nil {
-		done <- true
-		styles.GetErrorStyle().Println("❌ Failed to create request.")
+		styles.GetErrorStyle().Printf("\n❌ %s\n\n", err)
 		return
 	}
-	req.Header.Add("Accept", "application/json")
+
+	if joke == "" {
+		styles.GetErrorStyle().Println("\n❌ Could not retrieve a joke. Try again later!")
+		return
+	}
+
+	styles.GetSuccessStyle().Printf("\n😂 %s\n\n", joke)
+}
+
+// fetchJoke handles the API request and response processing
+func fetchJoke() (string, error) {
+	client := &http.Client{Timeout: requestTimeout}
+	
+	req, err := http.NewRequest(http.MethodGet, jokeAPIEndpoint, nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to create request: %v", err)
+	}
+	req.Header.Set("Accept", "application/json")
 
 	resp, err := client.Do(req)
 	if err != nil {
-		done <- true
-		styles.GetErrorStyle().Println("❌ Failed to fetch joke. Please check your internet connection!")
-		return
+		return "", fmt.Errorf("failed to fetch joke. Please check your internet connection: %v", err)
 	}
 	defer resp.Body.Close()
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		done <- true
-		styles.GetErrorStyle().Println("❌ Failed to read joke data.")
-		return
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("API request failed with status: %s", resp.Status)
 	}
 
-	var joke JokeData
-	err = json.Unmarshal(body, &joke)
-	done <- true
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		styles.GetErrorStyle().Println("❌ Failed to parse joke data.")
-		return
+		return "", fmt.Errorf("failed to read joke data: %v", err)
 	}
-	if joke.Joke != "" {
-		styles.GetSuccessStyle().Printf("\n😂 %s\n\n", joke.Joke)
-	} else {
-		styles.GetErrorStyle().Println("❌ Could not retrieve a joke. Try again later!")
+
+	var jokeData JokeResponse
+	if err := json.Unmarshal(body, &jokeData); err != nil {
+		return "", fmt.Errorf("failed to parse joke data: %v", err)
 	}
+
+	return jokeData.Joke, nil
 }
