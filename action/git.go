@@ -61,7 +61,7 @@ func getScope(reader *bufio.Reader) string {
 func getRequiredInput(reader *bufio.Reader, label string) string {
 	for {
 		input := promptInput(reader, label, "")
-		if input != "" { 
+		if input != "" {
 			return input
 		}
 		styles.ErrorStyle.Println("⚠️  This field is required")
@@ -228,4 +228,210 @@ func GitStatus() {
 	styles.Cyan.Println("\n🔍 Repository Status")
 	styles.Cyan.Println("───────────────────")
 	runGitCommand("status", "-sb")
+}
+
+// GitBranchCreate creates a new branch
+func GitBranchCreate() {
+	reader := bufio.NewReader(os.Stdin)
+	styles.Cyan.Println("\n🌿 Create New Branch")
+	styles.Cyan.Println("────────────────────")
+	branch := promptInput(reader, "Branch name", "feature/my-feature")
+	if branch == "" {
+		styles.ErrorStyle.Println("🚫 Branch name required")
+		return
+	}
+	runGitCommand("checkout", "-b", branch)
+	styles.SuccessStyle.Printf("✅ Created and switched to branch '%s'\n", branch)
+}
+
+// GitBranchSwitch switches to an existing branch
+func GitBranchSwitch() {
+	reader := bufio.NewReader(os.Stdin)
+	styles.Cyan.Println("\n🔀 Switch Branch")
+	styles.Cyan.Println("────────────────")
+	branch := promptInput(reader, "Branch name", "main")
+	if branch == "" {
+		styles.ErrorStyle.Println("🚫 Branch name required")
+		return
+	}
+	runGitCommand("checkout", branch)
+	styles.SuccessStyle.Printf("✅ Switched to branch '%s'\n", branch)
+}
+
+// GitBranchDelete deletes a branch
+func GitBranchDelete() {
+	reader := bufio.NewReader(os.Stdin)
+	styles.Cyan.Println("\n🗑️ Delete Branch")
+	styles.Cyan.Println("────────────────")
+	branch := promptInput(reader, "Branch name", "feature/my-feature")
+	if branch == "" {
+		styles.ErrorStyle.Println("🚫 Branch name required")
+		return
+	}
+	runGitCommand("branch", "-d", branch)
+	styles.SuccessStyle.Printf("✅ Deleted branch '%s'\n", branch)
+}
+
+// GitStashSave saves changes to a new stash
+func GitStashSave() {
+	reader := bufio.NewReader(os.Stdin)
+	styles.Cyan.Println("\n📦 Stash Changes")
+	styles.Cyan.Println("────────────────")
+	msg := promptInput(reader, "Stash message (optional)", "WIP")
+	if msg == "" {
+		runGitCommand("stash", "save")
+	} else {
+		runGitCommand("stash", "save", msg)
+	}
+	styles.SuccessStyle.Println("✅ Changes stashed")
+}
+
+// GitStashPop pops the latest stash
+func GitStashPop() {
+	styles.Cyan.Println("\n📤 Pop Stash")
+	styles.Cyan.Println("────────────")
+	runGitCommand("stash", "pop")
+	styles.SuccessStyle.Println("✅ Stash applied")
+}
+
+// GitStashList lists all stashes
+func GitStashList() {
+	styles.Cyan.Println("\n📚 Stash List")
+	styles.Cyan.Println("─────────────")
+	runGitCommand("stash", "list")
+}
+
+// GitTagCreate creates a new tag
+func GitTagCreate() {
+	reader := bufio.NewReader(os.Stdin)
+	styles.Cyan.Println("\n🏷️ Create Tag")
+	styles.Cyan.Println("─────────────")
+	tag := promptInput(reader, "Tag name", "v1.0.0")
+	if tag == "" {
+		styles.ErrorStyle.Println("🚫 Tag name required")
+		return
+	}
+	runGitCommand("tag", tag)
+	styles.SuccessStyle.Printf("✅ Tag '%s' created\n", tag)
+}
+
+// GitTagList lists all tags
+func GitTagList() {
+	styles.Cyan.Println("\n🏷️ Tag List")
+	styles.Cyan.Println("───────────")
+	runGitCommand("tag", "--list")
+}
+
+// GitTagDelete deletes a tag
+func GitTagDelete() {
+	reader := bufio.NewReader(os.Stdin)
+	styles.Cyan.Println("\n🗑️ Delete Tag")
+	styles.Cyan.Println("────────────")
+	tag := promptInput(reader, "Tag name", "v1.0.0")
+	if tag == "" {
+		styles.ErrorStyle.Println("🚫 Tag name required")
+		return
+	}
+	runGitCommand("tag", "-d", tag)
+	styles.SuccessStyle.Printf("✅ Tag '%s' deleted\n", tag)
+}
+
+// GitLogPretty prints a pretty git log
+func GitLogPretty() {
+	styles.Cyan.Println("\n📜 Git Log")
+	styles.Cyan.Println("──────────")
+	runGitCommand("log", "--oneline", "--graph", "--decorate", "--all")
+}
+
+// GitDiff shows the diff
+func GitDiff() {
+	styles.Cyan.Println("\n🔍 Git Diff")
+	styles.Cyan.Println("───────────")
+	runGitCommand("diff")
+}
+
+// GitMerge merges a branch into the current branch
+func GitMerge() {
+	reader := bufio.NewReader(os.Stdin)
+	styles.Cyan.Println("\n🔗 Merge Branch")
+	styles.Cyan.Println("───────────────")
+	branch := promptInput(reader, "Branch to merge", "feature/my-feature")
+	if branch == "" {
+		styles.ErrorStyle.Println("🚫 Branch name required")
+		return
+	}
+	runGitCommand("merge", branch)
+	styles.SuccessStyle.Printf("✅ Merged branch '%s'\n", branch)
+}
+
+// GitRebase rebases the current branch onto another
+func GitRebase() {
+	reader := bufio.NewReader(os.Stdin)
+	styles.Cyan.Println("\n🔄 Rebase Branch")
+	styles.Cyan.Println("────────────────")
+	branch := promptInput(reader, "Branch to rebase onto", "main")
+	if branch == "" {
+		styles.ErrorStyle.Println("🚫 Branch name required")
+		return
+	}
+	runGitCommand("rebase", branch)
+	styles.SuccessStyle.Printf("✅ Rebased onto '%s'\n", branch)
+}
+
+// GitCherryPick cherry-picks a commit
+func GitCherryPick() {
+	reader := bufio.NewReader(os.Stdin)
+	styles.Cyan.Println("\n🍒 Cherry-pick Commit")
+	styles.Cyan.Println("─────────────────────")
+	commit := promptInput(reader, "Commit hash", "abc1234")
+	if commit == "" {
+		styles.ErrorStyle.Println("🚫 Commit hash required")
+		return
+	}
+	runGitCommand("cherry-pick", commit)
+	styles.SuccessStyle.Printf("✅ Cherry-picked commit '%s'\n", commit)
+}
+
+// GitReset resets the current branch to a commit
+func GitReset() {
+	reader := bufio.NewReader(os.Stdin)
+	styles.Cyan.Println("\n🔄 Reset Branch")
+	styles.Cyan.Println("───────────────")
+	commit := promptInput(reader, "Commit hash or ref", "HEAD~1")
+	if commit == "" {
+		styles.ErrorStyle.Println("🚫 Commit hash or ref required")
+		return
+	}
+	runGitCommand("reset", "--hard", commit)
+	styles.SuccessStyle.Printf("✅ Reset to '%s'\n", commit)
+}
+
+// GitBisect starts a bisect session
+func GitBisect() {
+	styles.Cyan.Println("\n🕵️ Git Bisect")
+	styles.Cyan.Println("─────────────")
+	styles.Yellow.Println("◎ This will help you find the commit that introduced a bug.")
+	styles.Yellow.Println("◎ Use 'git bisect good' and 'git bisect bad' as prompted.")
+	runGitCommand("bisect", "start")
+}
+
+// GitBisectGood marks the current commit as good
+func GitBisectGood() {
+	styles.Cyan.Println("\n✅ Mark Good Commit")
+	styles.Cyan.Println("──────────────────")
+	runGitCommand("bisect", "good")
+}
+
+// GitBisectBad marks the current commit as bad
+func GitBisectBad() {
+	styles.Cyan.Println("\n❌ Mark Bad Commit")
+	styles.Cyan.Println("─────────────────")
+	runGitCommand("bisect", "bad")
+}
+
+// GitBisectReset ends the bisect session
+func GitBisectReset() {
+	styles.Cyan.Println("\n🔄 Reset Bisect")
+	styles.Cyan.Println("────────────────")
+	runGitCommand("bisect", "reset")
 }
