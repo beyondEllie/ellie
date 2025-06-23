@@ -50,7 +50,7 @@ func Joke() {
 		return
 	}
 	if joke.Joke != "" {
-		styles.GetSuccessStyle().Printf("\n😂 %s\n", joke.Joke)
+		styles.GetSuccessStyle().Printf("\n😂 %s\n\n", joke.Joke)
 	} else {
 		styles.GetErrorStyle().Println("❌ Could not retrieve a joke. Try again later!")
 	}
