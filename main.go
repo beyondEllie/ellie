@@ -264,7 +264,9 @@ var commandRegistry = map[string]command.Command{
 	"joke": {
 		Handler: func(args []string) { actions.Joke() },
 	},
-	"remind": {},
+	"remind": {
+		Handler: func(_ []string){actions.Remind()},
+	},
 	"about": {
 		Handler: actions.ShowAbout,
 	},

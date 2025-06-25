@@ -227,3 +227,9 @@ func ShowLoadingSpinnerWithMessageAndDuration(message string, duration time.Dura
 	}
 	fmt.Println("\r" + message + " done!")
 }
+
+//Error util for ellie
+func Error(message string, details ...any) {
+	styles.ErrorStyle.Printf("%s", message)
+}
+

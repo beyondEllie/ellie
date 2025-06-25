@@ -77,7 +77,7 @@ func getEmail() string {
 		if err == nil && email != "" {
 			return email
 		}
-		styles.ErrorStyle.Println("🚫 Recipient email cannot be empty")
+		utils.Error("🚫 Recipient email cannot be empty")
 	}
 }
 
