@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/charmbracelet/glamour"
+	"github.com/gen2brain/beeep"
 	"github.com/tacheraSasi/ellie/styles"
 )
 
@@ -228,8 +229,24 @@ func ShowLoadingSpinnerWithMessageAndDuration(message string, duration time.Dura
 	fmt.Println("\r" + message + " done!")
 }
 
-//Error util for ellie
+// Error util for ellie
 func Error(message string, details ...any) {
 	styles.ErrorStyle.Printf("%s", message)
 }
 
+// Sends a desktop Notification
+func Notify(message string) {
+	err := beeep.Notify("🔔 Ellie Reminder", message, "")
+
+	if err != nil {
+		Error("❌ Failed to send notification: " + err.Error())
+	} else {
+		styles.InfoStyle.Printf("\n🔔 Reminder: %s\n", message)
+	}
+}
+
+// Schedules a native reminder using the 'at' command.
+func ScheduleNativeReminder(title string, durationMinutes int) {
+	cmd := fmt.Sprintf(`echo "notify-send 'Ellie Reminder' '%s'" | at now + %d minutes`, title, durationMinutes)
+	exec.Command("bash", "-c", cmd).Run()
+}

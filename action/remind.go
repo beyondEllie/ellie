@@ -3,12 +3,13 @@ package actions
 import (
 	"time"
 
+	"github.com/gen2brain/beeep"
 	"github.com/tacheraSasi/ellie/styles"
 	"github.com/tacheraSasi/ellie/utils"
 )
 
 func Remind() {
-	styles.Cyan.Print("💡 ellie remind")
+	styles.Cyan.Println("💡 ellie remind")
 
 	title, err := getTitle()
 	if err != nil {
@@ -27,7 +28,7 @@ func Remind() {
 
 func getTitle() (string, error) {
 	for {
-		subject, err := utils.GetInput("📝 What do you want to remind yourself?")
+		subject, err := utils.GetInput("What do you want to remind yourself?")
 		if err == nil && subject != "" {
 			return subject, nil
 		}
@@ -53,6 +54,12 @@ func setReminder(title string, duration time.Duration) {
 	styles.SuccessStyle.Printf("✅ Reminder set! I will remind you in %v.\n", duration)
 
 	time.AfterFunc(duration, func() {
-		// styles.ReminderStyle.Printf("\n🔔 Reminder: %s\n", title)
+		// Sends Desktop Notification
+		err := beeep.Notify("🔔 Ellie Reminder", title, "")
+		if err != nil {
+			utils.Error("❌ Failed to send notification: " + err.Error())
+		} else {
+			styles.InfoStyle.Printf("\n🔔 Reminder: %s\n", title)
+		}
 	})
 }
