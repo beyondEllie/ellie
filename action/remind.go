@@ -9,6 +9,7 @@ import (
 )
 
 func Remind() {
+	utils.Notify("💡 ellie remind")
 	styles.Cyan.Println("💡 ellie remind")
 
 	title, err := getTitle()
