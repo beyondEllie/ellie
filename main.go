@@ -18,6 +18,7 @@ import (
 const (
 	VERSION = configs.VERSION
 )
+var ICON any = static.Icon()
 
 // User name from the saved files during initialization
 var CurrentUser string = configs.GetEnv("USERNAME")

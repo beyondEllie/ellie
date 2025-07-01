@@ -236,7 +236,8 @@ func Error(message string, details ...any) {
 
 // Sends a desktop Notification
 func Notify(message string) {
-	err := beeep.Notify("🔔 Ellie Reminder", message, "")
+	icon := "static/icon.png"
+	err := beeep.Notify("🔔 Ellie Reminder", message, icon)
 
 	if err != nil {
 		Error("❌ Failed to send notification: " + err.Error())

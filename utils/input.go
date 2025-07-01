@@ -12,6 +12,16 @@ import (
 
 // GetInput prompts the user for input and returns the trimmed string.
 func GetInput(promptText string) (string, error) {
+	reader := bufio.NewReader(os.Stdin)
+	styles.InputPrompt.Print(promptText, " ")
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(input), nil
+}
+
+func GetInputInteractively(promptText string) (string, error) {
 	if isTerminalInteractive() {
 		result := prompt.Input(promptText+" ", completer, prompt.OptionTitle("Ellie Input"))
 		return strings.TrimSpace(result), nil
