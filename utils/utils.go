@@ -236,3 +236,26 @@ func GetInterruptChannel() chan os.Signal {
 	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
 	return interrupt
 }
+
+// StringToInt converts a string to an integer, returning 0 if conversion fails
+func StringToInt(s string) int {
+	if s == "" {
+		return 0
+	}
+
+	// Remove any non-digit characters except minus sign
+	clean := ""
+	for _, char := range s {
+		if (char >= '0' && char <= '9') || char == '-' {
+			clean += string(char)
+		}
+	}
+
+	if clean == "" {
+		return 0
+	}
+
+	var result int
+	fmt.Sscanf(clean, "%d", &result)
+	return result
+}
