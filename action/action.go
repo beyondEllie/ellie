@@ -70,7 +70,7 @@ func ListFiles(dir string) {
 	}
 	fmt.Println("Files:")
 	for _, file := range files {
-		styles.Bold.Println("--",file.Name())
+		styles.Bold.Println("--", file.Name())
 	}
 }
 
@@ -124,7 +124,6 @@ func StartPostgres() {
 		styles.SuccessStyle.Println("PostgreSQL server started successfully.")
 	}
 }
-
 
 func StartAll() {
 	StartApache()
@@ -303,23 +302,4 @@ func Play(args []string) {
 		done <- true
 	})))
 	<-done
-}
-
-func Focus(args []string) { //Doesnot work properly
-	fmt.Println(args)
-	var cmd *exec.Cmd
-	if len(args) < 2 {
-		cmd = exec.Command(args[0])
-	} else {
-		cmd = exec.Command(args[0], args[1:]...)
-	}
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		styles.ErrorStyle.Println("Error: ", err)
-		return
-	}
-	if output != nil || len(output) == 0 {
-		styles.ErrorStyle.Printf("%s", output)
-	}
-
 }
