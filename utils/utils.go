@@ -5,8 +5,10 @@ import (
 	"math/rand/v2"
 	"os"
 	"os/exec"
+	"os/signal"
 	"runtime"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/charmbracelet/glamour"
@@ -226,4 +228,11 @@ func ShowLoadingSpinnerWithMessageAndDuration(message string, duration time.Dura
 		time.Sleep(100 * time.Millisecond)
 	}
 	fmt.Println("\r" + message + " done!")
+}
+
+// GetInterruptChannel returns a channel that receives interrupt signals
+func GetInterruptChannel() chan os.Signal {
+	interrupt := make(chan os.Signal, 1)
+	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
+	return interrupt
 }
