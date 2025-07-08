@@ -251,3 +251,5 @@ func ScheduleNativeReminder(title string, durationMinutes int) {
 	cmd := fmt.Sprintf(`echo "notify-send 'Ellie Reminder' '%s'" | at now + %d minutes`, title, durationMinutes)
 	exec.Command("bash", "-c", cmd).Run()
 }
+
+
