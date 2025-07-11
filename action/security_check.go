@@ -11,7 +11,7 @@ import (
 	"github.com/tacheraSasi/ellie/utils"
 )
 
-// Review reads a file and asks the LLM to review the code.
+// Review reads a file and asks the LLM to perform a strict security audit.
 func SecurityCheck(file string) {
 	openaiApikey := os.Getenv("OPENAI_API_KEY")
 	if openaiApikey == "" {
@@ -40,15 +40,19 @@ func SecurityCheck(file string) {
 	session := chat.NewChatSession(provider)
 
 	prompt := fmt.Sprintf(
-		`You are an expert software engineer. Please review the following code for bugs, security issues, code quality, and best practices. Provide actionable suggestions and a summary. 
+		`You are a senior security engineer. Perform a STRICT security audit of the following code. 
+- Identify ALL possible vulnerabilities, insecure coding patterns, injection risks, privilege escalation, insecure dependencies, and any non-compliance with best security practices or standards (e.g., OWASP Top 10).
+- For each issue, provide a SEVERITY rating (Critical, High, Medium, Low), a clear explanation, and explicit REMEDIATION steps.
+- Summarize the overall security posture and provide a checklist for hardening this code.
+- Do NOT skip minor issues. Be extremely thorough and strict.
+
 File: %s
 
 Code:
 %s
 `, file, string(code))
 
-	styles.InfoStyle.Println("Reviewing code with Ellie...")
-
+	styles.InfoStyle.Println("Performing strict security audit with Ellie...")
 	done := make(chan bool)
 	responseChan := make(chan string)
 	errorChan := make(chan error)
