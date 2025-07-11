@@ -14,12 +14,22 @@ pub extern "C" fn run_cmd(cmd: *const c_char) -> *mut c_char {
         .arg("-c")
         .arg(command_str)
         .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
         .output();
 
     match output {
         Ok(out) => {
-            let result = String::from_utf8_lossy(&out.stdout).to_string();
-            CString::new(result).unwrap().into_raw()
+            let stdout = String::from_utf8_lossy(&out.stdout);
+            let stderr = String::from_utf8_lossy(&out.stderr);
+            if !out.status.success() {
+                let result = format!("Error: {}\nOutput:\n{}", stderr.trim(), stdout.trim());
+                CString::new(result).unwrap().into_raw()
+            } else if !stderr.trim().is_empty() {
+                let result = format!("Output:\n{}\nError:\n{}", stdout.trim(), stderr.trim());
+                CString::new(result).unwrap().into_raw()
+            } else {
+                CString::new(stdout.trim()).unwrap().into_raw()
+            }
         }
         Err(e) => CString::new(format!("Error: {}", e)).unwrap().into_raw(),
     }

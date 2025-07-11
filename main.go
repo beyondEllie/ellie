@@ -25,8 +25,6 @@ var CurrentUser string = configs.GetEnv("USERNAME")
 
 
 func main() {
-	elliecore.RunCmd("echo Hello from Rust!")
-
 	// Setup global flags
 	showHelp := flag.Bool("help", false, "Show help information")
 	showVersion := flag.Bool("version", false, "Show version information")
