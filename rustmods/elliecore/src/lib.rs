@@ -2,7 +2,7 @@ use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::process::{Command, Stdio};
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub extern "C" fn run_cmd(cmd: *const c_char) -> *mut c_char {
     let c_str = unsafe { CStr::from_ptr(cmd) };
     let command_str = match c_str.to_str() {
