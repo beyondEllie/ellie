@@ -6,6 +6,16 @@ package elliecore
 char* run_cmd(const char* cmd);
 char* run_cmd_with_env(const char* cmd, const char* envs);
 char* read_file(const char* path);
+char* write_file(const char* path, const char* content);
+char* append_file(const char* path, const char* content);
+char* delete_file(const char* path);
+char* list_dir(const char* path);
+char* get_env(const char* key);
+char* set_env(const char* key, const char* value);
+char* get_cwd();
+char* change_dir(const char* path);
+int file_exists(const char* path);
+char* file_metadata(const char* path);
 */
 import "C"
 import (
@@ -50,4 +60,96 @@ func ReadFile(path string) string {
 
 	output := C.GoString(result)
 	return output
+}
+
+// WriteFile writes content to a file (overwrites if exists).
+func WriteFile(path, content string) string {
+	pathC := C.CString(path)
+	defer C.free(unsafe.Pointer(pathC))
+	contentC := C.CString(content)
+	defer C.free(unsafe.Pointer(contentC))
+	result := C.write_file(pathC, contentC)
+	defer C.free(unsafe.Pointer(result))
+	return C.GoString(result)
+}
+
+// AppendFile appends content to a file (creates if not exists).
+func AppendFile(path, content string) string {
+	pathC := C.CString(path)
+	defer C.free(unsafe.Pointer(pathC))
+	contentC := C.CString(content)
+	defer C.free(unsafe.Pointer(contentC))
+	result := C.append_file(pathC, contentC)
+	defer C.free(unsafe.Pointer(result))
+	return C.GoString(result)
+}
+
+// DeleteFile removes a file.
+func DeleteFile(path string) string {
+	pathC := C.CString(path)
+	defer C.free(unsafe.Pointer(pathC))
+	result := C.delete_file(pathC)
+	defer C.free(unsafe.Pointer(result))
+	return C.GoString(result)
+}
+
+// ListDir lists files and directories in a path (newline separated).
+func ListDir(path string) string {
+	pathC := C.CString(path)
+	defer C.free(unsafe.Pointer(pathC))
+	result := C.list_dir(pathC)
+	defer C.free(unsafe.Pointer(result))
+	return C.GoString(result)
+}
+
+// GetEnv retrieves the value of an environment variable.
+func GetEnv(key string) string {
+	keyC := C.CString(key)
+	defer C.free(unsafe.Pointer(keyC))
+	result := C.get_env(keyC)
+	defer C.free(unsafe.Pointer(result))
+	return C.GoString(result)
+}
+
+// SetEnv sets an environment variable for the current process.
+func SetEnv(key, value string) string {
+	keyC := C.CString(key)
+	defer C.free(unsafe.Pointer(keyC))
+	valueC := C.CString(value)
+	defer C.free(unsafe.Pointer(valueC))
+	result := C.set_env(keyC, valueC)
+	defer C.free(unsafe.Pointer(result))
+	return C.GoString(result)
+}
+
+// GetCwd returns the current working directory.
+func GetCwd() string {
+	result := C.get_cwd()
+	defer C.free(unsafe.Pointer(result))
+	return C.GoString(result)
+}
+
+// ChangeDir changes the current working directory.
+func ChangeDir(path string) string {
+	pathC := C.CString(path)
+	defer C.free(unsafe.Pointer(pathC))
+	result := C.change_dir(pathC)
+	defer C.free(unsafe.Pointer(result))
+	return C.GoString(result)
+}
+
+// FileExists checks if a file or directory exists.
+func FileExists(path string) bool {
+	pathC := C.CString(path)
+	defer C.free(unsafe.Pointer(pathC))
+	return C.file_exists(pathC) == 1
+}
+
+// FileMetadata returns file size, readonly, and modified time as JSON.
+func FileMetadata(path string) string {
+	pathC := C.CString(path)
+	defer C.free(unsafe.Pointer(pathC))
+	result := C.file_metadata(pathC)
+	defer C.free(unsafe.Pointer(result))
+	return C.GoString(result)
 }
