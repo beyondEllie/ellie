@@ -1,0 +1,22 @@
+# Rust build and dependency files
+/target/
+/target/**
+/target/**/**
+**/*.rs.bk
+Cargo.lock
+
+# IDE/editor files
+.idea/
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# By default, ignore everything in /rustmods/target 
