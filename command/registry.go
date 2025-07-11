@@ -1,6 +1,7 @@
 package command
 
 import (
+	"flag"
 	"fmt"
 
 	actions "github.com/tacheraSasi/ellie/action"
@@ -95,7 +96,9 @@ var commandRegistry = map[string]Command{
 		Handler: func(args []string) { actions.ConnectWiFi(args[1], args[2]) },
 	},
 	"greet": {
-		Handler: greetUser,
+		Handler: func(_ []string) {
+			styles.Highlight.Println("Your majesty,", configs.GetEnv("USERNAME"))
+		},
 	},
 	"send-mail": {
 		Handler: func(_ []string) { actions.Mailer() },
