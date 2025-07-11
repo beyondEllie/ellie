@@ -2,9 +2,9 @@ use std::ffi::{CStr, CString};
 use std::os::raw::{c_char, c_int};
 use std::process::{Command, Stdio};
 use std::{env, fs, path::Path};
-use std::io::{Write, Read};
+use std::io::Write;
 use std::fs::OpenOptions;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::time::UNIX_EPOCH;
 
 #[cfg(target_os = "windows")]
 const SHELL: &str = "cmd";
@@ -201,7 +201,9 @@ pub extern "C" fn set_env(key: *const c_char, value: *const c_char) -> *mut c_ch
         Ok(s) => s,
         Err(_) => return CString::new("Invalid value").unwrap().into_raw(),
     };
-    env::set_var(key_str, value_str);
+    unsafe {
+        env::set_var(key_str, value_str);
+    }
     CString::new("OK").unwrap().into_raw()
 }
 
