@@ -21,8 +21,3 @@ func RunCmd(cmd string) {
 
 	fmt.Println("Rust says:\n", C.GoString(result))
 }
-
-func main() {
-	fmt.Println("Testing Rust FFI call with 'echo Hello from Rust!'")
-	RunCmd("echo Hello from Rust!")
-}
