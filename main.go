@@ -11,7 +11,6 @@ import (
 	"github.com/tacheraSasi/ellie/configs"
 	"github.com/tacheraSasi/ellie/static"
 	"github.com/tacheraSasi/ellie/styles"
-	"github.com/tacheraSasi/ellie/types"
 	"github.com/texttheater/golang-levenshtein/levenshtein"
 )
 
@@ -69,9 +68,9 @@ func handleCommand(args []string) {
 		return
 	}
 
-	cmd, exists := commandRegistry[cmdName]
+	cmd, exists := command.Registry[cmdName]
 	if !exists {
-		matches := getClosestMatchingCmd(commandRegistry, cmdName)
+		matches := getClosestMatchingCmd(command.Registry, cmdName)
 		// fmt.Println(matches)
 		if len(matches) > 0 {
 			styles.GetErrorStyle().Printf("Unknown command: %s\n", cmdName)

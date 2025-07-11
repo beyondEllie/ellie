@@ -11,7 +11,7 @@ import (
 	"github.com/tacheraSasi/ellie/types"
 )
 
-var commandRegistry = map[string]Command{
+var Registry = map[string]Command{
 	"run": {
 		Handler: actions.Run,
 	},
