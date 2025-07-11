@@ -112,6 +112,12 @@ var Registry = map[string]Command{
 		Handler: func(args []string) { actions.Review(args[1]) },
 		// PreHook: ,
 	},
+	"security-check": {
+		Usage:   "security-check <path>",
+		MinArgs: 1,
+		Handler: func(args []string) { actions.SecurityCheck(args[1]) },
+		// PreHook: ,
+	},
 	"git": {
 		SubCommands: map[string]Command{
 			"status": {Handler: func(_ []string) { actions.GitStatus() }},
