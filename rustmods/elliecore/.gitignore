@@ -1,6 +1,7 @@
 # Rust build and dependency files
 /target/
-/target/
+/target/**
+/target/**/**
 **/*.rs.bk
 Cargo.lock
 
