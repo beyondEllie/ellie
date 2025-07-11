@@ -8,7 +8,6 @@ import (
 	actions "github.com/tacheraSasi/ellie/action"
 	"github.com/tacheraSasi/ellie/command"
 	"github.com/tacheraSasi/ellie/configs"
-	"github.com/tacheraSasi/ellie/elliecore"
 	"github.com/tacheraSasi/ellie/static"
 	"github.com/tacheraSasi/ellie/styles"
 	"github.com/texttheater/golang-levenshtein/levenshtein"
