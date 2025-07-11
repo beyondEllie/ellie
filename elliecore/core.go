@@ -1,0 +1,4 @@
+package elliecore
+
+import "C"
+
