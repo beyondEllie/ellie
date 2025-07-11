@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="docs.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -63,6 +64,14 @@
                         <li><a href="#aliases" class="sidebar-link">Custom Aliases</a></li>
                         <li><a href="#automation" class="sidebar-link">Task Automation</a></li>
                         <li><a href="#troubleshooting" class="sidebar-link">Troubleshooting</a></li>
+                    </ul>
+                </div>
+
+                <!-- CLI Commands Sidebar Section -->
+                <div class="sidebar-section">
+                    <h3>CLI Commands</h3>
+                    <ul>
+                        <li><a href="#cli-commands" class="sidebar-link">All Commands</a></li>
                     </ul>
                 </div>
             </div>
@@ -957,6 +966,64 @@ ellie todo --help</code></pre>
                         </div>
                     </div>
                 </section>
+            <!-- CLI Commands Section -->
+            <section id="cli-commands" class="docs-section">
+                <h1>CLI Commands</h1>
+                <p>A quick reference list of all Ellie CLI commands. Click any command to open its detailed Markdown documentation.</p>
+                <ul class="cli-command-list">
+                    <li><a href="#cmd-chat" class="sidebar-link">chat</a></li>
+                    <li><a href="#cmd-connect-wifi" class="sidebar-link">connect-wifi</a></li>
+                    <li><a href="#cmd-create-file" class="sidebar-link">create-file</a></li>
+                    <li><a href="#cmd-demo" class="sidebar-link">demo</a></li>
+                    <li><a href="#cmd-dev-init" class="sidebar-link">dev-init</a></li>
+                    <li><a href="#cmd-focus" class="sidebar-link">focus</a></li>
+                    <li><a href="#cmd-git-bisect" class="sidebar-link">git-bisect</a></li>
+                    <li><a href="#cmd-git-branch" class="sidebar-link">git-branch</a></li>
+                    <li><a href="#cmd-git-cherry-pick" class="sidebar-link">git-cherry-pick</a></li>
+                    <li><a href="#cmd-git-diff" class="sidebar-link">git-diff</a></li>
+                    <li><a href="#cmd-git-log" class="sidebar-link">git-log</a></li>
+                    <li><a href="#cmd-git-merge" class="sidebar-link">git-merge</a></li>
+                    <li><a href="#cmd-git-rebase" class="sidebar-link">git-rebase</a></li>
+                    <li><a href="#cmd-git-reset" class="sidebar-link">git-reset</a></li>
+                    <li><a href="#cmd-git-stash" class="sidebar-link">git-stash</a></li>
+                    <li><a href="#cmd-git-tag" class="sidebar-link">git-tag</a></li>
+                    <li><a href="#cmd-greet" class="sidebar-link">greet</a></li>
+                    <li><a href="#cmd-install" class="sidebar-link">install</a></li>
+                    <li><a href="#cmd-list" class="sidebar-link">list</a></li>
+                    <li><a href="#cmd-network-status" class="sidebar-link">network-status</a></li>
+                    <li><a href="#cmd-open-explorer" class="sidebar-link">open-explorer</a></li>
+                    <li><a href="#cmd-open" class="sidebar-link">open</a></li>
+                    <li><a href="#cmd-play" class="sidebar-link">play</a></li>
+                    <li><a href="#cmd-pwd" class="sidebar-link">pwd</a></li>
+                    <li><a href="#cmd-run" class="sidebar-link">run</a></li>
+                    <li><a href="#cmd-send-mail" class="sidebar-link">send-mail</a></li>
+                    <li><a href="#cmd-setup-git" class="sidebar-link">setup-git</a></li>
+                    <li><a href="#cmd-size" class="sidebar-link">size</a></li>
+                    <li><a href="#cmd-sysinfo" class="sidebar-link">sysinfo</a></li>
+                    <li><a href="#cmd-theme" class="sidebar-link">theme</a></li>
+                    <li><a href="#cmd-update" class="sidebar-link">update</a></li>
+                    <li><a href="#cmd-user-env" class="sidebar-link">user-env</a></li>
+                </ul>
+                <div id="cli-docs"></div>
+
+<script>
+// Dynamically fetch and embed markdown docs
+(function() {
+  const commands = ['chat','connect-wifi','create-file','demo','dev-init','focus','git-bisect','git-branch','git-cherry-pick','git-diff','git-log','git-merge','git-rebase','git-reset','git-stash','git-tag','greet','install','list','network-status','open-explorer','open','play','pwd','run','send-mail','setup-git','size','sysinfo','theme','update','user-env'];
+  const container = document.getElementById('cli-docs');
+  if (!container || typeof marked === 'undefined') return;
+  commands.forEach(cmd => {
+    fetch(`../docs/${cmd}.md`).then(r => r.text()).then(md => {
+      const sec = document.createElement('section');
+      sec.id = `cmd-${cmd}`;
+      sec.className = 'cli-doc-section';
+      sec.innerHTML = `<h2>${cmd}</h2>` + marked.parse(md);
+      container.appendChild(sec);
+    }).catch(err => console.error('Load markdown failed', cmd, err));
+  });
+})();
+</script>
+            </section>
             </div>
         </main>
     </div>

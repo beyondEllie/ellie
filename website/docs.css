@@ -719,3 +719,21 @@
   font-size: 0.9em;
   font-weight: 500;
 }
+
+/* CLI Docs section */
+.cli-doc-section {
+  margin-bottom: var(--space-12);
+}
+
+.cli-doc-section pre {
+  background: #0d1117;
+  color: #c9d1d9;
+  padding: var(--space-4);
+  border-radius: var(--border-radius-lg);
+  overflow-x: auto;
+}
+
+.cli-doc-section code {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9em;
+}
