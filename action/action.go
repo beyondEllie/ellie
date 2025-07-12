@@ -11,6 +11,7 @@ import (
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
+	"github.com/tacheraSasi/ellie/elliecore"
 	"github.com/tacheraSasi/ellie/styles"
 	"github.com/tacheraSasi/ellie/utils"
 )
@@ -85,13 +86,31 @@ func CreateFile(filePath string) {
 }
 
 func NetworkStatus() {
-	cmd := exec.Command("nmcli", "general", "status")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println("Error checking network status:", err)
-		return
+	var output string
+
+	switch runtime.GOOS {
+	case "windows":
+		// Windows: use ipconfig
+		output = elliecore.RunCmd("ipconfig")
+	case "darwin":
+		// macOS: use networksetup and ifconfig
+		output = elliecore.RunCmd("networksetup -listallnetworkservices")
+		output += "\n\n" + elliecore.RunCmd("ifconfig | grep -E 'inet |status'")
+	case "linux":
+		// Linux: try nmcli first, fallback to ip
+		output = elliecore.RunCmd("nmcli general status")
+		if strings.Contains(output, "Error:") {
+			output = elliecore.RunCmd("ip addr show")
+		}
+	default:
+		// Fallback for other systems
+		output = elliecore.RunCmd("ifconfig")
+		if strings.Contains(output, "Error:") {
+			output = elliecore.RunCmd("ip addr show")
+		}
 	}
-	fmt.Printf("Network Status:\n%s\n", string(output))
+
+	fmt.Printf("Network Status:\n%s\n", output)
 }
 
 func ConnectWiFi(ssid, password string) {
