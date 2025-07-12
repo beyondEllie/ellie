@@ -17,7 +17,7 @@ build_linux:
 	@echo 'zipping build...'
 	tar -zcvf binaries/ellie_linux_amd64.tar.gz ellie
 	@echo 'cleaning up...'
-	rm ellie
+	rm ellie     
 
 build_linux_upx:
 	@echo 'building linux binary with UPX...'

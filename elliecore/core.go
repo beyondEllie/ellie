@@ -26,10 +26,10 @@ import (
 // This is a low level, cross platform abstraction for shell command execution.
 func RunCmd(cmd string) string {
 	input := C.CString(cmd)
-	defer C.free(unsafe.Pointer(input))
+    defer C.free(unsafe.Pointer(input))
 
-	result := C.run_cmd(input)
-	defer C.free(unsafe.Pointer(result))
+    result := C.run_cmd(input)
+    defer C.free(unsafe.Pointer(result))
 
 	output := C.GoString(result)
 	return output
