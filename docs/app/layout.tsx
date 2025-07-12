@@ -8,13 +8,13 @@ import Analytics from "./analytics";
 
 export const metadata = {
 	title: {
-		template: "%s – Prisma Client Go",
-		default: "Prisma Client Go",
+		template: "%s – Ellie CLI",
+		default: "Ellie CLI",
 	},
 	metadataBase: new URL("https://goprisma.org"),
 	description:
-		"Prisma Client Go is an auto-generated and fully type-safe database client",
-	applicationName: "Go Prisma",
+		"Ellie CLI is an auto-generated and fully type-safe database client",
+	applicationName: "Ellie CLI",
 	icons: [
 		{
 			rel: "icon",
@@ -60,13 +60,13 @@ export default async function RootLayout({ children }) {
 						}
 						navbar={
 							<Navbar
-								logo={<div>Go Prisma</div>}
+								logo={<div>Ellie CLI</div>}
 								chatLink="https://discord.gg/er3ZbmYHDk"
-								projectLink="https://github.com/gooferOrm/goofer"
+								projectLink="https://github.com/beyondEllie/ellie"
 							/>
 						}
 						editLink="Edit this page on GitHub"
-						docsRepositoryBase="https://github.com/gooferOrm/goofer/tree/main/docs"
+						docsRepositoryBase="https://github.com/beyondEllie/ellie/tree/main/docs"
 						sidebar={{ defaultMenuCollapseLevel: 1 }}
 						pageMap={await getPageMap()}
 					>
