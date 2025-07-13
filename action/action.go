@@ -52,19 +52,17 @@ func Pwd() {
 
 func GitSetup(pat, username string) {
 	// cmd := exec.Command("git", "status")
-	elliecore.RunCmd("echo setting up git")
-	// elliecore.RunCmd("git init .")
-	// elliecore.RunCmd("git add .")
-	// elliecore.RunCmd("git commit -m 'init by ellie'")
+	output := elliecore.RunCmd("echo setting up git && git init . && git add . && git commit -m 'init by ellie'")
+	
 	// output, err := cmd.CombinedOutput()
 	// if err != nil {
 	// 	styles.ErrorStyle.Printf("🚫 Error: %v\n", err)
 	// 	return
 	// }
 
-	// if len(output) > 0 {
-	// 	fmt.Printf("Output: %s\n", string(output))
-	// }
+	if len(output) > 0 {
+		fmt.Printf("Output: %s\n", string(output))
+	}
 }
 
 func ListFiles(dir string) {
