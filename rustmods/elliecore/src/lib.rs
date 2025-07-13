@@ -9,7 +9,7 @@ use std::time::UNIX_EPOCH;
 #[cfg(target_os = "windows")]
 const SHELL: &str = "cmd";
 #[cfg(target_os = "windows")]
-const SHELL_ARG: &str = "/C";
+const SHELL_ARG: &str = "/C"; 
 
 #[cfg(not(target_os = "windows"))]
 const SHELL: &str = "sh";
