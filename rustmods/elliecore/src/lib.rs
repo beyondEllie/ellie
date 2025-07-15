@@ -9,7 +9,7 @@ use std::time::UNIX_EPOCH;
 #[cfg(target_os = "windows")]
 const SHELL: &str = "cmd";
 #[cfg(target_os = "windows")]
-const SHELL_ARG: &str = "/C";
+const SHELL_ARG: &str = "/C"; 
 
 #[cfg(not(target_os = "windows"))]
 const SHELL: &str = "sh";
@@ -78,7 +78,7 @@ pub extern "C" fn run_cmd_with_env(cmd: *const c_char, envs: *const c_char) -> *
                 CString::new(result).unwrap().into_raw()
             } else if !stderr.trim().is_empty() {
                 let result = format!("Output:\n{}\nError:\n{}", stdout.trim(), stderr.trim());
-                CString::new(result).unwrap().into_raw()
+            CString::new(result).unwrap().into_raw()
             } else {
                 CString::new(stdout.trim()).unwrap().into_raw()
             }

@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/tacheraSasi/ellie/configs"
+	"github.com/tacheraSasi/ellie/elliecore"
 	"github.com/tacheraSasi/ellie/styles"
 )
 
@@ -42,16 +43,60 @@ func loadAliases() {
 }
 
 func saveAliases() {
-	aliasFile := filepath.Join(configs.GetEllieDir(), "aliases.json")
-	data, err := json.MarshalIndent(aliases, "", "  ")
-	if err != nil {
-		styles.ErrorStyle.Println("Error saving aliases:", err)
+	// Get the user's shell configuration file
+	homeDir := os.Getenv("HOME")
+	shell := os.Getenv("SHELL")
+
+	var configFile string
+	if strings.Contains(shell, "zsh") {
+		configFile = filepath.Join(homeDir, ".zshrc")
+	} else if strings.Contains(shell, "bash") {
+		configFile = filepath.Join(homeDir, ".bashrc")
+	} else {
+		// Fallback to zsh
+		configFile = filepath.Join(homeDir, ".zshrc")
+	}
+
+	// Read existing config file
+	existingContent := elliecore.ReadFile(configFile)
+
+	// Remove existing ellie aliases
+	lines := strings.Split(existingContent, "\n")
+	var filteredLines []string
+	inEllieBlock := false
+
+	for _, line := range lines {
+		if strings.Contains(line, "# Ellie aliases") {
+			inEllieBlock = true
+			continue
+		}
+		if inEllieBlock && strings.Contains(line, "# End Ellie aliases") {
+			inEllieBlock = false
+			continue
+		}
+		if !inEllieBlock {
+			filteredLines = append(filteredLines, line)
+		}
+	}
+
+	// Add new ellie aliases
+	filteredLines = append(filteredLines, "")
+	filteredLines = append(filteredLines, "# Ellie aliases")
+	for _, alias := range aliases {
+		filteredLines = append(filteredLines, fmt.Sprintf("alias %s=\"%s\"", alias.Name, alias.Command))
+	}
+	filteredLines = append(filteredLines, "# End Ellie aliases")
+
+	// Write back to config file
+	newContent := strings.Join(filteredLines, "\n")
+	result := elliecore.WriteFile(configFile, newContent)
+	if result != "OK" {
+		styles.ErrorStyle.Printf("Error writing to %s: %s\n", configFile, result)
 		return
 	}
 
-	if err := os.WriteFile(aliasFile, data, 0644); err != nil {
-		styles.ErrorStyle.Println("Error writing aliases:", err)
-	}
+	styles.SuccessStyle.Printf("Aliases saved to %s\n", configFile)
+	styles.DimText.Println("Changes made to ~/.bashrc. Please run `source ~/.bashrc` or restart your shell.")
 }
 
 func AliasAdd(args []string) {

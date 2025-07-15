@@ -11,7 +11,7 @@ type DevTool struct {
 	DefaultInstall bool
 }
 
-// TODO:Will change this to more accurate struc with frameworks and stuff...
+// TODO:Will change this to more accurate struct with frameworks and stuff...
 type ServerTool struct{
 	Name        string
 	Description string

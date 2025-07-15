@@ -1,0 +1,39 @@
+import { Link } from "nextra-theme-docs";
+import styles from "./index.module.css";
+
+<div className={styles.container} style={{ height: "100%" }}>
+	<div>
+		<div className={styles.jumbotron}>
+			<h1 className={styles.heading}>
+				Ellie CLI - Your AI-Powered System Management Companion 🤖✨
+			</h1>
+			<h2 className={styles.subheading}>
+				Meet Ellie - Your all-in-one terminal buddy for system management, Git workflows, 
+				and productivity hacks. Built with ❤️ by Tachera Sasi
+			</h2>
+
+			<h2>
+				🚀 What makes Ellie special?
+			</h2>
+			<p>
+				Ellie combines the power of AI with practical system management tools, 
+				offering everything from smart Git workflows to cross-platform file operations, 
+				all wrapped in a beautiful, user-friendly interface.
+			</p>
+
+			<div className={styles.buttons}>
+				<Link href="/docs" className={styles.btnPrimary}>
+					Get Started
+					<span>→</span>
+				</Link>
+				<Link
+					href="https://github.com/tacheraSasi/ellie"
+					className={styles.btnSecondary}
+				>
+					GitHub Repo
+					<span>→</span>
+				</Link>
+			</div>
+		</div>
+	</div>
+</div>
