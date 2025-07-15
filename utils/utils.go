@@ -285,3 +285,9 @@ func ScheduleNativeReminder(title string, durationMinutes int) {
 }
 
 
+//Reloads the Shell
+func ReloadShell(){
+	
+}
+
+

@@ -11,6 +11,7 @@ import (
 	"github.com/faiface/beep"
 	"github.com/faiface/beep/mp3"
 	"github.com/faiface/beep/speaker"
+	"github.com/tacheraSasi/ellie/elliecore"
 	"github.com/tacheraSasi/ellie/styles"
 	"github.com/tacheraSasi/ellie/utils"
 )
@@ -50,12 +51,14 @@ func Pwd() {
 }
 
 func GitSetup(pat, username string) {
-	cmd := exec.Command("git", "status")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		styles.ErrorStyle.Printf("🚫 Error: %v\n", err)
-		return
-	}
+	// cmd := exec.Command("git", "status")
+	output := elliecore.RunCmd("echo setting up git && git init . && git add . && git commit -m 'init by ellie'")
+	
+	// output, err := cmd.CombinedOutput()
+	// if err != nil {
+	// 	styles.ErrorStyle.Printf("🚫 Error: %v\n", err)
+	// 	return
+	// }
 
 	if len(output) > 0 {
 		fmt.Printf("Output: %s\n", string(output))
@@ -85,13 +88,139 @@ func CreateFile(filePath string) {
 }
 
 func NetworkStatus() {
-	cmd := exec.Command("nmcli", "general", "status")
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println("Error checking network status:", err)
-		return
+	var output string
+
+	switch runtime.GOOS {
+	case "windows":
+		// Windows: use ipconfig
+		output = elliecore.RunCmd("ipconfig")
+	case "darwin":
+		// macOS: use networksetup and ifconfig
+		services := elliecore.RunCmd("networksetup -listallnetworkservices")
+		interfaces := elliecore.RunCmd("ifconfig | grep -E '^[a-zA-Z]|inet |status'")
+		output = services + "\n\n" + interfaces
+	case "linux":
+		// Linux: try nmcli first, fallback to ip
+		output = elliecore.RunCmd("nmcli general status")
+		if strings.Contains(output, "Error:") {
+			output = elliecore.RunCmd("ip addr show")
+		}
+	default:
+		// Fallback for other systems
+		output = elliecore.RunCmd("ifconfig")
+		if strings.Contains(output, "Error:") {
+			output = elliecore.RunCmd("ip addr show")
+		}
 	}
-	fmt.Printf("Network Status:\n%s\n", string(output))
+
+	// Format the output for better readability
+	formattedOutput := formatNetworkOutput(output, runtime.GOOS)
+	fmt.Printf("🌐 Network Status:\n%s\n", formattedOutput)
+}
+
+func formatNetworkOutput(rawOutput, os string) string {
+	if strings.Contains(rawOutput, "Error:") {
+		return rawOutput
+	}
+
+	var formatted strings.Builder
+
+	switch os {
+	case "darwin":
+		// Parse macOS output
+		lines := strings.Split(rawOutput, "\n")
+		var services []string
+		var interfaces []string
+
+		for _, line := range lines {
+			line = strings.TrimSpace(line)
+			if line == "" {
+				continue
+			}
+
+			if strings.Contains(line, "Thunderbolt") || strings.Contains(line, "Wi-Fi") || strings.Contains(line, "Ethernet") {
+				services = append(services, line)
+			} else if strings.HasPrefix(line, "inet ") {
+				interfaces = append(interfaces, line)
+			} else if strings.Contains(line, "status:") {
+				interfaces = append(interfaces, line)
+			}
+		}
+
+		formatted.WriteString("\n📡 Network Services:\n")
+		for _, service := range services {
+			if strings.Contains(service, "*") {
+				formatted.WriteString(fmt.Sprintf("  ❌ %s (disabled)\n", strings.TrimSpace(strings.ReplaceAll(service, "*", ""))))
+			} else {
+				formatted.WriteString(fmt.Sprintf("  ✅ %s\n", service))
+			}
+		}
+
+		formatted.WriteString("\n🌍 Network Interfaces:\n")
+		for i := 0; i < len(interfaces); i += 2 {
+			if i+1 < len(interfaces) {
+				ipLine := interfaces[i]
+				statusLine := interfaces[i+1]
+
+				if strings.Contains(ipLine, "127.0.0.1") {
+					formatted.WriteString(fmt.Sprintf("  🔄 Loopback: %s\n", strings.TrimSpace(ipLine)))
+				} else if strings.Contains(statusLine, "active") {
+					formatted.WriteString(fmt.Sprintf("  ✅ Active: %s\n", strings.TrimSpace(ipLine)))
+				} else {
+					formatted.WriteString(fmt.Sprintf("  ❌ Inactive: %s\n", strings.TrimSpace(ipLine)))
+				}
+			}
+		}
+
+	case "linux":
+		// Parse Linux output
+		if strings.Contains(rawOutput, "STATE") {
+			// nmcli output
+			lines := strings.Split(rawOutput, "\n")
+			formatted.WriteString("\n📡 Network Status:\n")
+			for _, line := range lines {
+				if strings.Contains(line, "connected") {
+					formatted.WriteString(fmt.Sprintf("  ✅ %s\n", strings.TrimSpace(line)))
+				} else if strings.Contains(line, "disconnected") {
+					formatted.WriteString(fmt.Sprintf("  ❌ %s\n", strings.TrimSpace(line)))
+				}
+			}
+		} else {
+			// ip addr output
+			formatted.WriteString("\n🌍 Network Interfaces:\n")
+			lines := strings.Split(rawOutput, "\n")
+			for _, line := range lines {
+				line = strings.TrimSpace(line)
+				if strings.HasPrefix(line, "inet ") {
+					formatted.WriteString(fmt.Sprintf("  🌐 %s\n", line))
+				} else if strings.HasPrefix(line, "UP") {
+					formatted.WriteString(fmt.Sprintf("  ✅ %s\n", line))
+				} else if strings.HasPrefix(line, "DOWN") {
+					formatted.WriteString(fmt.Sprintf("  ❌ %s\n", line))
+				}
+			}
+		}
+
+	case "windows":
+		// Parse Windows output
+		formatted.WriteString("\n🌍 Network Configuration:\n")
+		lines := strings.Split(rawOutput, "\n")
+		for _, line := range lines {
+			line = strings.TrimSpace(line)
+			if strings.Contains(line, "IPv4") {
+				formatted.WriteString(fmt.Sprintf("  🌐 %s\n", line))
+			} else if strings.Contains(line, "Subnet Mask") {
+				formatted.WriteString(fmt.Sprintf("  🎯 %s\n", line))
+			} else if strings.Contains(line, "Default Gateway") {
+				formatted.WriteString(fmt.Sprintf("  🚪 %s\n", line))
+			}
+		}
+
+	default:
+		formatted.WriteString(rawOutput)
+	}
+
+	return formatted.String()
 }
 
 func ConnectWiFi(ssid, password string) {
