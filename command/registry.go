@@ -15,8 +15,8 @@ var Registry = map[string]Command{
 	"run": {
 		Handler: actions.Run,
 	},
-	">":{
-		Usage: "ellie > run docker container for me please",
+	"::": {
+		Usage: "ellie :: run docker container for me please",
 		MinArgs: 1,
 		Handler: actions.SmartRun,
 	},
