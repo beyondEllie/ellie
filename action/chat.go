@@ -45,7 +45,7 @@ func Chat(openaiApikey string) {
 	userCtx := types.NewUserContext()
 
 	// Add system message with instructions and context
-	instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s %s`,
+	instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU ARE ELLIE note: %s %s`,
 		getReadmeContent(),
 		static.Instructions(*userCtx))
 
@@ -156,7 +156,7 @@ func ChatWithGemini(geminiApikey string) {
 	userCtx := types.NewUserContext()
 
 	// Add system message with instructions and context
-	instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s %s`,
+	instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU ARE ELLIE note: %s %s`,
 		getReadmeContent(),
 		static.Instructions(*userCtx))
 
