@@ -40,6 +40,12 @@ func Run(args []string) {
 	fmt.Printf("%s\n", output)
 }
 
+//SmartRun uses LLM to turn users request to commands and runs them
+func SmartRun(args []string){
+	userPrompt := args
+	fmt.Println(userPrompt)
+}
+
 // Pwd prints working directory
 func Pwd() {
 	dir, err := os.Getwd()

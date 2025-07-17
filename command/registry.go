@@ -15,6 +15,11 @@ var Registry = map[string]Command{
 	"run": {
 		Handler: actions.Run,
 	},
+	">":{
+		Usage: "ellie > run docker container for me please",
+		MinArgs: 1,
+		Handler: actions.SmartRun,
+	},
 	"user-env": {
 		Handler: func(s []string) {
 			// Create user context
