@@ -303,6 +303,88 @@ func createProjectFromTemplate(template ProjectTemplate) {
 	styles.InfoStyle.Printf("📂 Project location: %s\n", projectPath)
 }
 
+// checkPackageManager verifies if the required package manager is installed
+func checkPackageManager(os string) bool {
+	var packageManagers []struct {
+		name    string
+		command string
+		url     string
+	}
+
+	switch os {
+	case "mac":
+		packageManagers = []struct {
+			name    string
+			command string
+			url     string
+		}{
+			{"Homebrew", "brew --version", "https://brew.sh"},
+		}
+	case "linux":
+		packageManagers = []struct {
+			name    string
+			command string
+			url     string
+		}{
+			{"apt", "apt --version", "https://help.ubuntu.com/community/AptGet/Howto"},
+			{"snap", "snap --version", "https://snapcraft.io/docs/installing-snapd"},
+		}
+	case "windows":
+		packageManagers = []struct {
+			name    string
+			command string
+			url     string
+		}{
+			{"Chocolatey", "choco --version", "https://chocolatey.org/install"},
+		}
+	default:
+		return false
+	}
+
+	// Check if any package manager is installed
+	for _, pm := range packageManagers {
+		if isInstalled(pm.command) {
+			styles.SuccessStyle.Printf("✅ %s is already installed\n", pm.name)
+			return true
+		}
+	}
+
+	// No package manager found, prompt user to install
+	styles.ErrorStyle.Printf("❌ No package manager found for %s\n", strings.ToUpper(os))
+	styles.InfoStyle.Printf("📦 A package manager is required to install development tools on %s\n", strings.ToUpper(os))
+
+	// Provide installation commands for each OS
+	switch os {
+	case "mac":
+		styles.InfoStyle.Println("💻 To install Homebrew, run:")
+		styles.Highlight.Println("/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"")
+		styles.InfoStyle.Printf("🔗 Installation guide: %s\n", packageManagers[0].url)
+	case "linux":
+		styles.InfoStyle.Println("💻 To install apt (usually pre-installed on Ubuntu/Debian):")
+		styles.Highlight.Println("sudo apt update && sudo apt upgrade")
+		styles.InfoStyle.Printf("🔗 Installation guide: %s\n", packageManagers[0].url)
+		styles.InfoStyle.Println("💻 To install snap (alternative):")
+		styles.Highlight.Println("sudo apt install snapd")
+		styles.InfoStyle.Printf("🔗 Installation guide: %s\n", packageManagers[1].url)
+	case "windows":
+		styles.InfoStyle.Println("💻 To install Chocolatey, run in PowerShell as Administrator:")
+		styles.Highlight.Println("Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))")
+		styles.InfoStyle.Printf("🔗 Installation guide: %s\n", packageManagers[0].url)
+	}
+
+	// Ask user if they want to continue anyway
+	styles.WarningStyle.Println("⚠️  Some tools may fail to install without a package manager")
+	continueAnyway := utils.AskYesNo("Continue with dev init anyway?", false)
+
+	if !continueAnyway {
+		styles.InfoStyle.Println("🔄 Please install a package manager and run 'ellie dev init' again")
+		return false
+	}
+
+	styles.WarningStyle.Println("⚠️  Proceeding without package manager - some installations may fail")
+	return true
+}
+
 // DevInit is the enhanced development environment setup function
 func DevInit(installAll bool) {
 	session := &DevInitSession{
@@ -318,6 +400,13 @@ func DevInit(installAll bool) {
 
 	styles.HeaderStyle.Println("🚀 Enhanced Development Environment Setup")
 	styles.InfoStyle.Printf("Detected OS: %s\n\n", strings.ToUpper(session.OS))
+
+	// Check for required package manager
+	styles.HeaderStyle.Println("📦 Package Manager Check")
+	if !checkPackageManager(session.OS) {
+		return
+	}
+	styles.InfoStyle.Println("") // Add spacing
 
 	// Welcome and options
 	styles.InfoStyle.Println("Welcome to Ellie's Enhanced Dev Init!")

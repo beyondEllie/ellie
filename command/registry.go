@@ -15,14 +15,18 @@ var Registry = map[string]Command{
 	"run": {
 		Handler: actions.Run,
 	},
+	"::": {
+		Usage:   "ellie :: run docker container for me please",
+		MinArgs: 1,
+		Handler: actions.SmartRun,
+	},
 	"user-env": {
 		Handler: func(s []string) {
 			// Create user context
 			userCtx := types.NewUserContext()
 
 			// Add system message with instructions and context
-			instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU WERE CREATED BY HE HIMSELF THE GREAT ONE AND ONLY TACHER SASI(TACH) note: %s `,
-				static.Instructions(*userCtx))
+			instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU ARE ELLIE note: %s `,static.Instructions(*userCtx))
 			fmt.Println(instructions)
 		},
 	},
