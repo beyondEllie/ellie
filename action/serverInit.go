@@ -88,7 +88,7 @@ func IsInstalled(cmd string) bool {
 }
 
 // runInstallCommand installs a server tool
-func runInstallCommand(tool types.DevTool, currentOS string) bool {
+func runServerInstallCommand(tool types.DevTool, currentOS string) bool {
 	styles.InfoStyle.Printf("🚀 Installing %s...\n", tool.Name)
 	cmd := tool.Install[currentOS]
 	if cmd == "" {
@@ -236,7 +236,7 @@ func ServerInit() {
 			session.SkippedCount++
 			continue
 		}
-		if runInstallCommand(*tool, session.OS) {
+		if runServerInstallCommand(*tool, session.OS) {
 			session.SuccessCount++
 			session.InstalledTools = append(session.InstalledTools, tool.Name)
 		} else {
