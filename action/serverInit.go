@@ -118,7 +118,7 @@ func ServerInit() {
 		styles.ErrorStyle.Printf("❌ Error reading server name: %v\n", err)
 		return
 	}
-	session.ServerName = serverName
+	session.ServerName = "ellie/servers/"+serverName
 
 	// Create server directory and config file
 	err = os.Mkdir(serverName, 0755)
