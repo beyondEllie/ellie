@@ -93,7 +93,7 @@ func CheckPackageManager(os string) bool {
 
 // ServerInit initializes a server environment for a chosen framework
 func ServerInit() {
-	session := &ServerInitSession{
+	session := &common.ServerInitSession{
 		OS:        utils.GetOS(),
 		StartTime: time.Now(),
 	}
@@ -134,11 +134,11 @@ func ServerInit() {
 
 	// Display framework options
 	styles.HeaderStyle.Println("\n📋 Choose Your Server Framework")
-	frameworkList := []Framework{
-		frameworks["general"],
-		frameworks["laravel"],
-		frameworks["nodejs"],
-		frameworks["django"],
+	frameworkList := []common.Framework{
+		common.Frameworks["general"],
+		common.Frameworks["laravel"],
+		common.Frameworks["nodejs"],
+		common.Frameworks["django"],
 	}
 	for i, fw := range frameworkList {
 		styles.InfoStyle.Printf("  %d. %s - %s\n", i+1, fw.Name, fw.Description)
