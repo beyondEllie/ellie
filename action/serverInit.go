@@ -74,7 +74,7 @@ var frameworks = map[string]Framework{
 }
 
 // isInstalled checks if a command is available and working
-func isInstalled(cmd string) bool {
+func IsInstalled(cmd string) bool {
 	parts := strings.Split(cmd, " ")
 	if len(parts) == 0 {
 		return false
@@ -107,7 +107,7 @@ func runInstallCommand(tool types.DevTool, currentOS string) bool {
 		styles.ErrorStyle.Printf("❌ Failed to install %s: %v\n", tool.Name, err)
 		return false
 	}
-	if !isInstalled(tool.CheckCmd) {
+	if !IsInstalled(tool.CheckCmd) {
 		styles.ErrorStyle.Printf("❌ Installation verification failed for %s\n", tool.Name)
 		return false
 	}
@@ -128,7 +128,7 @@ func runInstallCommand(tool types.DevTool, currentOS string) bool {
 }
 
 // checkPackageManager verifies if the required package manager is installed
-func checkPackageManager(os string) bool {
+func CheckPackageManager(os string) bool {
 	var pmName, pmCommand string
 	switch os {
 	case "mac":
@@ -140,7 +140,7 @@ func checkPackageManager(os string) bool {
 	default:
 		return false
 	}
-	if isInstalled(pmCommand) {
+	if IsInstalled(pmCommand) {
 		styles.SuccessStyle.Printf("✅ %s is already installed\n", pmName)
 		return true
 	}
@@ -165,7 +165,7 @@ func ServerInit() {
 	styles.InfoStyle.Printf("Detected OS: %s\n\n", strings.ToUpper(session.OS))
 
 	// Check package manager
-	if !checkPackageManager(session.OS) {
+	if !CheckPackageManager(session.OS) {
 		styles.ErrorStyle.Println("❌ Please install a package manager and try again")
 		return
 	}
@@ -231,7 +231,7 @@ func ServerInit() {
 			session.FailedTools = append(session.FailedTools, toolName)
 			continue
 		}
-		if isInstalled(tool.CheckCmd) {
+		if IsInstalled(tool.CheckCmd) {
 			styles.SuccessStyle.Printf("✅ %s already installed\n", tool.Name)
 			session.SkippedCount++
 			continue
