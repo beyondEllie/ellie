@@ -12,7 +12,7 @@ import (
 
 const (
 	LOG_FILENAME = "ellie.combined.log"
-	CONFIG_DIR   = "/"+configs.ConfigDirName
+	CONFIG_DIR   = "/" + configs.ConfigDirName
 )
 
 var (
@@ -24,7 +24,7 @@ var (
 )
 
 // initializes loggers with both file and console output
-func initialize() {
+func init() {
 	once.Do(func() {
 		// Creates logs directory if it doesn't exist
 		logDir := filepath.Join(CONFIG_DIR, "logs")
@@ -55,19 +55,19 @@ func initialize() {
 
 // Info logs an informational message
 func Info(format string, v ...any) {
-	initialize()
+
 	infoLogger.Printf(format, v...)
 }
 
 // Warning logs a warning message
 func Warning(format string, v ...any) {
-	initialize()
+
 	warningLogger.Printf(format, v...)
 }
 
 // Error logs an error message
 func Error(err error) {
-	initialize()
+
 	if err != nil {
 		errorLogger.Printf("%v", err)
 	}
@@ -75,19 +75,19 @@ func Error(err error) {
 
 // Errorf logs a formatted error message
 func Errorf(format string, v ...any) {
-	initialize()
+
 	errorLogger.Printf(format, v...)
 }
 
 // Debug logs a debug message
 func Debug(format string, v ...any) {
-	initialize()
+
 	debugLogger.Printf(format, v...)
 }
 
 // Fatal logs a fatal error and exits the program
 func Fatal(err error) {
-	initialize()
+
 	if err != nil {
 		errorLogger.Fatalf("%v", err)
 	}
@@ -95,6 +95,6 @@ func Fatal(err error) {
 
 // Fatalf logs a formatted fatal error and exits the program
 func Fatalf(format string, v ...any) {
-	initialize()
+
 	errorLogger.Fatalf(format, v...)
 }
