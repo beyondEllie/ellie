@@ -351,4 +351,26 @@ var Tools []types.DevTool = []types.DevTool{
 			"linux": "sudo systemctl enable mongod && sudo systemctl start mongod",
 		},
 	},
+	{
+		Name:           "Composer",
+		Description:    "PHP dependency manager",
+		CheckCmd:       "composer --version",
+		DefaultInstall: false,
+		Install: map[string]string{
+			"mac":     "brew install composer",
+			"linux":   "sudo apt install composer -y",
+			"windows": "choco install composer",
+		},
+	},
+	{
+		Name:           "MySQL",
+		Description:    "MySQL database server",
+		CheckCmd:       "mysql --version",
+		DefaultInstall: false,
+		Install: map[string]string{
+			"mac":     "brew install mysql",
+			"linux":   "sudo apt install mysql-server -y",
+			"windows": "choco install mysql",
+		},
+	},
 }

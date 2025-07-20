@@ -8,12 +8,11 @@ import (
 	"time"
 
 	"github.com/tacheraSasi/ellie/common"
+	"github.com/tacheraSasi/ellie/configs"
 	"github.com/tacheraSasi/ellie/styles"
 	"github.com/tacheraSasi/ellie/types"
 	"github.com/tacheraSasi/ellie/utils"
 )
-
-
 
 // isInstalled checks if a command is available and working
 func IsInstalled(cmd string) bool {
@@ -118,15 +117,16 @@ func ServerInit() {
 		styles.ErrorStyle.Printf("❌ Error reading server name: %v\n", err)
 		return
 	}
-	session.ServerName = "ellie/servers/"+serverName
+	serverDir := filepath.Join(configs.GetEllieDir(), "servers", serverName)
+	session.ServerName = serverDir
 
 	// Create server directory and config file
-	err = os.Mkdir(serverName, 0755)
+	err = os.MkdirAll(serverDir, 0755)
 	if err != nil {
 		styles.ErrorStyle.Printf("❌ Error creating server directory: %v\n", err)
 		return
 	}
-	err = os.WriteFile(filepath.Join(serverName, "config.json"), []byte("{}"), 0644)
+	err = os.WriteFile(filepath.Join(serverDir, "config.json"), []byte("{}"), 0644)
 	if err != nil {
 		styles.ErrorStyle.Printf("❌ Error creating config file: %v\n", err)
 		return
@@ -154,7 +154,7 @@ func ServerInit() {
 
 	// Change to server directory for setup
 	originalDir, _ := os.Getwd()
-	os.Chdir(serverName)
+	os.Chdir(serverDir)
 	defer os.Chdir(originalDir)
 
 	// Install framework tools
@@ -219,6 +219,6 @@ func ServerInit() {
 	if len(session.FailedTools) > 0 {
 		styles.ErrorStyle.Println("Failed tools:", strings.Join(session.FailedTools, ", "))
 	}
-	styles.InfoStyle.Printf("📂 Server directory: %s\n", filepath.Join(originalDir, serverName))
+	styles.InfoStyle.Printf("📂 Server directory: %s\n", serverDir)
 	styles.SuccessStyle.Println("\n🎉 Server environment ready!")
 }
