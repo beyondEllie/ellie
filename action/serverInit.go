@@ -13,65 +13,7 @@ import (
 	"github.com/tacheraSasi/ellie/utils"
 )
 
-// ServerInitSession represents a server environment setup session
-type ServerInitSession struct {
-	OS             string
-	ServerName     string
-	SuccessCount   int
-	SkippedCount   int
-	FailedCount    int
-	StartTime      time.Time
-	EndTime        time.Time
-	InstalledTools []string
-	FailedTools    []string
-	Framework      string
-}
 
-// Framework represents a server framework with required tools and setup commands
-type Framework struct {
-	Name          string
-	Description   string
-	RequiredTools []string
-	SetupCommands []string
-}
-
-// frameworks is a map of available server frameworks
-var frameworks = map[string]Framework{
-	"general": {
-		Name:          "General",
-		Description:   "General server setup with common tools",
-		RequiredTools: []string{"Git", "Node.js", "Python", "Docker", "NGINX"},
-		SetupCommands: []string{},
-	},
-	"laravel": {
-		Name:          "Laravel",
-		Description:   "PHP-based Laravel framework server",
-		RequiredTools: []string{"PHP", "Composer", "Node.js", "MySQL", "NGINX"},
-		SetupCommands: []string{
-			"composer global require laravel/installer",
-			"laravel new project --no-interaction",
-		},
-	},
-	"nodejs": {
-		Name:          "Node.js",
-		Description:   "Node.js server with Express",
-		RequiredTools: []string{"Node.js", "Yarn"},
-		SetupCommands: []string{
-			"mkdir project && cd project",
-			"yarn init -y",
-			"yarn add express",
-		},
-	},
-	"django": {
-		Name:          "Django",
-		Description:   "Python-based Django framework server",
-		RequiredTools: []string{"Python", "PostgreSQL"},
-		SetupCommands: []string{
-			"pip install django psycopg2-binary",
-			"django-admin startproject project",
-		},
-	},
-}
 
 // isInstalled checks if a command is available and working
 func IsInstalled(cmd string) bool {
