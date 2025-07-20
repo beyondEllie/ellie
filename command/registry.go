@@ -73,6 +73,9 @@ var Registry = map[string]Command{
 			actions.DevInit(*allFlag)
 		},
 	},
+	"server-init":{
+		Handler: func(_ []string) { actions.ServerInit()},
+	},
 	"install": {
 		MinArgs: 1,
 		Usage:   "install <package>",
