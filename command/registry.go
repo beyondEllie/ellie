@@ -26,7 +26,7 @@ var Registry = map[string]Command{
 			userCtx := types.NewUserContext()
 
 			// Add system message with instructions and context
-			instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU ARE ELLIE note: %s `,static.Instructions(*userCtx))
+			instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU ARE ELLIE note: %s `, static.Instructions(*userCtx))
 			fmt.Println(instructions)
 		},
 	},
@@ -73,8 +73,8 @@ var Registry = map[string]Command{
 			actions.DevInit(*allFlag)
 		},
 	},
-	"server-init":{
-		Handler: func(_ []string) { actions.ServerInit()},
+	"server-init": {
+		Handler: func(_ []string) { actions.ServerInit() },
 	},
 	"install": {
 		MinArgs: 1,
@@ -127,10 +127,29 @@ var Registry = map[string]Command{
 	},
 	"git": {
 		SubCommands: map[string]Command{
-			"status": {Handler: func(_ []string) { actions.GitStatus() }},
-			"push":   {Handler: func(_ []string) { actions.GitPush() }},
-			"commit": {Handler: func(args []string) { actions.GitConventionalCommit() }},
-			"pull":   {Handler: func(_ []string) { actions.GitPull() }},
+			"status":        {Handler: func(_ []string) { actions.GitStatus() }},
+			"push":          {Handler: func(_ []string) { actions.GitPush() }},
+			"commit":        {Handler: func(args []string) { actions.GitConventionalCommit() }},
+			"pull":          {Handler: func(_ []string) { actions.GitPull() }},
+			"branch-create": {Handler: func(_ []string) { actions.GitBranchCreate() }},
+			"branch-switch": {Handler: func(_ []string) { actions.GitBranchSwitch() }},
+			"branch-delete": {Handler: func(_ []string) { actions.GitBranchDelete() }},
+			"stash-save":    {Handler: func(_ []string) { actions.GitStashSave() }},
+			"stash-pop":     {Handler: func(_ []string) { actions.GitStashPop() }},
+			"stash-list":    {Handler: func(_ []string) { actions.GitStashList() }},
+			"tag-create":    {Handler: func(_ []string) { actions.GitTagCreate() }},
+			"tag-list":      {Handler: func(_ []string) { actions.GitTagList() }},
+			"tag-delete":    {Handler: func(_ []string) { actions.GitTagDelete() }},
+			"log":           {Handler: func(_ []string) { actions.GitLogPretty() }},
+			"diff":          {Handler: func(_ []string) { actions.GitDiff() }},
+			"merge":         {Handler: func(_ []string) { actions.GitMerge() }},
+			"rebase":        {Handler: func(_ []string) { actions.GitRebase() }},
+			"cherry-pick":   {Handler: func(_ []string) { actions.GitCherryPick() }},
+			"reset":         {Handler: func(_ []string) { actions.GitReset() }},
+			"bisect":        {Handler: func(_ []string) { actions.GitBisect() }},
+			"bisect-good":   {Handler: func(_ []string) { actions.GitBisectGood() }},
+			"bisect-bad":    {Handler: func(_ []string) { actions.GitBisectBad() }},
+			"bisect-reset":  {Handler: func(_ []string) { actions.GitBisectReset() }},
 		},
 	},
 	"start": {
