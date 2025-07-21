@@ -1,6 +1,7 @@
 package actions
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/tacheraSasi/ellie/configs"
@@ -13,6 +14,7 @@ import (
 func SmartRun(args []string) {
 	userPrompt := strings.Join(args[1:], " ")
 	openaiApiKey := configs.GetEnv("OPENAI_API_KEY")
+	fmt.Println("openai key", openaiApiKey)
 	if openaiApiKey == "" {
 		styles.ErrorStyle.Println("Error: OpenAI API key is required. Please set your OPENAI_API_KEY environment variable.")
 		return
