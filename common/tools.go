@@ -64,6 +64,69 @@ var Frameworks = map[string]Framework{
 			"django-admin startproject project",
 		},
 	},
+	"rails": {
+		Name:          "Ruby on Rails",
+		Description:   "Ruby-based web framework",
+		RequiredTools: []string{"Ruby", "Node.js", "Yarn", "PostgreSQL"},
+		SetupCommands: []string{
+			"gem install rails",
+			"rails new project --database=postgresql",
+		},
+	},
+	"flask": {
+		Name:          "Flask",
+		Description:   "Lightweight Python framework",
+		RequiredTools: []string{"Python", "PostgreSQL"},
+		SetupCommands: []string{
+			"pip install Flask gunicorn psycopg2-binary",
+			"mkdir project && cd project",
+			"echo 'from flask import Flask\napp = Flask(__name__)\n@app.route(\"/\")\ndef hello():\n    return \"Hello, World!\"' > app.py",
+		},
+	},
+	"spring_boot": {
+		Name:          "Spring Boot",
+		Description:   "Java-based enterprise framework",
+		RequiredTools: []string{"Java", "Maven"},
+		SetupCommands: []string{
+			"curl https://start.spring.io/starter.tgz -d dependencies=web -d type=maven-project -d baseDir=project | tar -xzvf -",
+		},
+	},
+	"nextjs": {
+		Name:          "Next.js",
+		Description:   "React framework for server-rendered apps",
+		RequiredTools: []string{"Node.js", "Yarn"},
+		SetupCommands: []string{
+			"yarn create next-app project",
+		},
+	},
+	"gin": {
+		Name:          "Gin",
+		Description:   "Go web framework",
+		RequiredTools: []string{"Go"},
+		SetupCommands: []string{
+			"mkdir project && cd project",
+			"go mod init project",
+			"go get github.com/gin-gonic/gin",
+		},
+	},
+	"nuxtjs": {
+		Name:          "Nuxt.js",
+		Description:   "Vue.js framework for server-side rendering",
+		RequiredTools: []string{"Node.js", "Yarn"},
+		SetupCommands: []string{
+			"yarn create nuxt-app project",
+		},
+	},
+	"fastapi": {
+		Name:          "FastAPI",
+		Description:   "Modern Python API framework",
+		RequiredTools: []string{"Python", "PostgreSQL"},
+		SetupCommands: []string{
+			"pip install fastapi uvicorn psycopg2-binary",
+			"mkdir project && cd project",
+			"echo 'from fastapi import FastAPI\napp = FastAPI()\n\n@app.get(\"/\")\ndef read_root():\n    return {\"Hello\": \"World\"}' > main.py",
+		},
+	},
 }
 
 var Tools []types.DevTool = []types.DevTool{
@@ -371,6 +434,28 @@ var Tools []types.DevTool = []types.DevTool{
 			"mac":     "brew install mysql",
 			"linux":   "sudo apt install mysql-server -y",
 			"windows": "choco install mysql",
+		},
+	},
+	{
+		Name:           "Ruby",
+		Description:    "Ruby programming language",
+		CheckCmd:       "ruby --version",
+		DefaultInstall: false,
+		Install: map[string]string{
+			"mac":     "brew install ruby",
+			"linux":   "sudo apt install ruby-full -y",
+			"windows": "choco install ruby",
+		},
+	},
+	{
+		Name:           "Maven",
+		Description:    "Java project management and build tool",
+		CheckCmd:       "mvn --version",
+		DefaultInstall: false,
+		Install: map[string]string{
+			"mac":     "brew install maven",
+			"linux":   "sudo apt install maven -y",
+			"windows": "choco install maven",
 		},
 	},
 }
