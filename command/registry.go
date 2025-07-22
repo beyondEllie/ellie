@@ -20,6 +20,12 @@ var Registry = map[string]Command{
 		MinArgs: 1,
 		Handler: actions.SmartRun,
 	},
+	"code":{
+		Usage: "ellie code",
+		Handler: func(_ []string) {
+			actions.StartEllieCode()
+		},
+	},
 	"user-env": {
 		Handler: func(s []string) {
 			// Create user context
