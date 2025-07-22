@@ -6,7 +6,9 @@ import (
 
 	"github.com/tacheraSasi/ellie/configs"
 	"github.com/tacheraSasi/ellie/llm"
+	"github.com/tacheraSasi/ellie/static"
 	"github.com/tacheraSasi/ellie/styles"
+	"github.com/tacheraSasi/ellie/types"
 	"github.com/tacheraSasi/ellie/utils"
 )
 
@@ -28,13 +30,16 @@ func SmartRun(args []string) {
 		styles.ErrorStyle.Printf("Error creating provider: %v\n", err)
 		return
 	}
-
-	// Updated prompt to include <cmd> wrapping instructions
+	userCtx := types.NewUserContext()
+	instructions := fmt.Sprintf(`!!!!!!!!!!!!!!!!!!!!!IMPORTANT YOU ARE ELLIE note: %s %s`,
+		getReadmeContent(),
+		static.Instructions(*userCtx))
+	
 	prompt := `You are an expert terminal assistant. Respond to the user request following these rules:
 1. If you need to execute a bash command to fulfill the request, wrap it EXACTLY like this: <cmd>COMMAND</cmd>.
 2. Provide clear instructions/explanations OUTSIDE the tags.
 3. NEVER include commands outside <cmd> tags.
-User request: ` + userPrompt
+User request: ` + instructions +userPrompt
 
 	resp, err := provider.Chat([]llm.Message{{Role: "user", Content: prompt}})
 	if err != nil {
