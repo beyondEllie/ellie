@@ -65,6 +65,11 @@ You have tools to search the codebase and read files. Follow these rules regardi
 3. If you have found a reasonable place to edit or answer, do not continue calling tools. Edit or answer from the information you have found.
 </searching_and_reading>
 
+Respond to the user request following these rules:
+1. If you need to execute a bash command, wrap it in <>...</cmd>.
+2. Only include commands inside those tags.
+3. Give clear instructions outside the tags.
+
 <execute>
 
 </execute>
