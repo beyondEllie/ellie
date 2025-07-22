@@ -50,6 +50,8 @@ func NewProvider(providerType string, config Config) (Provider, error) {
 		return NewOpenAIProvider(config)
 	case "gemini":
 		return NewGeminiProvider(config)
+	case "ellieapi":
+		return NewEllieAPIProvider(config)
 	default:
 		return nil, fmt.Errorf("unsupported provider type: %s", providerType)
 	}
