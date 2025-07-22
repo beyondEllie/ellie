@@ -1,3 +1,7 @@
 [submodule "elliecode"]
 	path = elliecode
 	url = https://github.com/beyondEllie/elliecode.git
+
+[submodule "ellieapi"]
+	path = ellieapi
+	url = https://github.com/beyondEllie/ellieapi.git
