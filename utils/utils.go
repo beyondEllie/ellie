@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"bufio"
 	"fmt"
 	"math/rand/v2"
 	"os"
@@ -290,4 +291,10 @@ func ReloadShell(){
 	
 }
 
+func AskForConfirmation(prompt string) bool {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Printf("%s [y/N]: ", prompt)
+	resp, _ := reader.ReadString('\n')
+	return strings.TrimSpace(strings.ToLower(resp)) == "y"
+}
 

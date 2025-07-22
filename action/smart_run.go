@@ -10,38 +10,99 @@ import (
 	"github.com/tacheraSasi/ellie/utils"
 )
 
-// SmartRun uses LLM to turn users request to commands and runs them
+// SmartRun uses LLM to process user requests and executes confirmed commands
 func SmartRun(args []string) {
 	userPrompt := strings.Join(args[1:], " ")
 	openaiApiKey := configs.GetEnv("OPENAI_API_KEY")
-	fmt.Println("openai key", openaiApiKey)
 	if openaiApiKey == "" {
-		styles.ErrorStyle.Println("Error: OpenAI API key is required. Please set your OPENAI_API_KEY environment variable.")
+		styles.ErrorStyle.Println("Error: OpenAI API key is required. Please set OPENAI_API_KEY.")
 		return
 	}
 
-	llmConfig := llm.Config{
-		APIKey:  openaiApiKey,
-		Model:   "gpt-3.5-turbo",
-		Timeout: 30,
+	config := llm.Config{
+		Timeout: 60,
 	}
-	provider, err := llm.NewProvider("openai", llmConfig)
+
+	provider, err := llm.NewProvider("ellieapi", config)
 	if err != nil {
-		styles.ErrorStyle.Printf("Error creating LLM provider: %v\n", err)
+		styles.ErrorStyle.Printf("Error creating provider: %v\n", err)
 		return
 	}
 
-	prompt := `You are an expert terminal assistant. Given a user request, output ONLY the most appropriate bash command to accomplish the task. Do not explain, just output the command. User request: ` + userPrompt
+	// Updated prompt to include <cmd> wrapping instructions
+	prompt := `You are an expert terminal assistant. Respond to the user request following these rules:
+1. If you need to execute a bash command to fulfill the request, wrap it EXACTLY like this: <cmd>COMMAND</cmd>.
+2. Provide clear instructions/explanations OUTSIDE the tags.
+3. NEVER include commands outside <cmd> tags.
+User request: ` + userPrompt
+
 	resp, err := provider.Chat([]llm.Message{{Role: "user", Content: prompt}})
 	if err != nil {
-		styles.ErrorStyle.Printf("Error from LLM: %v\n", err)
+		styles.ErrorStyle.Printf("LLM error: %v\n", err)
 		return
 	}
-	command := strings.TrimSpace(resp.Content)
-	if command == "" {
-		styles.ErrorStyle.Println("LLM did not return a command.")
-		return
+
+	// Process response
+	responseContent := resp.Content
+	instructions, commands := extractContent(responseContent)
+
+	// Display instructions
+	if instructions != "" {
+		fmt.Println(instructions)
 	}
-	styles.Cyan.Printf("\n$ %s\n", command)
-	utils.RunCommand([]string{"bash", "-c", command}, "Error running command:")
+
+	// Execute confirmed commands
+	if len(commands) > 0 {
+		executeCommands(commands)
+	} else {
+		styles.WarningStyle.Println("No actionable commands found in the response.")
+	}
+}
+
+// extractContent separates instructions and commands from LLM response
+func extractContent(response string) (string, []string) {
+	var instructionsBuilder strings.Builder
+	var commands []string
+	startTag := "<cmd>"
+	endTag := "</cmd>"
+
+	// Process all <cmd> segments
+	for {
+		startIdx := strings.Index(response, startTag)
+		if startIdx == -1 {
+			break
+		}
+
+		// Capture content before command
+		instructionsBuilder.WriteString(response[:startIdx])
+		response = response[startIdx+len(startTag):]
+
+		// Extract command
+		endIdx := strings.Index(response, endTag)
+		if endIdx == -1 {
+			break // Unclosed tag, ignore
+		}
+
+		cmd := strings.TrimSpace(response[:endIdx])
+		if cmd != "" {
+			commands = append(commands, cmd)
+		}
+		response = response[endIdx+len(endTag):]
+	}
+
+	// Add remaining content
+	instructionsBuilder.WriteString(response)
+	return strings.TrimSpace(instructionsBuilder.String()), commands
+}
+
+// executeCommands prompts user and runs confirmed commands
+func executeCommands(commands []string) {
+	for _, cmd := range commands {
+		styles.Cyan.Printf("\nCommand: %s\n", cmd)
+		if utils.AskForConfirmation("Run this command?") {
+			utils.RunCommand([]string{"bash", "-c", cmd}, "Command error:")
+		} else {
+			styles.InfoStyle.Println("Command skipped.")
+		}
+	}
 }

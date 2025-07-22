@@ -27,11 +27,10 @@ func SecurityCheck(file string) {
 
 	config := llm.Config{
 		APIKey:  openaiApikey,
-		Model:   "gpt-4",
 		Timeout: 60,
 	}
 
-	provider, err := llm.NewProvider("openai", config)
+	provider, err := llm.NewProvider("ellieapi", config)
 	if err != nil {
 		styles.ErrorStyle.Printf("Error creating provider: %v\n", err)
 		return
