@@ -13,7 +13,9 @@ type EllieAPIProvider struct {
 // NewEllieAPIProvider creates a new EllieAPI provider
 func NewEllieAPIProvider(config Config) (Provider, error) {
 	if config.BaseURL == "" {
-		config.BaseURL = "http://localhost:8000" // Default to local development server
+		// config.BaseURL = "http://localhost:8000" // Default to local development server
+		config.BaseURL = "https://api-ellie.ekilie.com/"
+
 	}
 
 	return &EllieAPIProvider{
