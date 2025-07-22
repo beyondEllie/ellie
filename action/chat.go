@@ -21,7 +21,7 @@ func Chat(openaiApikey string) {
 		return
 	}
 
-	// Create a new LLM provider (OpenAI by default)
+	// Create a new LLM provider (EllieAPI by default)
 	config := llm.Config{
 		APIKey: openaiApikey,
 		Model:  "gpt-3.5-turbo",
@@ -29,10 +29,11 @@ func Chat(openaiApikey string) {
 		// Model:   "gpt-4o", // Uncomment for GPT-4o
 		// Model:   "gpt-4o-mini", // Uncomment for GPT-4o-mini
 		// Model:   "gpt-3.5-turbo-16k", // Uncomment for 16k context length
+		BaseURL: "http://localhost:8000", // Default EllieAPI server URL
 		Timeout: 30,
 	}
 
-	provider, err := llm.NewProvider("openai", config)
+	provider, err := llm.NewProvider("ellieapi", config)
 	if err != nil {
 		styles.ErrorStyle.Printf("Error creating provider: %v\n", err)
 		return
