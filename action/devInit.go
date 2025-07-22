@@ -461,10 +461,19 @@ func DevInit(installAll bool) {
 
 		_, exists := tool.Install[session.OS]
 		if !exists {
-			styles.ErrorStyle.Printf("❌ No installation command for %s on %s\n", tool.Name, session.OS)
-			session.FailedCount++
-			session.FailedTools = append(session.FailedTools, tool.Name)
-			continue
+			_, commonExists := tool.Install["common"]
+			if !commonExists {
+				styles.ErrorStyle.Printf("❌ No installation command for %s on %s\n", tool.Name, session.OS)
+				session.FailedCount++
+				session.FailedTools = append(session.FailedTools, tool.Name)
+				continue
+			}
+			// Use common installation command if available
+			tool.Install[session.OS] = tool.Install["common"]
+		}
+
+		if tool.CheckCmd == "" {
+			tool.CheckCmd = tool.Name // Default to the tool name if no check command is provided
 		}
 
 		if runInstallCommand(tool, session.OS) {
