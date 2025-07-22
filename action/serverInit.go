@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -132,17 +133,24 @@ func ServerInit() {
 		return
 	}
 
-	// Display framework options
+		// Display all frameworks from the map
 	styles.HeaderStyle.Println("\n📋 Choose Your Server Framework")
-	frameworkList := []common.Framework{
-		common.Frameworks["general"],
-		common.Frameworks["laravel"],
-		common.Frameworks["nodejs"],
-		common.Frameworks["django"],
+
+	var frameworkKeys []string
+	for key := range common.Frameworks {
+		frameworkKeys = append(frameworkKeys, key)
 	}
+	sort.Strings(frameworkKeys)
+
+	var frameworkList []common.Framework
+	for _, key := range frameworkKeys {
+		frameworkList = append(frameworkList, common.Frameworks[key])
+	}
+
 	for i, fw := range frameworkList {
 		styles.InfoStyle.Printf("  %d. %s - %s\n", i+1, fw.Name, fw.Description)
 	}
+
 	choice, _ := utils.GetInput("Select a framework (number): ")
 	chosenIndex := utils.StringToInt(choice) - 1
 	if chosenIndex < 0 || chosenIndex >= len(frameworkList) {
@@ -151,6 +159,7 @@ func ServerInit() {
 	}
 	chosenFramework := frameworkList[chosenIndex]
 	session.Framework = chosenFramework.Name
+
 
 	// Change to server directory for setup
 	originalDir, _ := os.Getwd()
