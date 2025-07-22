@@ -1,155 +1,140 @@
 package elliecore
 
-/*
-#cgo LDFLAGS: -L${SRCDIR}/../rustmods/elliecore/target/debug -lelliecore
-#include <stdlib.h>
-char* run_cmd(const char* cmd);
-char* run_cmd_with_env(const char* cmd, const char* envs);
-char* read_file(const char* path);
-char* write_file(const char* path, const char* content);
-char* append_file(const char* path, const char* content);
-char* delete_file(const char* path);
-char* list_dir(const char* path);
-char* get_env(const char* key);
-char* set_env(const char* key, const char* value);
-char* get_cwd();
-char* change_dir(const char* path);
-int file_exists(const char* path);
-char* file_metadata(const char* path);
-*/
-import "C"
 import (
-	"unsafe"
+	"encoding/json"
+	"errors"
+	"os"
+	"os/exec"
+	"strings"
+	"time"
 )
 
-// RunCmd executes a shell command using the Rust FFI and returns the result as a string.
-// This is a low level, cross platform abstraction for shell command execution.
+// RunCmd executes a shell command and returns the output or error.
 func RunCmd(cmd string) string {
-	input := C.CString(cmd)
-    defer C.free(unsafe.Pointer(input))
-
-    result := C.run_cmd(input)
-    defer C.free(unsafe.Pointer(result))
-
-	output := C.GoString(result)
-	return output
+	out, err := exec.Command("sh", "-c", cmd).CombinedOutput()
+	if err != nil {
+		return "Error: " + err.Error() + "\n" + string(out)
+	}
+	return string(out)
 }
 
-// RunCmdWithEnv executes a shell command with environment variables using the Rust FFI.
-// envs should be a semicolon-separated list of key=value pairs, e.g. "FOO=bar;BAZ=qux"
+// RunCmdWithEnv executes a shell command with additional environment variables.
 func RunCmdWithEnv(cmd string, envs string) string {
-	cmdC := C.CString(cmd)
-	defer C.free(unsafe.Pointer(cmdC))
-	envsC := C.CString(envs)
-	defer C.free(unsafe.Pointer(envsC))
-
-	result := C.run_cmd_with_env(cmdC, envsC)
-	defer C.free(unsafe.Pointer(result))
-
-	output := C.GoString(result)
-	return output
+	envList := strings.Split(envs, ";")
+	command := exec.Command("sh", "-c", cmd)
+	command.Env = append(os.Environ(), envList...)
+	out, err := command.CombinedOutput()
+	if err != nil {
+		return "Error: " + err.Error() + "\n" + string(out)
+	}
+	return string(out)
 }
 
-// ReadFile reads a file and returns its contents as a string using the Rust FFI.
+// ReadFile reads the content of a file.
 func ReadFile(path string) string {
-	pathC := C.CString(path)
-	defer C.free(unsafe.Pointer(pathC))
-
-	result := C.read_file(pathC)
-	defer C.free(unsafe.Pointer(result))
-
-	output := C.GoString(result)
-	return output
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return "Error: " + err.Error()
+	}
+	return string(data)
 }
 
-// WriteFile writes content to a file (overwrites if exists).
+// WriteFile overwrites a file with given content.
 func WriteFile(path, content string) string {
-	pathC := C.CString(path)
-	defer C.free(unsafe.Pointer(pathC))
-	contentC := C.CString(content)
-	defer C.free(unsafe.Pointer(contentC))
-	result := C.write_file(pathC, contentC)
-	defer C.free(unsafe.Pointer(result))
-	return C.GoString(result)
+	err := os.WriteFile(path, []byte(content), 0644)
+	if err != nil {
+		return "Error: " + err.Error()
+	}
+	return "OK"
 }
 
-// AppendFile appends content to a file (creates if not exists).
+// AppendFile appends content to a file, creates it if not exists.
 func AppendFile(path, content string) string {
-	pathC := C.CString(path)
-	defer C.free(unsafe.Pointer(pathC))
-	contentC := C.CString(content)
-	defer C.free(unsafe.Pointer(contentC))
-	result := C.append_file(pathC, contentC)
-	defer C.free(unsafe.Pointer(result))
-	return C.GoString(result)
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return "Error: " + err.Error()
+	}
+	defer f.Close()
+	if _, err := f.WriteString(content); err != nil {
+		return "Error: " + err.Error()
+	}
+	return "OK"
 }
 
 // DeleteFile removes a file.
 func DeleteFile(path string) string {
-	pathC := C.CString(path)
-	defer C.free(unsafe.Pointer(pathC))
-	result := C.delete_file(pathC)
-	defer C.free(unsafe.Pointer(result))
-	return C.GoString(result)
+	err := os.Remove(path)
+	if err != nil {
+		return "Error: " + err.Error()
+	}
+	return "OK"
 }
 
-// ListDir lists files and directories in a path (newline separated).
+// ListDir lists files and directories in a path.
 func ListDir(path string) string {
-	pathC := C.CString(path)
-	defer C.free(unsafe.Pointer(pathC))
-	result := C.list_dir(pathC)
-	defer C.free(unsafe.Pointer(result))
-	return C.GoString(result)
+	files, err := os.ReadDir(path)
+	if err != nil {
+		return "Error: " + err.Error()
+	}
+	var builder strings.Builder
+	for _, f := range files {
+		builder.WriteString(f.Name() + "\n")
+	}
+	return builder.String()
 }
 
-// GetEnv retrieves the value of an environment variable.
+// GetEnv returns the value of an environment variable.
 func GetEnv(key string) string {
-	keyC := C.CString(key)
-	defer C.free(unsafe.Pointer(keyC))
-	result := C.get_env(keyC)
-	defer C.free(unsafe.Pointer(result))
-	return C.GoString(result)
+	return os.Getenv(key)
 }
 
-// SetEnv sets an environment variable for the current process.
+// SetEnv sets an environment variable in the current process.
 func SetEnv(key, value string) string {
-	keyC := C.CString(key)
-	defer C.free(unsafe.Pointer(keyC))
-	valueC := C.CString(value)
-	defer C.free(unsafe.Pointer(valueC))
-	result := C.set_env(keyC, valueC)
-	defer C.free(unsafe.Pointer(result))
-	return C.GoString(result)
+	err := os.Setenv(key, value)
+	if err != nil {
+		return "Error: " + err.Error()
+	}
+	return "OK"
 }
 
 // GetCwd returns the current working directory.
 func GetCwd() string {
-	result := C.get_cwd()
-	defer C.free(unsafe.Pointer(result))
-	return C.GoString(result)
+	dir, err := os.Getwd()
+	if err != nil {
+		return "Error: " + err.Error()
+	}
+	return dir
 }
 
 // ChangeDir changes the current working directory.
 func ChangeDir(path string) string {
-	pathC := C.CString(path)
-	defer C.free(unsafe.Pointer(pathC))
-	result := C.change_dir(pathC)
-	defer C.free(unsafe.Pointer(result))
-	return C.GoString(result)
+	err := os.Chdir(path)
+	if err != nil {
+		return "Error: " + err.Error()
+	}
+	return "OK"
 }
 
-// FileExists checks if a file or directory exists.
+// FileExists checks if a file or dir exists.
 func FileExists(path string) bool {
-	pathC := C.CString(path)
-	defer C.free(unsafe.Pointer(pathC))
-	return C.file_exists(pathC) == 1
+	_, err := os.Stat(path)
+	return !errors.Is(err, os.ErrNotExist)
 }
 
-// FileMetadata returns file size, readonly, and modified time as JSON.
+// FileMetadata returns JSON with file size, readonly, modified time.
 func FileMetadata(path string) string {
-	pathC := C.CString(path)
-	defer C.free(unsafe.Pointer(pathC))
-	result := C.file_metadata(pathC)
-	defer C.free(unsafe.Pointer(result))
-	return C.GoString(result)
+	info, err := os.Stat(path)
+	if err != nil {
+		return "Error: " + err.Error()
+	}
+
+	meta := map[string]interface{}{
+		"size":     info.Size(),
+		"readonly": info.Mode().Perm()&0200 == 0,
+		"modified": info.ModTime().Format(time.RFC3339),
+		"is_dir":   info.IsDir(),
+	}
+
+	jsonData, _ := json.MarshalIndent(meta, "", "  ")
+	return string(jsonData)
 }
