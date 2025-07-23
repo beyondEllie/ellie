@@ -18,7 +18,7 @@ const (
 	readmeName        = "README.md"
 	exampleEnvName    = "config.example.env"
 	configVersionFile = "config.version"
-	VERSION           = "0.0.9"
+	VERSION           = "0.1.0"
 )
 
 var (
