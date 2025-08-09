@@ -118,11 +118,6 @@ func createVersionFile() {
 }
 
 func Init() {
-	// Skip initialization if ELLIE_SKIP_INIT is set (for testing)
-	if os.Getenv("ELLIE_SKIP_INIT") == "1" {
-		return
-	}
-	
 	if _, err := os.Stat(ConfigPath); os.IsNotExist(err) {
 		createDefaultConfig()
 	} else {
