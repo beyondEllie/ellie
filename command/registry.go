@@ -158,6 +158,37 @@ var Registry = map[string]Command{
 			"bisect-reset":  {Handler: func(_ []string) { actions.GitBisectReset() }},
 		},
 	},
+	"docker": {
+		SubCommands: map[string]Command{
+			"build": {
+				MinArgs: 1,
+				Usage:   "docker build <path>",
+				Handler: func(args []string) { actions.DockerBuild(args[1:]) },
+			},
+			"run": {
+				MinArgs: 1,
+				Usage:   "docker run <image>",
+				Handler: func(args []string) { actions.DockerRun(args[1:]) },
+			},
+			"ps": {
+				Handler: func(args []string) { actions.DockerPS(args[1:]) },
+			},
+			"compose": {
+				SubCommands: map[string]Command{
+					"up": {
+						MinArgs: 0,
+						Usage:   "docker compose up",
+						Handler: func(args []string) { actions.DockerCompose(args) },
+					},
+					"down": {
+						MinArgs: 0,
+						Usage:   "docker compose down",
+						Handler: func(args []string) { actions.DockerCompose(args) },
+					},
+				},
+			},
+		},
+	},
 	"start": {
 		SubCommands: map[string]Command{
 			"apache":   {Handler: func(args []string) { actions.HandleService("start", "apache") }},

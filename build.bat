@@ -3,7 +3,7 @@ REM build.bat - Builds the Ellie executable and creates the NSIS installer
 
 REM --- Configuration ---
 SET NSIS_PATH="C:\Program Files (x86)\NSIS\makensis.exe"
-SET PROJECT_ROOT=%~dp0
+SET PROJECT_ROOT=%.~dp0
 SET DIST_DIR=%PROJECT_ROOT%dist
 SET INSTALLER_DIR=%PROJECT_ROOT%installer
 SET EXE_NAME=ellie.exe
