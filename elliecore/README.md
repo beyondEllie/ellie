@@ -8,6 +8,7 @@ The integration works through CGO bindings that call into a Rust static library 
 
 ### FFI Functions Available
 
+#### **Basic Operations**
 - **Command Execution**
   - `run_cmd(cmd)` - Execute shell commands
   - `run_cmd_with_env(cmd, envs)` - Execute commands with custom environment variables
@@ -27,6 +28,27 @@ The integration works through CGO bindings that call into a Rust static library 
   - `get_cwd()` - Get current working directory
   - `change_dir(path)` - Change directory
 
+#### **Advanced System Operations** 🆕
+- **Enhanced File System**
+  - `create_dir(path)` - Create directories recursively
+  - `copy_file(src, dst)` - Copy files efficiently
+  - `move_file(src, dst)` - Move/rename files
+  - `get_file_hash(path)` - Calculate file hash
+  - `path_join(path1, path2)` - Platform-safe path joining
+  - `path_absolute(path)` - Get absolute path
+
+- **System Information**
+  - `get_system_info()` - Get OS, architecture, CPU count as JSON
+  - `get_disk_usage(path)` - Get disk usage statistics
+
+- **Network Operations**
+  - `get_network_interfaces()` - List network interfaces
+  - `ping_host(host)` - Ping network hosts
+
+- **Process Management**
+  - `get_process_list()` - List all running processes
+  - `kill_process(pid)` - Terminate processes by PID
+
 ## Memory Management
 
 The Go code properly manages C string memory by:
@@ -40,6 +62,7 @@ The Go code properly manages C string memory by:
 - **100 file operations**: ~16.5ms via Rust FFI  
 - **Large file handling**: Successfully handles 57KB+ files
 - **Error handling**: Robust error reporting for edge cases
+- **Cross-platform**: Unified API across Windows, macOS, and Linux
 
 ## Building
 
@@ -54,6 +77,27 @@ Use `make all` to build both Rust and Go components.
 
 The integration is verified through:
 - Static linking verification (Rust symbols in binary)
-- Comprehensive FFI function testing
+- Comprehensive FFI function testing (24 functions total)
 - Edge case and performance testing
 - Memory safety validation
+
+## Example Usage
+
+```go
+// System information
+sysInfo := elliecore.GetSystemInfo()
+// Returns: {"os":"linux","arch":"x86_64","family":"unix","cpu_count":4}
+
+// Network operations
+networkInfo := elliecore.GetNetworkInterfaces()
+pingResult := elliecore.PingHost("google.com")
+
+// Advanced file operations
+elliecore.CreateDir("/tmp/myapp")
+elliecore.CopyFile("config.yaml", "/tmp/myapp/config.yaml")
+hash := elliecore.GetFileHash("/tmp/myapp/config.yaml")
+
+// Process management
+processes := elliecore.GetProcessList()
+elliecore.KillProcess("1234")
+```

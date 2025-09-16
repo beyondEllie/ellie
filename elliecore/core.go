@@ -29,6 +29,20 @@ char* get_cwd();
 char* change_dir(const char* path);
 int file_exists(const char* path);
 char* file_metadata(const char* path);
+
+// Additional system operations
+char* create_dir(const char* path);
+char* copy_file(const char* src, const char* dst);
+char* move_file(const char* src, const char* dst);
+char* get_file_hash(const char* path);
+char* get_system_info();
+char* get_disk_usage(const char* path);
+char* get_network_interfaces();
+char* ping_host(const char* host);
+char* get_process_list();
+char* kill_process(const char* pid);
+char* path_join(const char* path1, const char* path2);
+char* path_absolute(const char* path);
 */
 import "C"
 
@@ -164,5 +178,112 @@ func FileMetadata(path string) string {
 	defer C.free(unsafe.Pointer(cPath))
 	
 	result := C.file_metadata(cPath)
+	return cStringToGoString(result)
+}
+
+// ============ ADDITIONAL SYSTEM OPERATIONS ============
+
+// CreateDir creates a directory and all necessary parent directories.
+func CreateDir(path string) string {
+	cPath := C.CString(path)
+	defer C.free(unsafe.Pointer(cPath))
+	
+	result := C.create_dir(cPath)
+	return cStringToGoString(result)
+}
+
+// CopyFile copies a file from source to destination.
+func CopyFile(src, dst string) string {
+	cSrc := C.CString(src)
+	defer C.free(unsafe.Pointer(cSrc))
+	cDst := C.CString(dst)
+	defer C.free(unsafe.Pointer(cDst))
+	
+	result := C.copy_file(cSrc, cDst)
+	return cStringToGoString(result)
+}
+
+// MoveFile moves/renames a file from source to destination.
+func MoveFile(src, dst string) string {
+	cSrc := C.CString(src)
+	defer C.free(unsafe.Pointer(cSrc))
+	cDst := C.CString(dst)
+	defer C.free(unsafe.Pointer(cDst))
+	
+	result := C.move_file(cSrc, cDst)
+	return cStringToGoString(result)
+}
+
+// GetFileHash calculates a hash of the file contents.
+func GetFileHash(path string) string {
+	cPath := C.CString(path)
+	defer C.free(unsafe.Pointer(cPath))
+	
+	result := C.get_file_hash(cPath)
+	return cStringToGoString(result)
+}
+
+// GetSystemInfo returns system information as JSON.
+func GetSystemInfo() string {
+	result := C.get_system_info()
+	return cStringToGoString(result)
+}
+
+// GetDiskUsage returns disk usage information for the given path.
+func GetDiskUsage(path string) string {
+	cPath := C.CString(path)
+	defer C.free(unsafe.Pointer(cPath))
+	
+	result := C.get_disk_usage(cPath)
+	return cStringToGoString(result)
+}
+
+// GetNetworkInterfaces returns network interface information.
+func GetNetworkInterfaces() string {
+	result := C.get_network_interfaces()
+	return cStringToGoString(result)
+}
+
+// PingHost pings a host and returns the result.
+func PingHost(host string) string {
+	cHost := C.CString(host)
+	defer C.free(unsafe.Pointer(cHost))
+	
+	result := C.ping_host(cHost)
+	return cStringToGoString(result)
+}
+
+// GetProcessList returns a list of running processes.
+func GetProcessList() string {
+	result := C.get_process_list()
+	return cStringToGoString(result)
+}
+
+// KillProcess kills a process by PID.
+func KillProcess(pid string) string {
+	cPid := C.CString(pid)
+	defer C.free(unsafe.Pointer(cPid))
+	
+	result := C.kill_process(cPid)
+	return cStringToGoString(result)
+}
+
+// PathJoin joins two path components.
+func PathJoin(path1, path2 string) string {
+	cPath1 := C.CString(path1)
+	defer C.free(unsafe.Pointer(cPath1))
+	cPath2 := C.CString(path2)
+	defer C.free(unsafe.Pointer(cPath2))
+	
+	result := C.path_join(cPath1, cPath2)
+	return cStringToGoString(result)
+}
+
+// PathAbsolute returns the absolute path of the given path.
+func PathAbsolute(path string) string {
+	cPath := C.CString(path)
+	defer C.free(unsafe.Pointer(cPath))
+	
+	result := C.path_absolute(cPath)
 	return cStringToGoString(result)
 }
