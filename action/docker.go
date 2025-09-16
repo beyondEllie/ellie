@@ -8,7 +8,8 @@ import (
 )
 
 func DockerBuild(args []string) {
-	cmd := exec.Command("docker", "build", args...)
+	cmdArgs := append([]string{"build"}, args...)
+	cmd := exec.Command("docker", cmdArgs...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
@@ -18,7 +19,8 @@ func DockerBuild(args []string) {
 }
 
 func DockerRun(args []string) {
-	cmd := exec.Command("docker", "run", args...)
+	cmdArgs := append([]string{"run"}, args...)
+	cmd := exec.Command("docker", cmdArgs...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
@@ -28,7 +30,8 @@ func DockerRun(args []string) {
 }
 
 func DockerPS(args []string) {
-	cmd := exec.Command("docker", "ps", args...)
+	cmdArgs := append([]string{"ps"}, args...)
+	cmd := exec.Command("docker", cmdArgs...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()

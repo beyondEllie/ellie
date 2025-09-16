@@ -9,11 +9,11 @@ rust:
 
 go:
 	go mod tidy
-	go build -o ellie
+	CGO_ENABLED=1 go build -o ellie
 
 build_linux:
 	@echo 'building linux binary...'
-	env GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o ellie
+	env GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -ldflags="-s -w" -o ellie
 	@echo 'zipping build...'
 	tar -zcvf binaries/ellie_linux_amd64.tar.gz ellie
 	@echo 'cleaning up...'
@@ -21,7 +21,7 @@ build_linux:
 
 build_linux_upx:
 	@echo 'building linux binary with UPX...'
-	env GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o ellie
+	env GOOS=linux GOARCH=amd64 CGO_ENABLED=1 go build -ldflags="-s -w" -o ellie
 	@echo 'compressing with UPX...'
 	upx --best ellie
 	@echo 'zipping build...'
