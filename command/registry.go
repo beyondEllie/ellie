@@ -20,7 +20,7 @@ var Registry = map[string]Command{
 		MinArgs: 1,
 		Handler: actions.SmartRun,
 	},
-	"code":{
+	"code": {
 		Usage: "ellie code",
 		Handler: func(_ []string) {
 			actions.StartEllieCode()
@@ -133,29 +133,94 @@ var Registry = map[string]Command{
 	},
 	"git": {
 		SubCommands: map[string]Command{
-			"status":        {Handler: func(_ []string) { actions.GitStatus() }},
-			"push":          {Handler: func(_ []string) { actions.GitPush() }},
-			"commit":        {Handler: func(args []string) { actions.GitConventionalCommit() }},
-			"pull":          {Handler: func(_ []string) { actions.GitPull() }},
-			"branch-create": {Handler: func(_ []string) { actions.GitBranchCreate() }},
-			"branch-switch": {Handler: func(_ []string) { actions.GitBranchSwitch() }},
-			"branch-delete": {Handler: func(_ []string) { actions.GitBranchDelete() }},
-			"stash-save":    {Handler: func(_ []string) { actions.GitStashSave() }},
-			"stash-pop":     {Handler: func(_ []string) { actions.GitStashPop() }},
-			"stash-list":    {Handler: func(_ []string) { actions.GitStashList() }},
-			"tag-create":    {Handler: func(_ []string) { actions.GitTagCreate() }},
-			"tag-list":      {Handler: func(_ []string) { actions.GitTagList() }},
-			"tag-delete":    {Handler: func(_ []string) { actions.GitTagDelete() }},
-			"log":           {Handler: func(_ []string) { actions.GitLogPretty() }},
-			"diff":          {Handler: func(_ []string) { actions.GitDiff() }},
-			"merge":         {Handler: func(_ []string) { actions.GitMerge() }},
-			"rebase":        {Handler: func(_ []string) { actions.GitRebase() }},
-			"cherry-pick":   {Handler: func(_ []string) { actions.GitCherryPick() }},
-			"reset":         {Handler: func(_ []string) { actions.GitReset() }},
-			"bisect":        {Handler: func(_ []string) { actions.GitBisect() }},
-			"bisect-good":   {Handler: func(_ []string) { actions.GitBisectGood() }},
-			"bisect-bad":    {Handler: func(_ []string) { actions.GitBisectBad() }},
-			"bisect-reset":  {Handler: func(_ []string) { actions.GitBisectReset() }},
+			// Basic operations
+			"status": {Handler: func(_ []string) { actions.GitStatus() }},
+			"push":   {Handler: func(_ []string) { actions.GitPush() }},
+			"commit": {Handler: func(args []string) { actions.GitConventionalCommit() }},
+			"pull":   {Handler: func(_ []string) { actions.GitPull() }},
+			"init":   {Handler: func(_ []string) { actions.GitInit() }},
+			"clone":  {Handler: func(_ []string) { actions.GitClone() }},
+			"fetch":  {Handler: func(_ []string) { actions.GitFetch() }},
+
+			// Branch operations
+			"branch-create":      {Handler: func(_ []string) { actions.GitBranchCreate() }},
+			"branch-switch":      {Handler: func(_ []string) { actions.GitBranchSwitch() }},
+			"branch-delete":      {Handler: func(_ []string) { actions.GitBranchDelete() }},
+			"branch-list":        {Handler: func(_ []string) { actions.GitBranchList() }},
+			"branch-list-remote": {Handler: func(_ []string) { actions.GitBranchListRemote() }},
+			"branch-rename":      {Handler: func(_ []string) { actions.GitBranchRename() }},
+
+			// Stash operations
+			"stash-save":  {Handler: func(_ []string) { actions.GitStashSave() }},
+			"stash-pop":   {Handler: func(_ []string) { actions.GitStashPop() }},
+			"stash-list":  {Handler: func(_ []string) { actions.GitStashList() }},
+			"stash-show":  {Handler: func(_ []string) { actions.GitStashShow() }},
+			"stash-drop":  {Handler: func(_ []string) { actions.GitStashDrop() }},
+			"stash-apply": {Handler: func(_ []string) { actions.GitStashApply() }},
+
+			// Tag operations
+			"tag-create": {Handler: func(_ []string) { actions.GitTagCreate() }},
+			"tag-list":   {Handler: func(_ []string) { actions.GitTagList() }},
+			"tag-delete": {Handler: func(_ []string) { actions.GitTagDelete() }},
+
+			// Log and diff operations
+			"log":         {Handler: func(_ []string) { actions.GitLogPretty() }},
+			"log-search":  {Handler: func(_ []string) { actions.GitLogSearch() }},
+			"log-author":  {Handler: func(_ []string) { actions.GitLogAuthor() }},
+			"log-since":   {Handler: func(_ []string) { actions.GitLogSince() }},
+			"diff":        {Handler: func(_ []string) { actions.GitDiff() }},
+			"diff-staged": {Handler: func(_ []string) { actions.GitDiffStaged() }},
+			"diff-branch": {Handler: func(_ []string) { actions.GitDiffBranch() }},
+
+			// Merge and rebase operations
+			"merge":       {Handler: func(_ []string) { actions.GitMerge() }},
+			"rebase":      {Handler: func(_ []string) { actions.GitRebase() }},
+			"cherry-pick": {Handler: func(_ []string) { actions.GitCherryPick() }},
+			"reset":       {Handler: func(_ []string) { actions.GitReset() }},
+			"revert":      {Handler: func(_ []string) { actions.GitRevert() }},
+
+			// Bisect operations
+			"bisect":       {Handler: func(_ []string) { actions.GitBisect() }},
+			"bisect-good":  {Handler: func(_ []string) { actions.GitBisectGood() }},
+			"bisect-bad":   {Handler: func(_ []string) { actions.GitBisectBad() }},
+			"bisect-reset": {Handler: func(_ []string) { actions.GitBisectReset() }},
+
+			// Remote operations
+			"remote-list":   {Handler: func(_ []string) { actions.GitRemoteList() }},
+			"remote-add":    {Handler: func(_ []string) { actions.GitRemoteAdd() }},
+			"remote-remove": {Handler: func(_ []string) { actions.GitRemoteRemove() }},
+
+			// Push operations
+			"push-tags":     {Handler: func(_ []string) { actions.GitPushTags() }},
+			"push-force":    {Handler: func(_ []string) { actions.GitPushForce() }},
+			"push-upstream": {Handler: func(_ []string) { actions.GitPushUpstream() }},
+
+			// Submodule operations
+			"submodule-add":    {Handler: func(_ []string) { actions.GitSubmoduleAdd() }},
+			"submodule-update": {Handler: func(_ []string) { actions.GitSubmoduleUpdate() }},
+			"submodule-status": {Handler: func(_ []string) { actions.GitSubmoduleStatus() }},
+
+			// Configuration operations
+			"config-set-user":  {Handler: func(_ []string) { actions.GitConfigSetUser() }},
+			"config-list":      {Handler: func(_ []string) { actions.GitConfigList() }},
+			"config-set-alias": {Handler: func(_ []string) { actions.GitConfigSetAlias() }},
+
+			// Worktree operations
+			"worktree-add":    {Handler: func(_ []string) { actions.GitWorktreeAdd() }},
+			"worktree-list":   {Handler: func(_ []string) { actions.GitWorktreeList() }},
+			"worktree-remove": {Handler: func(_ []string) { actions.GitWorktreeRemove() }},
+			"worktree-prune":  {Handler: func(_ []string) { actions.GitWorktreePrune() }},
+
+			// Maintenance operations
+			"reflog": {Handler: func(_ []string) { actions.GitReflog() }},
+			"clean":  {Handler: func(_ []string) { actions.GitClean() }},
+			"gc":     {Handler: func(_ []string) { actions.GitGC() }},
+			"fsck":   {Handler: func(_ []string) { actions.GitFsck() }},
+
+			// Information operations
+			"show":    {Handler: func(_ []string) { actions.GitShow() }},
+			"blame":   {Handler: func(_ []string) { actions.GitBlame() }},
+			"archive": {Handler: func(_ []string) { actions.GitArchive() }},
 		},
 	},
 	"docker": {
