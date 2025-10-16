@@ -135,7 +135,7 @@ func TestFormatDuration(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := formatDuration(tt.duration)
+			result := formatDurationForRemind(tt.duration)
 			if result != tt.expected {
 				t.Errorf("For duration %v, expected %q, got %q", tt.duration, tt.expected, result)
 			}
