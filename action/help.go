@@ -105,5 +105,27 @@ func ShowHelp() {
 	fmt.Println("  theme set <light|dark|auto>\tSet the theme mode")
 	fmt.Println("  theme show\t\tShow current theme")
 
-	styles.DimText.Println("For detailed command help, use 'ellie <command> --help'")
+	styles.GetHeaderStyle().Println("System Health & Monitoring:")
+	fmt.Println("  health\t\tDisplay comprehensive system health dashboard")
+	fmt.Println("  monitor\t\tStart real-time system monitoring")
+	fmt.Println("  alerts\t\tCheck for system alerts and issues")
+	fmt.Println("  quickcheck\t\tQuick system health check")
+
+	styles.GetHeaderStyle().Println("Smart Assistant:")
+	fmt.Println("  suggest\t\tGet smart command suggestions based on context")
+	fmt.Println("  assist\t\tContext-aware help and suggestions")
+	fmt.Println("  workflow\t\tAnalyze your command workflow and get insights")
+	fmt.Println("  time-suggest\t\tGet time-based suggestions")
+
+	styles.GetHeaderStyle().Println("Automation:")
+	fmt.Println("  automate add <name> <schedule> <command>\tAdd automation task")
+	fmt.Println("  automate list\t\tList all automation tasks")
+	fmt.Println("  automate delete <id>\tDelete automation task")
+	fmt.Println("  automate toggle <id>\tEnable/disable automation task")
+	fmt.Println("  automate run\t\tExecute due automation tasks")
+	fmt.Println("  automate daemon\tStart automation daemon")
+	fmt.Println("  automate quick\t\tQuick setup for common automations")
+
+	styles.DimText.Println("\n💡 For detailed command help, use 'ellie <command> --help'")
+	styles.DimText.Println("💡 New to Ellie? Try 'ellie assist' for context-aware guidance!")
 }
