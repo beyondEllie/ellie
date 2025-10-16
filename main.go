@@ -157,14 +157,20 @@ func handleSubCommand(parentCmd command.Command, args []string) {
 		os.Exit(1)
 	}
 
+	if subCmd.PreHook != nil {
+		subCmd.PreHook()
+	}
+
+	// Handle nested subcommands
+	if len(subCmd.SubCommands) > 0 && len(args) > 1 {
+		handleSubCommand(subCmd, args[1:])
+		return
+	}
+
 	if len(args)-1 < subCmd.MinArgs {
 		styles.GetErrorStyle().Printf("Invalid usage for %s\n", subCmdName)
 		styles.GetInfoStyle().Println("Usage:", subCmd.Usage)
 		os.Exit(1)
-	}
-
-	if subCmd.PreHook != nil {
-		subCmd.PreHook()
 	}
 
 	subCmd.Handler(args)
