@@ -71,7 +71,7 @@ func parseDuration(input string) (time.Duration, error) {
 	// Parse custom formats: days (d) and weeks (w)
 	re := regexp.MustCompile(`^(\d+(?:\.\d+)?)(d|w)$`)
 	matches := re.FindStringSubmatch(strings.ToLower(input))
-	
+
 	if len(matches) != 3 {
 		return 0, fmt.Errorf("invalid duration format")
 	}

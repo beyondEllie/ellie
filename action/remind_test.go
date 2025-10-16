@@ -83,7 +83,7 @@ func TestParseDuration(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			result, err := parseDuration(tt.input)
-			
+
 			if tt.hasError {
 				if err == nil {
 					t.Errorf("Expected error for input %q, but got none", tt.input)
