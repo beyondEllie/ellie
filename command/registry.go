@@ -436,4 +436,77 @@ var Registry = map[string]Command{
 		MinArgs: 1,
 		Handler: actions.MarkdownRender,
 	},
+	
+	// System Health and Monitoring
+	"health": {
+		Usage:   "health - Display comprehensive system health dashboard",
+		Handler: func(_ []string) { actions.SystemHealth() },
+	},
+	"monitor": {
+		Usage:   "monitor - Start real-time system monitoring (Ctrl+C to stop)",
+		Handler: func(_ []string) { actions.MonitorSystem() },
+	},
+	"alerts": {
+		Usage:   "alerts - Check for system alerts and issues",
+		Handler: func(_ []string) { actions.CheckSystemAlerts() },
+	},
+	"quickcheck": {
+		Usage:   "quickcheck - Quick system health check",
+		Handler: func(_ []string) { actions.QuickHealthCheck() },
+	},
+	
+	// Smart Assistant
+	"suggest": {
+		Usage:   "suggest - Get smart command suggestions based on context",
+		Handler: func(_ []string) { actions.SmartSuggest() },
+	},
+	"assist": {
+		Usage:   "assist - Context-aware help and suggestions",
+		Handler: func(_ []string) { actions.ContextHelp() },
+	},
+	"workflow": {
+		Usage:   "workflow - Analyze your command workflow and get insights",
+		Handler: func(_ []string) { actions.WorkflowAnalysis() },
+	},
+	"time-suggest": {
+		Usage:   "time-suggest - Get time-based suggestions",
+		Handler: func(_ []string) { actions.TimeBasedSuggestions() },
+	},
+	
+	// Automation
+	"automate": {
+		Usage: "automate - Manage automation tasks",
+		SubCommands: map[string]Command{
+			"add": {
+				MinArgs: 3,
+				Usage:   "automate add <name> <schedule> <command>",
+				Handler: actions.AutomationAdd,
+			},
+			"list": {
+				Handler: actions.AutomationList,
+			},
+			"delete": {
+				MinArgs: 1,
+				Usage:   "automate delete <id>",
+				Handler: actions.AutomationDelete,
+			},
+			"toggle": {
+				MinArgs: 1,
+				Usage:   "automate toggle <id>",
+				Handler: actions.AutomationToggle,
+			},
+			"run": {
+				Usage:   "automate run - Execute due automation tasks",
+				Handler: actions.AutomationRun,
+			},
+			"daemon": {
+				Usage:   "automate daemon - Start automation daemon",
+				Handler: actions.AutomationDaemon,
+			},
+			"quick": {
+				Usage:   "automate quick - Quick setup for common automations",
+				Handler: actions.QuickAutomations,
+			},
+		},
+	},
 }
