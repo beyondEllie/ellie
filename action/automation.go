@@ -294,7 +294,8 @@ func AutomationRun(args []string) {
 // AutomationDaemon runs the automation daemon
 func AutomationDaemon(args []string) {
 	styles.GetInfoStyle().Println("🤖 Starting Ellie Automation Daemon")
-	styles.GetInfoStyle().Println("Press Ctrl+C to stop\n")
+	styles.GetInfoStyle().Println("Press Ctrl+C to stop")
+	fmt.Println()
 	
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()

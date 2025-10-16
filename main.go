@@ -47,6 +47,8 @@ func main() {
 
 	// Interactive mode if no commands
 	if len(args) == 0 {
+		// Show welcome message before chat
+		actions.ShowWelcome()
 		actions.Chat(configs.GetEnv("OPENAI_API_KEY"))
 		return
 	}

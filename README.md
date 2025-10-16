@@ -1,6 +1,16 @@
-# Ellie - The AI-Powered CLI Companion 🤖✨
+# Ellie - Your Personal Command-Line Companion 🤖✨
 
-**Meet Ellie** - Your all-in-one terminal buddy for system management, Git workflows, and productivity hacks. Built with ❤️ by **Tachera Sasi**
+**Meet Ellie** - Your intelligent CLI companion that takes the hassle out of system management and automation. With real-time health monitoring, smart context-aware assistance, and powerful automation capabilities, Ellie transforms how you interact with your terminal. Built with ❤️ by **Tachera Sasi**
+
+## ✨ What's New & Impressive
+
+🏥 **Intelligent System Monitoring** - Real-time health dashboard with CPU, memory, disk tracking, and proactive alerts  
+🤖 **Smart Context-Aware Assistant** - Get intelligent suggestions based on your location, project type, and Git status  
+⚙️ **Powerful Automation Scheduler** - Automate routine tasks with daily, hourly, weekly, or custom schedules  
+📊 **Workflow Analysis** - Understand your command patterns and get optimization tips  
+🎯 **Quick Health Checks** - Instant system health verification for scripts and workflows
+
+> 💡 **Try it now**: `ellie impress` - See all the impressive features in action!
 
 ## Quick Installation ⚡
 
@@ -150,6 +160,71 @@ $ ellie project add api ~/projects/api
 $ ellie switch api
 ✅ Switched to project 'api'
 ```
+
+---
+
+## 🚀 Quick Start Guide
+
+New to Ellie? Here's how to get the most out of your new companion:
+
+### First Steps
+```bash
+# See what Ellie can do for you
+ellie impress
+
+# Get context-aware help
+ellie assist
+
+# Check your system health
+ellie health
+
+# Get smart suggestions
+ellie suggest
+```
+
+### System Monitoring
+```bash
+# Full health dashboard
+ellie health
+
+# Quick health check
+ellie quickcheck
+
+# Real-time monitoring (Ctrl+C to stop)
+ellie monitor
+
+# Check for issues
+ellie alerts
+```
+
+### Automation
+```bash
+# Quick setup for common tasks
+ellie automate quick
+
+# Add custom automation
+ellie automate add "Morning Check" @09:00 "ellie health"
+
+# List all automations
+ellie automate list
+
+# Run due tasks
+ellie automate run
+```
+
+### Smart Assistant
+```bash
+# Get suggestions based on context
+ellie suggest
+
+# Analyze your workflow
+ellie workflow
+
+# Time-based suggestions
+ellie time-suggest
+```
+
+📖 **For detailed documentation**: See [FEATURES.md](./FEATURES.md)
 
 ---
 

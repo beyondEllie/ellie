@@ -387,7 +387,8 @@ func formatBytes(bytes uint64) string {
 // MonitorSystem starts real-time system monitoring
 func MonitorSystem() {
 	styles.GetInfoStyle().Println("🔍 Starting real-time system monitoring...")
-	styles.GetInfoStyle().Println("Press Ctrl+C to stop\n")
+	styles.GetInfoStyle().Println("Press Ctrl+C to stop")
+	fmt.Println()
 	
 	ticker := time.NewTicker(2 * time.Second)
 	defer ticker.Stop()

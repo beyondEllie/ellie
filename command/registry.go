@@ -409,6 +409,18 @@ var Registry = map[string]Command{
 	"about": {
 		Handler: actions.ShowAbout,
 	},
+	"welcome": {
+		Usage:   "welcome - Show welcome message",
+		Handler: func(_ []string) { actions.ShowWelcome() },
+	},
+	"showcase": {
+		Usage:   "showcase - Interactive feature showcase",
+		Handler: func(_ []string) { actions.ShowcaseFeatures() },
+	},
+	"impress": {
+		Usage:   "impress - Quick impressive demo of features",
+		Handler: func(_ []string) { actions.ImpressMe() },
+	},
 	"theme": {
 		SubCommands: map[string]Command{
 			"set": {
