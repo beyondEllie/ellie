@@ -94,7 +94,7 @@ func parseDuration(input string) (time.Duration, error) {
 
 func setReminder(title string, duration time.Duration) {
 	// Format duration for display
-	durationStr := formatRemindDuration(duration)
+	durationStr := formatDurationForRemind(duration)
 	styles.SuccessStyle.Printf("✅ Reminder set! I will remind you in %s.\n", durationStr)
 
 	time.AfterFunc(duration, func() {
@@ -108,7 +108,7 @@ func setReminder(title string, duration time.Duration) {
 	})
 }
 
-func formatRemindDuration(d time.Duration) string {
+func formatDurationForRemind(d time.Duration) string {
 	if d < time.Minute {
 		return fmt.Sprintf("%d seconds", int(d.Seconds()))
 	} else if d < time.Hour {

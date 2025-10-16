@@ -121,22 +121,58 @@ func getClosestMatchingCmd(cmdMap map[string]command.Command, cmdArg string) []s
 	return list
 }
 
+// Returns a list of subcommand names that closely match the input
+func getClosestMatchingSubCmd(subCmdMap map[string]command.Command, subCmdArg string) []string {
+	var list []string
+	for cmd := range subCmdMap {
+		distance := levenshtein.DistanceForStrings([]rune(subCmdArg), []rune(cmd), levenshtein.DefaultOptions)
+		maxLen := len(subCmdArg)
+		if len(cmd) > maxLen {
+			maxLen = len(cmd)
+		}
+		similarity := 1.0 - (float64(distance) / float64(maxLen))
+		if similarity > 0.4 {
+			list = append(list, cmd)
+		}
+	}
+	return list
+}
+
 func handleSubCommand(parentCmd command.Command, args []string) {
 	subCmdName := args[0]
 	subCmd, exists := parentCmd.SubCommands[subCmdName]
 	if !exists {
-		styles.GetErrorStyle().Println("Unknown subcommand:", subCmdName)
+		matches := getClosestMatchingSubCmd(parentCmd.SubCommands, subCmdName)
+		if len(matches) > 0 {
+			styles.GetErrorStyle().Printf("Unknown subcommand: %s\n", subCmdName)
+			styles.GetInfoStyle().Println("Did you mean:")
+			for _, m := range matches {
+				styles.GetInfoStyle().Printf("  %s\n", m)
+			}
+		} else {
+			styles.GetErrorStyle().Printf("Unknown subcommand: %s\n", subCmdName)
+			styles.GetInfoStyle().Println("Available subcommands:")
+			for name := range parentCmd.SubCommands {
+				styles.GetInfoStyle().Printf("  %s\n", name)
+			}
+		}
 		os.Exit(1)
+	}
+
+	if subCmd.PreHook != nil {
+		subCmd.PreHook()
+	}
+
+	// Handle nested subcommands
+	if len(subCmd.SubCommands) > 0 && len(args) > 1 {
+		handleSubCommand(subCmd, args[1:])
+		return
 	}
 
 	if len(args)-1 < subCmd.MinArgs {
 		styles.GetErrorStyle().Printf("Invalid usage for %s\n", subCmdName)
 		styles.GetInfoStyle().Println("Usage:", subCmd.Usage)
 		os.Exit(1)
-	}
-
-	if subCmd.PreHook != nil {
-		subCmd.PreHook()
 	}
 
 	subCmd.Handler(args)
