@@ -71,6 +71,20 @@ var Registry = map[string]Command{
 	"sysinfo": {
 		Handler: func(_ []string) { actions.SysInfo() },
 	},
+	"disk": {
+		Usage:   "disk [path] - Show disk usage information",
+		Handler: actions.Disk,
+		SubCommands: map[string]Command{
+			"all": {
+				Usage:   "disk all - Show all disk partitions",
+				Handler: func(_ []string) { actions.DiskAll() },
+			},
+			"space": {
+				Usage:   "disk space - Show disk space summary",
+				Handler: func(_ []string) { actions.DiskSpace() },
+			},
+		},
+	},
 	"dev-init": {
 		Handler: func(args []string) {
 			fs := flag.NewFlagSet("dev-init", flag.ExitOnError)
