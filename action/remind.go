@@ -1,6 +1,10 @@
 package actions
 
 import (
+	"fmt"
+	"regexp"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gen2brain/beeep"
@@ -9,53 +13,92 @@ import (
 )
 
 func Remind() {
-	utils.Notify("💡 ellie remind")
-	styles.Cyan.Println("💡 ellie remind")
+	styles.Cyan.Print("💡 Set a reminder")
+	styles.DimText.Println(" (Schedule desktop notifications)")
 
-	title, err := getTitle()
-	if err != nil {
-		utils.Error("❌ Something went wrong, failed to get the title.")
+	title := getReminderTitle()
+	if title == "" {
 		return
 	}
 
-	duration, err := getDuration()
-	if err != nil {
-		utils.Error("❌ Failed to get reminder duration.")
+	duration := getReminderDuration()
+	if duration == 0 {
 		return
 	}
 
 	setReminder(title, duration)
 }
 
-func getTitle() (string, error) {
+func getReminderTitle() string {
 	for {
-		subject, err := utils.GetInput("What do you want to remind yourself?")
-		if err == nil && subject != "" {
-			return subject, nil
+		title, err := utils.GetInput("What do you want to remind yourself?")
+		if err == nil && title != "" {
+			return title
 		}
-		styles.ErrorStyle.Println("🚫 Title cannot be empty.")
+		styles.ErrorStyle.Println("🚫 Reminder title cannot be empty.")
 	}
 }
 
-func getDuration() (time.Duration, error) {
+func getReminderDuration() time.Duration {
 	for {
-		input, err := utils.GetInput("⏳ In how many seconds/minutes/hours? (e.g., 10s, 5m, 2h)")
+		input, err := utils.GetInput("⏳ When should I remind you? (e.g., 10s, 5m, 2h, 3d, 1w)")
 		if err != nil {
-			return 0, err
+			styles.ErrorStyle.Println("🚫 Failed to read input. Please try again.")
+			continue
 		}
-		duration, err := time.ParseDuration(input)
+
+		duration, err := parseDuration(input)
 		if err == nil && duration > 0 {
-			return duration, nil
+			return duration
 		}
-		styles.ErrorStyle.Println("🚫 Invalid duration. Try formats like '10s', '5m', '2h'.")
+
+		styles.ErrorStyle.Println("🚫 Invalid duration. Try formats like '10s', '5m', '2h', '3d', '1w'.")
+	}
+}
+
+func parseDuration(input string) (time.Duration, error) {
+	input = strings.TrimSpace(input)
+	if input == "" {
+		return 0, fmt.Errorf("empty input")
+	}
+
+	// Try standard time.ParseDuration first (handles s, m, h)
+	duration, err := time.ParseDuration(input)
+	if err == nil {
+		return duration, nil
+	}
+
+	// Parse custom formats: days (d) and weeks (w)
+	re := regexp.MustCompile(`^(\d+(?:\.\d+)?)(d|w)$`)
+	matches := re.FindStringSubmatch(strings.ToLower(input))
+
+	if len(matches) != 3 {
+		return 0, fmt.Errorf("invalid duration format")
+	}
+
+	value, err := strconv.ParseFloat(matches[1], 64)
+	if err != nil {
+		return 0, err
+	}
+
+	unit := matches[2]
+	switch unit {
+	case "d":
+		return time.Duration(value * 24 * float64(time.Hour)), nil
+	case "w":
+		return time.Duration(value * 7 * 24 * float64(time.Hour)), nil
+	default:
+		return 0, fmt.Errorf("unsupported time unit: %s", unit)
 	}
 }
 
 func setReminder(title string, duration time.Duration) {
-	styles.SuccessStyle.Printf("✅ Reminder set! I will remind you in %v.\n", duration)
+	// Format duration for display
+	durationStr := formatDuration(duration)
+	styles.SuccessStyle.Printf("✅ Reminder set! I will remind you in %s.\n", durationStr)
 
 	time.AfterFunc(duration, func() {
-		// Sends Desktop Notification
+		// Send Desktop Notification
 		err := beeep.Notify("🔔 Ellie Reminder", title, "")
 		if err != nil {
 			utils.Error("❌ Failed to send notification: " + err.Error())
@@ -63,4 +106,18 @@ func setReminder(title string, duration time.Duration) {
 			styles.InfoStyle.Printf("\n🔔 Reminder: %s\n", title)
 		}
 	})
+}
+
+func formatDuration(d time.Duration) string {
+	if d < time.Minute {
+		return fmt.Sprintf("%d seconds", int(d.Seconds()))
+	} else if d < time.Hour {
+		return fmt.Sprintf("%d minutes", int(d.Minutes()))
+	} else if d < 24*time.Hour {
+		return fmt.Sprintf("%.1f hours", d.Hours())
+	} else if d < 7*24*time.Hour {
+		return fmt.Sprintf("%.1f days", d.Hours()/24)
+	} else {
+		return fmt.Sprintf("%.1f weeks", d.Hours()/(24*7))
+	}
 }
