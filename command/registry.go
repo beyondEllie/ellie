@@ -72,8 +72,8 @@ var Registry = map[string]Command{
 		Handler: func(_ []string) { actions.SysInfo() },
 	},
 	"disk": {
-		Usage:   "disk [path] - Show disk usage information",
-		Handler: actions.Disk,
+		Usage:   "disk - Show disk usage information. Use 'disk all' or 'disk space' for more options",
+		Handler: func(args []string) { actions.Disk(args) },
 		SubCommands: map[string]Command{
 			"all": {
 				Usage:   "disk all - Show all disk partitions",

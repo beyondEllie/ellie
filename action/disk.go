@@ -180,7 +180,7 @@ func DiskSpace() {
 
 	// Parse and display a simplified summary
 	lines := strings.Split(diskInfo, "\n")
-	
+
 	switch runtime.GOOS {
 	case "darwin", "linux":
 		for i, line := range lines {
@@ -204,7 +204,7 @@ func DiskSpace() {
 				styles.InfoStyle.Printf("  Total Space:     %s\n", size)
 				styles.SuccessStyle.Printf("  Available Space: %s\n", available)
 				styles.WarningStyle.Printf("  Used Space:      %s\n", used)
-				
+
 				// Color code usage percentage
 				usageNum := strings.TrimSuffix(usePercent, "%")
 				if strings.HasPrefix(usageNum, "9") || strings.HasPrefix(usageNum, "10") {
